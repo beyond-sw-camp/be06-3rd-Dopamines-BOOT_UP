@@ -9,12 +9,28 @@ import MainFooter from "@/components/layout/MainFooter.vue";
   <div class="body-container">
     <MainHeader></MainHeader>
     <main>
-      <PostEditor board-title="자유게시판 수정"></PostEditor>
+      <div class="board-create-title">
+        <h1>자유게시판 수정</h1>
+      </div>
+      <PostEditor></PostEditor>
     </main>
     <MainFooter></MainFooter>
   </div>
 </template>
 
 <style scoped>
+main {
+  flex-direction: column;
+} 
 
+.board-create-title {
+  max-width: 1000px;
+  width: 100%;
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 30px;
+  text-align: center;
+}
 </style>

@@ -1,5 +1,4 @@
 <script setup>
-
 import MainHeader from "@/components/layout/MainHeader.vue";
 import ChatListItem from "@/pages/Market/Chat/component/ChatListItem.vue";
 import ChatMessageUser from "@/pages/Market/Chat/component/ChatMessageUser.vue";
@@ -16,11 +15,17 @@ import ChatMessageOther from "@/pages/Market/Chat/component/ChatMessageOther.vue
       <div class="chat-window">
         <div class="chat-header">Chat with User 1</div>
         <div class="chat-messages">
-          <ChatMessageUser time="11:40 PM"  user-message="Hi How are you!"></ChatMessageUser>
-          <ChatMessageOther others-message="I'm fine thank you~" time="11: 50 PM"></ChatMessageOther>
+          <ChatMessageUser
+            time="11:40 PM"
+            user-message="Hi How are you!"
+          ></ChatMessageUser>
+          <ChatMessageOther
+            others-message="I'm fine thank you~"
+            time="11: 50 PM"
+          ></ChatMessageOther>
         </div>
         <div class="chat-input">
-          <input type="text" placeholder="Type your message...">
+          <input type="text" placeholder="Type your message..." />
           <button>Send</button>
         </div>
       </div>
@@ -29,7 +34,7 @@ import ChatMessageOther from "@/pages/Market/Chat/component/ChatMessageOther.vue
 </template>
 
 <style scoped>
-.chat-container{
+.chat-container {
   width: 1000px;
   display: flex;
   margin-top: 150px;
@@ -49,7 +54,7 @@ import ChatMessageOther from "@/pages/Market/Chat/component/ChatMessageOther.vue
 .chat-header {
   padding: 15px;
   border-bottom: 1px solid #ccc;
-  background-color: #E06139;
+  background-color: #e06139;
   color: white;
   font-weight: bold;
 }
@@ -75,7 +80,7 @@ import ChatMessageOther from "@/pages/Market/Chat/component/ChatMessageOther.vue
 .chat-input button {
   padding: 10px 20px;
   border: none;
-  background-color: #E06139;
+  background-color: #e06139;
   color: white;
   border-radius: 20px;
   cursor: pointer;

@@ -29,9 +29,9 @@ export default {
 </template>
 
 <style scoped>
-  .content-area{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+.content-area {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 </style>

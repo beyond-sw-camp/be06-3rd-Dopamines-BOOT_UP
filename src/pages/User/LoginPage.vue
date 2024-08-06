@@ -4,9 +4,9 @@ import { useRouter } from 'vue-router';
 import MainHeader from '@/components/layout/MainHeader.vue';
 import SocialLoginBtn from '@/pages/User/component/SocialLoginBtn.vue';
 import SubmitBtn from '@/components/button/SubmitBtn.vue';
-import { useAuthStore } from '@/pages/User/stores/useAuthStore';
+import {useUserStore} from "@/pages/User/stores/useUserStore";
 
-const authStore = useAuthStore();
+const userStore = useUserStore();
 const router = useRouter();
 const userEmail = ref('');
 const password = ref('');
@@ -15,7 +15,7 @@ const error = ref('');
 const handleLogin = async () => {
   error.value = ''; // Reset error message
   try {
-    const success = await authStore.login({ username: userEmail.value, password: password.value });
+    const success = await userStore.login({ username: userEmail.value, password: password.value });
     if (success) {
       router.push('/');
     } else {

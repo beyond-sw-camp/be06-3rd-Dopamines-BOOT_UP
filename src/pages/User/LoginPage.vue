@@ -1,67 +1,87 @@
-<script>
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import MainHeader from '@/components/layout/MainHeader.vue';
+import SocialLoginBtn from '@/pages/User/component/SocialLoginBtn.vue';
+import SubmitBtn from '@/components/button/SubmitBtn.vue';
+import { useAuthStore } from '@/pages/User/stores/useAuthStore';
 
-import {defineComponent} from "vue";
-import MainHeader from "@/components/layout/MainHeader.vue";
-import SocialLoginBtn from "@/pages/User/component/SocialLoginBtn.vue";
-import SubmitBtn from "@/components/button/SubmitBtn.vue";
+const authStore = useAuthStore();
+const router = useRouter();
+const userEmail = ref('');
+const password = ref('');
+const error = ref('');
 
-export default defineComponent({
-  name: "LoginPage",
-  data(){
-    return {
+const handleLogin = async () => {
+  error.value = ''; // Reset error message
+  try {
+    const success = await authStore.login({ username: userEmail.value, password: password.value });
+    if (success) {
+      router.push('/');
+    } else {
+      error.value = '로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.';
     }
-  },
-  components: {
-    SocialLoginBtn,
-    MainHeader,
-    SubmitBtn
+  } catch (e) {
+    console.error(e);
+    error.value = '로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.';
   }
-})
+};
 </script>
 
 <template>
   <div class="body-container">
-    <MainHeader></MainHeader>
+    <MainHeader />
     <main>
-        <div class="login-container">
-          <h2 class="login-title">Beyond SW 에 오신것을 환영합니다.</h2>
-          <div class="content-container">
-            <span class="social-login-title">SNS 로그인</span>
-            <SocialLoginBtn></SocialLoginBtn>
-            <div class="login-subtitle">
-              <hr>
-              <span> BOOT UP 아이디로 로그인 </span>
-              <hr>
-            </div>
-            <form class="login-form">
-              <div class="login-form-container">
-                <div class="id-wrapper">
-                  <label for="user-id">아이디</label>
-                  <input id="user-id" type="text" autocomplete="name" class="login-input" name="userId">
-                </div>
-                <div class="pw-wrapper">
-                  <label for="user-pw">비밀번호</label>
-                  <input id="user-pw" type="password" autocomplete="current-password" class="login-input" name="password">
-                </div>
-              </div>
-              <div class="button-container">
-                <SubmitBtn text="로그인"></SubmitBtn>
-              </div>
-              <p class="not-member-wrapper"><span>아직 회원이 아니신가요?</span>
-                <router-link class="signup-link" to="/signup-agree">회원가입</router-link>
-              </p>
-            </form>
+      <div class="login-container">
+        <h2 class="login-title">Beyond SW 에 오신것을 환영합니다.</h2>
+        <div class="content-container">
+          <span class="social-login-title">SNS 로그인</span>
+          <SocialLoginBtn />
+          <div class="login-subtitle">
+            <hr />
+            <span> BOOT UP 아이디로 로그인 </span>
+            <hr />
           </div>
+          <form class="login-form" @submit.prevent="handleLogin">
+            <div class="login-form-container">
+              <div class="id-wrapper">
+                <label for="user-id">아이디</label>
+                <input id="user-id" type="text" autocomplete="name" class="login-input" v-model="userEmail" />
+              </div>
+              <div class="pw-wrapper">
+                <label for="user-pw">비밀번호</label>
+                <input id="user-pw" type="password" autocomplete="current-password" class="login-input" v-model="password" />
+              </div>
+            </div>
+            <div class="button-container">
+              <SubmitBtn text="로그인" />
+            </div>
+            <p class="not-member-wrapper">
+              <span>아직 회원이 아니신가요?</span>
+              <router-link class="signup-link" to="/signup-agree">회원가입</router-link>
+            </p>
+            <p v-if="error" class="error-message">{{ error }}</p>
+          </form>
         </div>
+      </div>
     </main>
   </div>
 </template>
 
 <style>
-.body-container{
-  width: 100%;
-  /* max-width: 800px; */
+/* Add any relevant styles here */
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
+</style>
+
+
+<style>
+.body-container {
+  width: 100%;
+}
+
 .login-container {
   max-width: 800px;
   width: 100%;
@@ -77,7 +97,8 @@ export default defineComponent({
   font-weight: 700;
   color: #E06139;
   display: flex;
-  hr{
+
+  hr {
     width: 300px;
     height: 2px;
     background-color: #E06139;
@@ -97,7 +118,7 @@ export default defineComponent({
   gap: 20px;
 }
 
-.login-input{
+.login-input {
   border-radius: 5px;
   border: 1px solid hsla(220, 9%, 46%, .3);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
@@ -113,7 +134,7 @@ export default defineComponent({
 }
 
 .not-member-wrapper {
-  gap : 10px;
+  gap: 10px;
   display: flex;
   justify-content: center;
 }

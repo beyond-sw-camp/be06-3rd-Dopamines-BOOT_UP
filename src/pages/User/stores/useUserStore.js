@@ -1,5 +1,6 @@
 import { defineStore } from "pinia"
-import axios from "axios";
+import axios from "../../../config/axiosConfig";
+import Cookies from "js-cookie";
 
 const backend = "http://localhost:8080";
 
@@ -91,7 +92,31 @@ export const useUserStore = defineStore("user", {
             console.log(signupResponse.email);
             console.log(signupResponse.name);
             
-        }
-
-    }
+        },
+        async login(user) {
+            try {
+                let response = await axios.post(backend + "/login", user);
+                if (response.status === 200) {
+                    this.isLoggedIn = true;
+                    const token = response.headers['authorization'];
+                    Cookies.set('jwt', token, { secure: true, sameSite: 'Strict' });
+                    return true;
+                }
+            } catch (error) {
+                console.error("로그인 실패", error);
+                return false;
+            }
+        },
+        logout() {
+            this.isLoggedIn = false;
+            Cookies.remove('jwt');
+        },
+        initialize() {
+            const token = Cookies.get('jwt');
+            if (token) {
+                this.isLoggedIn = true;
+            }
+        },
+    },
+    persist: true
 })

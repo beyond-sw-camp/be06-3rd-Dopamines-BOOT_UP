@@ -23,7 +23,6 @@ export default defineComponent({
   <div class="body-container">
     <MainHeader></MainHeader>
     <main>
-      <div class="body-container">
         <div class="login-container">
           <h2 class="login-title">Beyond SW 에 오신것을 환영합니다.</h2>
           <div class="content-container">
@@ -54,7 +53,6 @@ export default defineComponent({
             </form>
           </div>
         </div>
-      </div>
     </main>
   </div>
 </template>
@@ -62,10 +60,10 @@ export default defineComponent({
 <style>
 .body-container{
   width: 100%;
-  //max-width: 800px;
+  /* max-width: 800px; */
 }
 .login-container {
-  max-width: 500px;
+  max-width: 800px;
   width: 100%;
 }
 
@@ -80,7 +78,7 @@ export default defineComponent({
   color: #E06139;
   display: flex;
   hr{
-    width: 150px;
+    width: 300px;
     height: 2px;
     background-color: #E06139;
     border: 0;

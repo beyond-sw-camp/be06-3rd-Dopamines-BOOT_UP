@@ -124,7 +124,7 @@ export default {
 
 <style>
 .container-wrap{
-  //margin-top: 250px;
+  /* margin-top: 250px; */
 }
 
 .container{
@@ -152,7 +152,7 @@ export default {
 }
 
 .seat-table-label{
-
+  margin: 0;
 }
 
 .seat-table{

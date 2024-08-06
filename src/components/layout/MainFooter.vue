@@ -26,10 +26,10 @@
           </div>
         </div>
         <div class="participations">
+          <div>유송연</div>
           <div>서시현</div>
           <div>최승은</div>
           <div>곽동현</div>
-          <div>유송연</div>
           <div>최수빈</div>
         </div>
       </div>

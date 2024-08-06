@@ -1,5 +1,5 @@
 <script setup>
-import PostList from "@/pages/component/List/PostList.vue";
+import PostList from "@/components/post/List/PostList.vue";
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
 </script>

@@ -15,14 +15,15 @@ const router = createRouter({
                 { path: 'login', component: () => import('../pages/User/LoginPage.vue') },
                 { path: 'signup/agree', component: () => import('../pages/User/SignupAgree.vue') },
                 { path: 'signup/info', component: () => import('../pages/User/SignupPage.vue') },
-                { path: 'signup/complete', component: () => import('../pages/User/SignupComplete.vue') },
+                // { path: 'signup/complete', component: () => import('../pages/User/SignupComplete.vue') },
+                { path: 'signup/success', component: () => import('../pages/User/SignupSuccessPage.vue') }
             ]
         },
 
         // Community
         { path: '/community', component: () => import('../pages/Community/CommunityBoardListPage.vue') },
         { path: '/community/free', component: () => import('../pages/Community/FreeBoard/FreeListPage.vue') },
-        { path: '/community/free/detail/:id', component: () => import('../pages/Community/FreeBoard/FreeDetailPage.vue') },
+        { path: '/community/free/detail', component: () => import('../pages/Community/FreeBoard/FreeDetailPage.vue') },
         { path: '/community/free/write', component: () => import('../pages/Community/FreeBoard/FreeWritePage.vue') },
         { path: '/community/free/edit/:id', component: () => import('../pages/Community/FreeBoard/FreeEditPage.vue') },
         { path: '/community/open', component: () => import('../pages/Community/OpenBoard/OpenListPage.vue') },

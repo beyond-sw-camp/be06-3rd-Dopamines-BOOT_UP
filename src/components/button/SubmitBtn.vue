@@ -1,23 +1,28 @@
-<script setup>
-  import { defineProps } from 'vue';
-
-  const props = defineProps({
-      // isAccess: {
-      //   type: Boolean
-      // },
-      text:{
-        type: String,
-        required: true
-      }
-  })
-</script>
-
 <template>
   <!-- todo -> v-if 적용-->
-  <button type="submit" class="submit-btn-disabled">
-    <strong>{{ props.text }}</strong>
+   <!-- 부모 컴포넌트에게 클릭 이벤트 전달 -->
+  <button :disabled="isDisabled" :class="{'submit-btn-primary': !isDisabled, 'submit-btn-disabled': isDisabled}"><strong>회원가입</strong>
   </button>
 </template>
+
+<script>
+export default {
+  name:"SubmitBtnComponent",
+  props:{
+    isDisabled: {
+      type: Boolean,
+      required: true
+    }
+  },
+  // methods: {
+  //   handleClick() {
+  //     if (!this.isDisabled) {
+  //       this.$emit('click');
+  //     }
+  //   }
+  // }
+}
+</script>
 
 <style scoped>
 .submit-btn-primary{

@@ -55,7 +55,7 @@ const handleSearch = () => {
             <router-link to="/user/login">로그인</router-link>
           </li>
           <li>
-            <router-link to="/user/signup">회원가입</router-link>
+            <router-link to="/user/signup/agree">회원가입</router-link>
           </li>
         </ul>
       </nav>

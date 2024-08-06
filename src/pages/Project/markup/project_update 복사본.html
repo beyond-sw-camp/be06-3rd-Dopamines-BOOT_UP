@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프로젝트 등록</title>
+    <link rel="stylesheet" href="./css/sh.css">
+</head>
+<body>
+    <div class="mt-40"></div>
+    <div class="css-1yh1ujh">
+        <div class="css-1x3lndz">
+            <h1>프로젝트 등록</h1>
+        </div>
+        <form>
+            <label for="title">제목:</label>
+            <input type="text" id="title" name="title" value="VaRoon" required>
+
+            <div class="row">
+                <label for="generation">기수 선택:</label>
+                <select id="generation" name="generation" required>
+                    <option value="1">1기</option>
+                    <option value="2">2기</option>
+                    <option value="3">3기</option>
+                    <option value="4">4기</option>
+                    <option value="5">5기</option>
+                    <option value="6" selected>6기</option>
+                    <option value="7">7기</option>
+                    <option value="8">8기</option>
+                    <option value="9">9기</option>
+                    <option value="10">10기</option>
+                </select>
+
+                <label for="team">팀 선택:</label>
+                <select id="team" name="team" required>
+                    <option value="dopamines" selected>dopamines</option>
+                    <option value="fiiiiive">fiiiiive</option>
+                    <option value="ketchap">ketchap</option>
+                    <option value="404x">404x</option>
+                    <option value="gamza">gamza</option>
+                    <option value="4trees">4trees</option>
+                </select>
+            </div>
+
+            <label for="title">기존 첨부 파일</label>
+            <input type="text" id="uploaded-file"
+                value="https://dopamines-bootup.s3.ap-northeast-2.amazonaws.com/PROJECT/2024/07/26/b72fcea3-efae-4098-aeae-2f28a8434e9f_IMG_4896.mp4">
+
+            <label for="title">수정 첨부 파일</label>
+            <input type="file" id="file-upload" name="file-upload">
+
+            <label for="title">GitHub URL</label>
+            <input type="text" id="github-url" value="https://www.github.com/SihyunSeo" required>
+
+            <label for="content">내용:</label>
+            <textarea id="content" name="content" rows="10" required>VR 기반 사시 치료 플랫폼 수술 후 사시 교정의 지속성을 위한 VR 기술 기반 평가, 치료 플랫폼</textarea>
+
+            <button type="submit">제출</button>
+        </form>
+
+        <div class="mt-40"></div>
+    </div>
+</body>
+</html>

@@ -4,9 +4,9 @@ import { useRouter } from 'vue-router';
 import MainHeader from '@/components/layout/MainHeader.vue';
 import SocialLoginBtn from '@/pages/User/component/SocialLoginBtn.vue';
 import SubmitBtn from '@/components/button/SubmitBtn.vue';
-import {useUserStore} from "@/pages/User/stores/useUserStore";
+import { useLoginStore } from '@/pages/User/stores/useLoginStore';
 
-const userStore = useUserStore();
+const loginStore = useLoginStore();
 const router = useRouter();
 const userEmail = ref('');
 const password = ref('');
@@ -15,7 +15,7 @@ const error = ref('');
 const handleLogin = async () => {
   error.value = ''; // Reset error message
   try {
-    const success = await userStore.login({ username: userEmail.value, password: password.value });
+    const success = await loginStore.login({ email: userEmail.value, password: password.value });
     if (success) {
       router.push('/');
     } else {
@@ -33,13 +33,13 @@ const handleLogin = async () => {
     <MainHeader />
     <main>
       <div class="login-container">
-        <h2 class="login-title">Beyond SW 에 오신것을 환영합니다.</h2>
+        <h2 class="login-title">Beyond SW에 오신 것을 환영합니다.</h2>
         <div class="content-container">
           <span class="social-login-title">SNS 로그인</span>
           <SocialLoginBtn />
           <div class="login-subtitle">
             <hr />
-            <span> BOOT UP 아이디로 로그인 </span>
+            <span>BOOT UP 아이디로 로그인</span>
             <hr />
           </div>
           <form class="login-form" @submit.prevent="handleLogin">
@@ -58,24 +58,16 @@ const handleLogin = async () => {
             </div>
             <p class="not-member-wrapper">
               <span>아직 회원이 아니신가요?</span>
-              <router-link class="signup-link" to="/signup-agree">회원가입</router-link>
+              <router-link class="signup-link" to="/signup/agree">회원가입</router-link>
             </p>
             <p v-if="error" class="error-message">{{ error }}</p>
           </form>
         </div>
       </div>
     </main>
+    <MainFooter />
   </div>
 </template>
-
-<style>
-/* Add any relevant styles here */
-.error-message {
-  color: red;
-  margin-top: 10px;
-}
-</style>
-
 
 <style>
 .body-container {

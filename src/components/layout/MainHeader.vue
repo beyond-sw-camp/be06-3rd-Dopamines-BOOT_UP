@@ -16,7 +16,7 @@ const handleSearch = () => {
       <div class="header-area">
         <div class="logo-area">
           <div class="logo">
-            <a href="main.html">
+            <a href="/">
               <img src="../../assets/img/pepecolor.jpeg" height="28px">
             </a>
           </div>

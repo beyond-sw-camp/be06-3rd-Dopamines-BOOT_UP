@@ -1,3 +1,32 @@
+<script setup>
+import { ref, computed, watch } from 'vue';
+import SubmitBtn from '@/components/button/SubmitBtn.vue';
+import router from "@/router";
+
+const ckAll = ref(false);
+const ck01 = ref(false);
+const ck02 = ref(false);
+const ck03 = ref(false);
+const ck04 = ref(false);
+
+const allChecked = computed(() => ck01.value && ck02.value && ck03.value && ck04.value);
+
+watch(ckAll, (newVal) => {
+  ck01.value = newVal;
+  ck02.value = newVal;
+  ck03.value = newVal;
+  ck04.value = newVal;
+});
+
+watch([ck01, ck02, ck03, ck04], ([newCk01, newCk02, newCk03, newCk04]) => {
+  ckAll.value = newCk01 && newCk02 && newCk03 && newCk04;
+});
+
+const handleSubmit = () => {
+  router.push('/user/signup/info');
+};
+</script>
+
 <template>
   <div class="signup-container">
     <div class="signup-wrapper">
@@ -23,7 +52,7 @@
             <div class="ck-wrap">
               <p class="ck-title">이용약관2</p>
               <div class="checkbox">
-                <input type="checkbox" id="ck02"  v-model ="ck02" name="ck" required class="required-checkbox">
+                <input type="checkbox" id="ck02" v-model="ck02" name="ck" required class="required-checkbox">
                 <label for="ck02">동의합니다.</label>
               </div>
             </div>
@@ -35,7 +64,7 @@
             <div class="ck-wrap">
               <p class="ck-title">이용약관3</p>
               <div class="checkbox">
-                <input type="checkbox" id="ck03" v-model ="ck03" name="ck" required class="required-checkbox">
+                <input type="checkbox" id="ck03" v-model="ck03" name="ck" required class="required-checkbox">
                 <label for="ck03">동의합니다.</label>
               </div>
             </div>
@@ -47,7 +76,7 @@
             <div class="ck-wrap">
               <p class="ck-title">이용약관4</p>
               <div class="checkbox">
-                <input type="checkbox" id="ck04" v-model ="ck04" name="ck" required class="required-checkbox">
+                <input type="checkbox" id="ck04" v-model="ck04" name="ck" required class="required-checkbox">
                 <label for="ck04">동의합니다.</label>
               </div>
             </div>
@@ -56,83 +85,13 @@
             </div>
           </div>
           <div class="button-container">
-            <SubmitBtn text="회원가입"></SubmitBtn>
+            <SubmitBtn :is-disabled="!allChecked" :handle-submit="handleSubmit" text="회원가입"></SubmitBtn>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-import SubmitBtn from '@/components/button/SubmitBtn.vue';
-
-export default {
-  name: 'SignupAgreePage',
-  components: {
-    SubmitBtn,
-  },
-  data() {
-    return {
-      ckAll : false,
-      ck01 : false,
-      ck02 : false,
-      ck03 : false,
-      ck04 : false
-    };
-  },
-  methods: {
-    checkAllClick() {
-      if(this.ckAll) {
-        this.ck01 = true;
-        this.ck02 = true;
-        this.ck03 = true;
-        this.ck04 = true;
-      }
-    },
-    checkAllUnclick() {
-      if((this.ck01 && this.ck02 && this.ck03 && this.ck04)===true && this.ckAll === false ){
-        this.ck01 = false;
-        this.ck02 = false;
-        this.ck03 = false;
-        this.ck04 = false;
-      }
-    },
-    checkOneClick() {
-      if(this.ck01 && this.ck02 && this.ck03 && this.ck04) {
-        this.ckAll = true;
-      }
-      else {
-        this.ckAll=false;
-        if(!this.ck01) this.ck01=false;
-        if(!this.ck02) this.ck02=false;
-        if(!this.ck03) this.ck03=false;
-        if(!this.ck04) this.ck04=false;
-      }
-    }
-  },
-  watch: {
-    ckAll() {
-      this.checkAllClick();
-      this.checkAllUnclick();
-    },
-    ck01() {
-      this.checkOneClick();
-    },
-    ck02() {
-      this.checkOneClick();
-    },
-    ck03() {
-      this.checkOneClick();
-    },
-    ck04() {
-      this.checkOneClick();
-    }
-  }
-}
-
-
-</script>
 
 <style scoped>
 .signup-container {

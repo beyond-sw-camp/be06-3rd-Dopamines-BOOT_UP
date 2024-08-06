@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'SocialButtonComponent',
+  name: 'SocialLoginBtn',
   props: {
     msg: String
   }

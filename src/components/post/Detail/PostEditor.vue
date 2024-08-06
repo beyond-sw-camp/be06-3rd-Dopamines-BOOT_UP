@@ -4,7 +4,6 @@ import { useCommunityStore } from '@/pages/Community/stores/useCommunityStore';
 import axios from "axios";
 import {loadScript} from "vue-plugin-load-script";
 
-
 const props = defineProps({
   postIndex: {
     type: Number,

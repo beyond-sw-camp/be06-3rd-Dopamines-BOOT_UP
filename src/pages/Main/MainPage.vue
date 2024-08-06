@@ -2,6 +2,23 @@
 import PostList from "@/components/post/List/PostList.vue";
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
+import { useFreePostStore } from "@/pages/Community/FreeBoard/stores/useFreePostStore";
+import { useOpenPostStore } from "@/pages/Community/OpenBoard/stores/useOpenPostStore";
+import { onMounted, ref } from "vue";
+
+const freeStore = useFreePostStore();
+const openStore = useOpenPostStore();
+const isDataLoaded = ref(false);
+
+onMounted(async () => {
+  try {
+    await freeStore.readAllPosts(1, 10);
+    await openStore.readAllPosts(1, 10);
+    isDataLoaded.value = true;
+  } catch (error) {
+    console.error("Error loading posts:", error);
+  }
+});
 </script>
 
 <template>
@@ -15,8 +32,8 @@ import MainFooter from "@/components/layout/MainFooter.vue";
           </div>
         </div>
         <div class="content-area">
-          <PostList title="자유 게시판"></PostList>
-          <PostList title="공개 게시판"></PostList>
+          <PostList :dataList="freeStore.posts" title="자유 게시판"></PostList>
+          <PostList :dataList="openStore.posts" title="공개 게시판"></PostList>
         </div>
       </div>
     </main>
@@ -25,15 +42,15 @@ import MainFooter from "@/components/layout/MainFooter.vue";
 </template>
 
 <style scoped>
-.banner-area{
+.banner-area {
   position: relative;
-  /* max-width: 1200px; */
   width: 100%;
   margin: 0px auto;
   height: 300px;
   box-shadow: 2px 2px 10px 0px rgb(0 0 0 / 10%);
   background-color: #e06039e0;
-  .banner{
+
+  .banner {
     width: 100%;
     height: 100%;
     border-radius: 10px;
@@ -42,7 +59,7 @@ import MainFooter from "@/components/layout/MainFooter.vue";
   }
 }
 
-.content-area{
+.content-area {
   display: flex;
   column-gap: 2.5rem;
   margin-top: 2rem;

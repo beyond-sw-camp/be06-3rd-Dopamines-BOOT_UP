@@ -1,35 +1,28 @@
-<script>
-// import useProjectStore from '../store/useProjectStore'
-export default {
-  props: {
-    teamName: String,
-    projectTitle: String,
-    projectDescription: String,
-    teamMateName: String
-  },
-  data() {
-    return {
-      i: 0,
-      nameList: [],
-      courseNum: 0
-    }
-  }
-}
+<script setup>
+import { defineProps } from "vue";
+
+const props = defineProps({
+  teamName: String,
+  projectTitle: String,
+  projectDescription: String,
+  nameList: Array,
+  courseNum: String,
+});
 </script>
 
 <template>
   <li class="project-card-list">
     <div class="project-card-item">
       <div class="top">
-        <div class="team">{{ teamName }}</div>
-        <div class="title">{{ projectTitle }}</div>
-        <p class="description">{{ projectDescription }}</p>
+        <div class="team">{{ props.teamName }}</div>
+        <div class="title">{{ props.projectTitle }}</div>
+        <p class="description">{{ props.projectDescription }}</p>
       </div>
       <div class="name">
         <ul>
-          <li v-for="(name, index) in nameList" v-bind:key="index">{{ teamMateName }}</li>
+          <li v-for="(name, index) in props.nameList" v-bind:key="index">{{ name }}</li>
         </ul>
-        <div class="course-num">{{ courseNum }}</div>
+        <div class="course-num">{{ props.courseNum }}</div>
       </div>
     </div>
   </li>
@@ -37,12 +30,30 @@ export default {
 
 <style scoped>
 .project-card-list {
-  width: 33.333%;
-  border-right: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+  width: 33%;
   position: relative;
   min-height: 315px;
-  transition: all ease-in-out .15s;
+  transition: box-shadow 0.3s ease;
+
+}
+
+.project-card-list:hover {
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, .15);
+}
+
+.project-card-list > li:hover:before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  content: '';
+  z-index: 1;
+}
+
+.project-card-list > li:hover .course-num {
+  color: rgba(224, 97, 57, 0.5);
+  text-shadow: none;
 }
 
 .project-card-item {
@@ -53,21 +64,55 @@ export default {
   position: relative;
   overflow: hidden;
   padding: 50px 30px 40px;
+  box-sizing: border-box;
+  transition: box-shadow 0.3s ease;
+  background-color: #bfb8a61f;
+  border: 5px solid #fff;
+}
 
-  .name {
-    display: flex;
-    margin: 30px 0 -5px -5px;
-    font-weight: 300;
-    position: relative;
-    z-index: 1;
-    flex-wrap: wrap;
+.project-card-item:hover .course-num {
+  color: rgba(224, 97, 57, 0.5);
+}
 
-    li {
-      padding: 10px 15px;
-      margin: 0 0 5px 5px;
-      background: #f4f4f4;
-      color: #666;
-    }
-  }
+.team {
+  font-size: 20px;
+  font-weight: 700;
+  color: #19191A;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #19191A;
+
+}
+
+.name ul {
+  display: flex;
+  margin: 30px 0 -5px -5px;
+  font-weight: 300;
+  position: relative;
+  z-index: 1;
+  flex-wrap: wrap;
+}
+
+.name li {
+  padding: 10px 15px;
+  margin: 0 0 5px 5px;
+  background: #bfb8a67d;
+  color: #19191A;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.course-num {
+  position: absolute;
+  right: -5px;
+  bottom: 0;
+  text-shadow: -1px 0 #efefef, 0 1px #efefef, 1px 0 #efefef, 0 -1px #efefef;
+  color: #fff;
+  font-weight: 900;
+  font-size: 90px;
+  line-height: .67;
 }
 </style>

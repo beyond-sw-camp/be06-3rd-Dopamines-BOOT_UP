@@ -17,6 +17,7 @@
     "vee-validate": "^4.13.2",
     "vue": "^3.4.35",
     "vue-router": "^4.4.1",
+    "vue-plugin-load-script": "^2.1.1",
     "vue-slick-carousel": "^1.0.6",
     "vue3-carousel": "^0.3.3",
     "yarn": "^1.22.22",

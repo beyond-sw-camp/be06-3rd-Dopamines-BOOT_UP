@@ -12,6 +12,7 @@ const handleSearch = () => {
 
 <template>
   <header>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <div class="header-wrap">
       <div class="header-area">
         <div class="logo-area">

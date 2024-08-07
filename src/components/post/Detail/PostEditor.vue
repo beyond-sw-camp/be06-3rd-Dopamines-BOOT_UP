@@ -1,9 +1,8 @@
 <script setup>
-import { defineProps, onMounted, ref } from 'vue';
-import { useCommunityStore } from '@/pages/Community/stores/useCommunityStore';
+import { defineProps, onMounted, ref, defineEmits } from 'vue';
+// import { useCommunityStore } from '@/pages/Community/stores/useCommunityStore';
 import axios from "axios";
 import {loadScript} from "vue-plugin-load-script";
-
 
 const props = defineProps({
   postIndex: {
@@ -12,7 +11,9 @@ const props = defineProps({
   }
 })
 
-const communityStore = useCommunityStore();
+// const communityStore = useCommunityStore();
+
+const emit = defineEmits(['formData']);
 
 const freePostReq = ref({
   idx: 0,
@@ -65,75 +66,57 @@ onMounted(async () => {
       }
     }
   });
-
-  freePostReq.value.idx = 14;
+});
+  // freePostReq.value.idx = 14;
 
   // 게시물 세부 정보 가져오기
   // if (props.postIndex !== null && props.postIndex !== undefined) {
-  if(freePostReq.value.idx !== null && freePostReq.value.idx !== undefined){
-    await communityStore.getPostDetail(14); // props.postIdx로 바꿔야함
-    if (communityStore.postDetail) {
-      freePostReq.value.title = communityStore.postDetail.title;
-      freePostReq.value.content = communityStore.postDetail.content;
-      window.$("#summernote").summernote("code", freePostReq.value.content);
-    }
+  // if(freePostReq.value.idx !== null && freePostReq.value.idx !== undefined){
+  //   await communityStore.getPostDetail(14); // props.postIdx로 바꿔야함
+  //   if (communityStore.postDetail) {
+  //     freePostReq.value.title = communityStore.postDetail.title;
+  //     freePostReq.value.content = communityStore.postDetail.content;
+  //     window.$("#summernote").summernote("code", freePostReq.value.content);
+  //   }
     // if (!props.postIndex) {
     //   freePostReq.value.idx = 5; // 임시로 설정
     // }
-  }
-});
+  // }
+// });
 
 // send 함수
-const send = async () => {
+const create = async () => {
+  console.log(props.postIndex);
   console.log(window.$('#summernote').summernote('code'));
   freePostReq.value.content = window.$('#summernote').summernote('code');
   const formData = new FormData();
   const jsonBlob = new Blob([JSON.stringify(freePostReq.value)], { type: 'application/json' })
   formData.append('req', jsonBlob);
 
-  await axios.post("http://localhost:8080/free/post/create", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZHgiOjEsImVtYWlsIjoic3RhcmJpbjc3ODhAbmF2ZXIuY29tIiwicm9sZSI6IlJPTEVfVEVNUE9SQVJZX1VTRVIiLCJuaWNrbmFtZSI6IuydteuqhTEiLCJpYXQiOjE3MjI5MzA5NTcsImV4cCI6MTcyMjk0Mjk1N30.N4PGUmQKS2OXDPC0-zKeRG_JMYm3OUZVPktCaiFQk_4"
-    }
-  });
+  emit('formData', formData);
 };
 
 // update 함수
-const update = async () => {
-  freePostReq.value.content = window.$('#summernote').summernote('code');
-  // freePostReq.value.idx = props.postIndex;
-  console.log(props.postIndex);
-  freePostReq.value.idx = 14;
-  const formData = new FormData();
-  const jsonBlob = new Blob([JSON.stringify(freePostReq.value)], { type: 'application/json' });
-  formData.append('req', jsonBlob);
-
-  await axios.put(`http://localhost:8080/free/post/update`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZHgiOjEsImVtYWlsIjoic3RhcmJpbjc3ODhAbmF2ZXIuY29tIiwicm9sZSI6IlJPTEVfVEVNUE9SQVJZX1VTRVIiLCJuaWNrbmFtZSI6IuydteuqhTEiLCJpYXQiOjE3MjI5MzA5NTcsImV4cCI6MTcyMjk0Mjk1N30.N4PGUmQKS2OXDPC0-zKeRG_JMYm3OUZVPktCaiFQk_4"
-    },
-  });
-}
-
-const handleSubmit = () => {
-  // if (props.postIndex) {
-  //   update();
-  // } else {
-  //   send();
-  // }
-  if (freePostReq.value.idx) {
-    update();
-  } else {
-    send();
-  }
-}
+// const update = async () => {
+//   freePostReq.value.content = window.$('#summernote').summernote('code');
+//   // freePostReq.value.idx = props.postIndex;
+//   console.log(props.postIndex);
+//   freePostReq.value.idx = 14;
+//   const formData = new FormData();
+//   const jsonBlob = new Blob([JSON.stringify(freePostReq.value)], { type: 'application/json' });
+//   formData.append('req', jsonBlob);
+//
+//   emit('action', "update");
+//   emit('formData', formData);
+// }
 </script>
+
+
+
 
 <template>
   <div class="board-create-container">
-    <form @submit.prevent="handleSubmit">
+    <form @submit.prevent="create">
       <label for="title">제목:</label>
       <input type="text" id="title" name="title" v-model="freePostReq.title" required>
 

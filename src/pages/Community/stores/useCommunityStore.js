@@ -6,7 +6,7 @@ export const useCommunityStore = defineStore('community', {
     state: () => (
         {
             postDetail: { idx:0, title: "", content: "", author: "", imageUrlList: [], created_at: "", likeCount: 0, freeCommentList: []},
-
+            freePostReq: { idx:0, title: "", content: "", images: []}
         }
     ),
     actions: {

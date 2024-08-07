@@ -1,6 +1,6 @@
 <script setup>
 import { defineProps, onMounted, ref, defineEmits } from 'vue';
-// import { useCommunityStore } from '@/pages/Community/stores/useCommunityStore';
+import { useCommunityStore } from '@/pages/Community/stores/useCommunityStore';
 import axios from "axios";
 import {loadScript} from "vue-plugin-load-script";
 
@@ -11,16 +11,11 @@ const props = defineProps({
   }
 })
 
-// const communityStore = useCommunityStore();
+const communityStore = useCommunityStore();
 
 const emit = defineEmits(['formData']);
 
-const freePostReq = ref({
-  idx: 0,
-  title: "",
-  content: "",
-  images: []
-});
+const freePostReq = ref(communityStore.freePostReq);
 
 onMounted(async () => {
   await loadScript("https://code.jquery.com/jquery-3.6.0.min.js");

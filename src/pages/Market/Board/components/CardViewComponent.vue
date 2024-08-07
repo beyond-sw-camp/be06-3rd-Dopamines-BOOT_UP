@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a :href="`detail/${product.idx}`" class="card-container">
+    <a :href="`market/detail/${product.idx}`" class="card-container">
       <div class="card-wrapper group">
         <img
           alt=""

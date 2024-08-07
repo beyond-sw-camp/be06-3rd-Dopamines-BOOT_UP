@@ -45,7 +45,7 @@ const router = createRouter({
 
         // Market Board
         { path: '/market', component: () => import('../pages/Market/Board/MarketListPage.vue') },
-        { path: '/market/detail/:id', component: () => import('../pages/Market/Board/MarketDetailPage.vue') },
+        { path: '/market/detail/:idx', component: () => import('../pages/Market/Board/MarketDetailPage.vue') },
         { path: '/market/write', component: () => import('../pages/Market/Board/MarketWritePage.vue') },
         // Market Chat
         { path: '/market/chat', component: () => import('../pages/Market/Chat/MarketChatPage.vue') },

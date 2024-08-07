@@ -1,27 +1,23 @@
-import {defineStore} from "pinia";
+import { defineStore } from "pinia";
 import axios from "axios";
 
-const useProjectStore = defineStore("project", {
-  state: () => ({
-      idx: 1,
-      title: "",
-      contents: "",
-      courseNum: 0,
-      sourceUrl: "",
-      team: "",
-  }),
+export const useProjectStore = defineStore("project", {
+    state: () => (
+          {
+              projectList: { idx: 0, title: "", contents: "", courseNum: "", gitUrl: "", sourceUrl: "", teamName: "", students: [] }
+
+          }
+    ),
     actions: {
-        async getProjectDetail(){
+        async getProjectList() {
             const response = await axios.get(
-                "http://192.168.0.50:8080/project/read-all"
+                `api/project/read-all`
             )
-            this.idx = response.data.idx;
-            this.title = response.data.title;
-            this.contents = response.data.contents;
-            this.courseNum = response.data.courseNum;
-            this.sourceUrl = response.data.sourceUrl;
-            this.team = response.data.team;
+
+            console.log(response);
+            this.projectList = response.data.result;
+
+            return this.projectList;
         }
     }
 });
-export default useProjectStore;

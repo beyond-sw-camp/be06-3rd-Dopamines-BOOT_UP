@@ -13,7 +13,7 @@ export const useCommunityStore = defineStore('community', {
     actions: {
         async getPostDetail(idx) {
             const response = await axios.get(
-                `http://localhost:8080/free/post/read?idx=${idx}`,{ // 쿠키 포함
+                `api/free/post/read?idx=${idx}`,{ // 쿠키 포함
                     headers: {
                         // 'Content-Type': 'multipart/form-data',
                         'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZHgiOjIwLCJlbWFpbCI6IuyEnOyLnO2YhEB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6IuyEnOyLnO2YhCIsImlhdCI6MTcyMjk5Mzg1OSwiZXhwIjoxNzIzMDA1ODU5fQ.g2SOJkzMw5iVLOTVtXUxILaS6x0GLaBvxphLGDq-mgk'
@@ -29,7 +29,7 @@ export const useCommunityStore = defineStore('community', {
         async createPost(formData) {
             try{
                 const response = await axios.post(
-                    `http://localhost:8080/free/post/create`, formData, {
+                    `api/free/post/create`, formData, {
                         headers: {
                             "Content-Type": "multipart/form-data",
                             "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZHgiOjIwLCJlbWFpbCI6IuyEnOyLnO2YhEB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6IuyEnOyLnO2YhCIsImlhdCI6MTcyMjk5Mzg1OSwiZXhwIjoxNzIzMDA1ODU5fQ.g2SOJkzMw5iVLOTVtXUxILaS6x0GLaBvxphLGDq-mgk"
@@ -50,7 +50,7 @@ export const useCommunityStore = defineStore('community', {
 
         async updatePost(formData) {
             const response = await axios.put(
-                `http://localhost:8080/free/post/update`, formData, {
+                `api/free/post/update`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZHgiOjEsImVtYWlsIjoic3RhcmJpbjc3ODhAbmF2ZXIuY29tIiwicm9sZSI6IlJPTEVfVEVNUE9SQVJZX1VTRVIiLCJuaWNrbmFtZSI6IuydteuqhTEiLCJpYXQiOjE3MjI5MzA5NTcsImV4cCI6MTcyMjk0Mjk1N30.N4PGUmQKS2OXDPC0-zKeRG_JMYm3OUZVPktCaiFQk_4"

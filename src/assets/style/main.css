@@ -39,7 +39,6 @@ header{
 }
 
 main{
-  align-items: center;
   height: auto !important;
   display: flex;
   justify-content: center;

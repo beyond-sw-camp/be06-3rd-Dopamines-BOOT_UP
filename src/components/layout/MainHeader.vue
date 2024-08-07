@@ -6,8 +6,20 @@ const searchInput = ref('');
 const router = useRouter();
 
 const handleSearch = () => {
-  router.push({path: '/search', query: { q : searchInput.value}});
+  router.push({ path: '/search', query: { q: searchInput.value } });
 };
+
+router.afterEach(() => {
+  const nav = document.querySelector('.category');
+  const navItems = nav.querySelectorAll('li');
+  navItems.forEach((item) => {
+    if (item.querySelector('a').href === window.location.href) {
+      item.classList.add('nav-on');
+    } else {
+      item.classList.remove('nav-on');
+    }
+  });
+});
 </script>
 
 <template>
@@ -17,7 +29,7 @@ const handleSearch = () => {
         <div class="logo-area">
           <div class="logo">
             <a href="/">
-              <img src="../../assets/img/pepecolor.jpeg" height="28px">
+              <img src="@/assets/img/main-logo.png" height="28px">
             </a>
           </div>
         </div>
@@ -146,13 +158,18 @@ nav{
       align-items: center;
       display: flex;
       position: relative;
-      padding: 0 20px;
-      &:hover{
-        background-color: rgba(224, 97, 57, 0.8);
-        border-radius: 5px;
-        router-link{
+      transition: all 0.5s;
+      a{
+        padding: 0 10px;
+        transition: all 0.5s;
+        &:hover{
           color: #fff;
         }
+      }
+      &:hover, .nav-on{
+        background-color: rgba(224, 97, 57, 0.8);
+        border-radius: 5px;
+        margin: 0 10px;
       }
     }
   }

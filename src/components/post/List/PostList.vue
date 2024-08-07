@@ -78,14 +78,13 @@ defineProps({
   width: 100%;
   box-sizing: border-box;
   align-items: center;
-  a {
+  box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
+  span {
     align-items: center;
     display: flex;
     height: 100%;
-    span {
-      font-weight: 700;
-      font-size: 18px;
-    }
+    font-weight: 700;
+    font-size: 20px;
   }
 }
 

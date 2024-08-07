@@ -1,21 +1,57 @@
 <script setup>
+import { ref, onMounted } from 'vue';
+import PostList from "@/components/post/List/PostList.vue";
+import MainHeader from "@/components/layout/MainHeader.vue";
+import MainFooter from "@/components/layout/MainFooter.vue";
+import { useFreePostStore } from "@/pages/Community/FreeBoard/stores/useFreePostStore";
+import PaginationComponent from "@/components/layout/PaginationComponent.vue";
 
+const freePostStore = useFreePostStore();
+
+const freePosts = ref([]);
+
+onMounted(async () => {
+  await freePostStore.readAllPosts(0, 10);
+  freePosts.value = freePostStore.posts;
+});
+
+const onPageChanged = async (page) => {
+  await freePostStore.readAllPosts(page - 1, 10);
+  freePosts.value = freePostStore.posts;
+};
 </script>
 
 <template>
-  <div>
-    <h1>자유게시판 리스트 페이지</h1>
-    <ul>
-      <li>
-        <div class="list-item">
-          <h3>리스트 제목</h3>
-          <p>리스트 설명</p>
-        </div>
-      </li>
-    </ul>
+  <div class="body-container">
+    <MainHeader></MainHeader>
+    <main>
+      <div class="main-container">
+        <PostList
+            :posts="freePosts" title="자유 게시판" :data-list="freePosts" >
+        </PostList>
+        <PaginationComponent
+            :totalItems="freePosts.length"
+            :itemsPerPage="10"
+            :currentPage="1"
+            @page-changed="onPageChanged"
+        />
+      </div>
+    </main>
+    <MainFooter></MainFooter>
   </div>
 </template>
 
 <style scoped>
+.body-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
 
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
 </style>

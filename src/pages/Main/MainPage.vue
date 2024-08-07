@@ -2,21 +2,38 @@
 import PostList from "@/components/post/List/PostList.vue";
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
+import { useFreePostStore } from "@/pages/Community/FreeBoard/stores/useFreePostStore";
+import { useOpenPostStore } from "@/pages/Community/OpenBoard/stores/useOpenPostStore";
+import { onMounted, ref } from "vue";
+
+const freeStore = useFreePostStore();
+const openStore = useOpenPostStore();
+const isDataLoaded = ref(false);
+
+onMounted(async () => {
+  try {
+    await freeStore.readAllPosts(1, 10);
+    await openStore.readAllPosts(1, 10);
+    isDataLoaded.value = true;
+  } catch (error) {
+    console.error("Error loading posts:", error);
+  }
+});
 </script>
 
 <template>
   <div class="body-container">
     <MainHeader></MainHeader>
-    <main>
+    <main style="margin-top: 115px !important;">
       <div class="main-container">
         <div class="banner-area">
           <div class="banner">
-            <img src="../../assets/img/pepecolor.jpeg" height="100%">
+            <img src="@/assets/img/main-banner.png" alt="">
           </div>
         </div>
         <div class="content-area">
-          <PostList title="자유 게시판"></PostList>
-          <PostList title="공개 게시판"></PostList>
+          <PostList :dataList="freeStore.posts" title="자유 게시판"></PostList>
+          <PostList :dataList="openStore.posts" title="공개 게시판"></PostList>
         </div>
       </div>
     </main>
@@ -25,24 +42,27 @@ import MainFooter from "@/components/layout/MainFooter.vue";
 </template>
 
 <style scoped>
-.banner-area{
+.banner-area {
   position: relative;
-  /* max-width: 1200px; */
   width: 100%;
   margin: 0px auto;
-  height: 300px;
-  box-shadow: 2px 2px 10px 0px rgb(0 0 0 / 10%);
-  background-color: #e06039e0;
-  .banner{
+  box-shadow: 3px 3px 10px 0px rgb(0 0 0 / 30%);
+  //margin-top: -150px;
+
+  .banner {
     width: 100%;
     height: 100%;
     border-radius: 10px;
     display: flex;
     justify-content: center;
+    img{
+      width: 1000px;
+      height: 100%;
+    }
   }
 }
 
-.content-area{
+.content-area {
   display: flex;
   column-gap: 2.5rem;
   margin-top: 2rem;

@@ -30,6 +30,9 @@ export default {
 </script>
 
 <style scoped>
+.join-top{
+  width: 100%;
+}
 .signup-title {
   font-size: 40px;
   line-height: 60px;

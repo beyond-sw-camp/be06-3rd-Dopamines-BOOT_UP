@@ -5,11 +5,9 @@
     </div>
     <h2 class="signup-title">Beyond Software에 오신것을 환영합니다.</h2>
     <div class="content-container">
-      <!-- Todo : div 값이 깨짐 -->
       <div class="social-signup-container">
-        <span class="social-design">SNS 회원가입
-          <SocialLoginBtn></SocialLoginBtn>
-        </span>
+        <span class="social-design">SNS 회원가입</span>
+        <SocialLoginBtn></SocialLoginBtn>
       </div>
       <div class="signup-description">
         <span>회원가입에 필요한 기본정보를 입력해주세요.</span>
@@ -107,12 +105,14 @@
         </Form>
         </div>
       </div>
- 
+
       <!-- v-if 로 활성화 및 색깔-->
       <div @click="signup">
-        <SubmitBtn :isDisabled="isDisabled" text="회원가입"></SubmitBtn>  <!--자식 컴포넌트한테 emit 으로 이벤트 전달받기-->
+        <SubmitBtn :isDisabled="isDisabled" text="회원가입" handle-submit=""></SubmitBtn>  <!--자식 컴포넌트한테 emit 으로 이벤트 전달받기-->
       </div>
-      <p class="lead-login-url-text"><span>이미 회원이신가요?</span><a class="lead-login-url" href="https://okky.kr/login">로그인</a></p>
+      <p class="lead-login-url-text"><span>이미 회원이신가요?</span>
+        <router-link to="/login" class="lead-login-url">로그인</router-link>
+      </p>
   </div>
 </template>
 
@@ -218,7 +218,7 @@ export default {
     verify(){
       try{
         const userStore = useUserStore();
-        
+
         userStore.emailVerify(this.email,this.uuid)
         .then(rs => {
             console.log("넘어온 result: " + rs);
@@ -238,7 +238,7 @@ export default {
       if(!this.isDisabled){
         const userStore = useUserStore();
         userStore.signup(this.email, this.password, this.nickname, this.name, this.phoneNumber,this.address);
-        this.$router.push('success');
+        this.$router.push('/info');
       }
     }
   }
@@ -292,13 +292,37 @@ export default {
 }
 .email-input-wrapper{
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap:10px
 }
 .email-input{
   width: calc(100% - 150px);
 }
+.email-verify-wrapper{
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.email-verify-input{
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  input{
+    margin-bottom: 0;
+  }
+  button{
+    margin-bottom: 0;
+  }
+}
+.email-alert{
+  background-color: rgba(224, 97, 57, 0.1);
+  color: #e06139;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+}
 .email-check-input{
-  height: 20px;
   border-radius: 5px;
   border-color: hsla(220, 9%, 46%, .3);
 }

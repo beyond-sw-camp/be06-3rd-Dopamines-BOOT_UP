@@ -1,5 +1,5 @@
-import { defineStore } from "pinia";
-import axios from '../../../config/axiosConfig';
+import { defineStore } from "pinia"
+import axios from "axios";
 import Cookies from 'js-cookie';
 
 const backend = "http://localhost:8080";
@@ -103,22 +103,13 @@ export const useUserStore = defineStore("user", {
                         return false;
                     }
                     return true;
+                } else{
+                    console.log("이메일 인증 실패");
+                    return false;
                 }
-            } catch (error) {
-                console.error("로그인 실패", error);
-                return false;
+            } catch(error){
+                console.log(" error ", error);
             }
         },
-        logout() {
-            this.isLoggedIn = false;
-            Cookies.remove('jwt');
-        },
-        initialize() {
-            const token = Cookies.get('jwt');
-            if (token) {
-                this.isLoggedIn = true;
-            }
-        },
-    },
-    persist: true
-});
+    }
+})

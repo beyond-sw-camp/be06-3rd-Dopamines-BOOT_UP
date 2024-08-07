@@ -5,11 +5,9 @@
     </div>
     <h2 class="signup-title">Beyond Software에 오신것을 환영합니다.</h2>
     <div class="content-container">
-      <!-- Todo : div 값이 깨짐 -->
       <div class="social-signup-container">
-        <span class="social-design">SNS 회원가입
-          <SocialLoginBtn></SocialLoginBtn>
-        </span>
+        <span class="social-design">SNS 회원가입</span>
+        <SocialLoginBtn></SocialLoginBtn>
       </div>
       <div class="signup-description">
         <span>회원가입에 필요한 기본정보를 입력해주세요.</span>
@@ -23,22 +21,27 @@
               <div class="signup-wrapper-distance">
                 <div class="email-input-wrapper">
                   <!-- Todo : disabled되면 색깔 변하게-->
-                  <input
-                    id="email-address"
-                    :disabled="disabledButton"
-                    v-model="email"
-                    type="email"
-                    autocomplete="email"
-                    required
-                    class="signup-input-box signup-input-text email-input"
-                    placeholder="munchkin@okky.kr"
-                    name="email"
-                  />        
-                  <ErrorMessage name="email" />          
-            <button  @click="authenticate" :disabled="disabledButton" :class="{'email-check-btn': true, 'authentication-btn-disabled': disabledButton}">인증하기</button>
-                </div>
-                <div v-if="showInput">
-                  <input type="text" name="emailCheck" :disabled="disabledButton" v-model="uuid" class="email-check-input"> <button @click="verify" :disabled="disabledButton" :class="{'email-check-btn': true, 'authentication-btn-disabled': disabledButton}"> 확인하기 </button>
+                  <div style="display: flex; justify-content: space-between">
+                    <input
+                        id="email-address"
+                        :disabled="disabledButton"
+                        v-model="email"
+                        type="email"
+                        autocomplete="email"
+                        required
+                        class="signup-input-box signup-input-text email-input"
+                        placeholder="munchkin@okky.kr"
+                        name="email"
+                    />
+                    <button  @click="authenticate" :disabled="disabledButton" :class="{'email-check-btn': true, 'authentication-btn-disabled': disabledButton}">인증하기</button>
+                  </div>
+                  <div class="email-verify-wrapper">
+                    <ErrorMessage name="email" class="email-alert"/>
+                    <div v-if="showInput" class="email-verify-input">
+                      <input type="text" name="emailCheck" :disabled="disabledButton" v-model="uuid" class="email-check-input signup-input-box">
+                      <button @click="verify" :disabled="disabledButton" :class="{'email-check-btn': true, 'authentication-btn-disabled': disabledButton}"> 확인하기 </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -74,10 +77,10 @@
           </div>
         </div>
       </div>
- 
+
       <!-- v-if 로 활성화 및 색깔-->
       <div @click="signup">
-        <SubmitBtn :isDisabled="isDisabled" text="회원가입"></SubmitBtn>  <!--자식 컴포넌트한테 emit 으로 이벤트 전달받기-->
+        <SubmitBtn :isDisabled="isDisabled" text="회원가입" handle-submit=""></SubmitBtn>  <!--자식 컴포넌트한테 emit 으로 이벤트 전달받기-->
       </div>
       <p class="lead-login-url-text"><span>이미 회원이신가요?</span>
         <router-link to="/login" class="lead-login-url">로그인</router-link>
@@ -161,7 +164,7 @@ export default {
     verify(){
       try{
         const userStore = useUserStore();
-        
+
         userStore.emailVerify(this.email,this.uuid)
         .then(rs => {
             console.log("넘어온 result: " + rs);
@@ -235,13 +238,37 @@ export default {
 }
 .email-input-wrapper{
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap:10px
 }
 .email-input{
   width: calc(100% - 150px);
 }
+.email-verify-wrapper{
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.email-verify-input{
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  input{
+    margin-bottom: 0;
+  }
+  button{
+    margin-bottom: 0;
+  }
+}
+.email-alert{
+  background-color: rgba(224, 97, 57, 0.1);
+  color: #e06139;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+}
 .email-check-input{
-  height: 20px;
   border-radius: 5px;
   border-color: hsla(220, 9%, 46%, .3);
 }

@@ -18,6 +18,7 @@ export default {
 <style scoped>
 .social-button-wrapper {
   margin-top: 5px;
+  width: 100%;
 }
 
 .social-button {

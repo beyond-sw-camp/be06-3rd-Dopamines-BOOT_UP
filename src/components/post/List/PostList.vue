@@ -1,23 +1,31 @@
 <script setup>
 import { defineProps } from 'vue';
 
-const props = defineProps({
+defineProps({
   title: {
     type: String,
     required: true
+  },
+  dataList: {
+    type: Array,
+    required: true
+  },
+  showStatus: {
+    type: Boolean,
+    default: true
   }
 });
 </script>
 
 <template>
-  <div>
+  <div class="post-list-container">
     <div class="title">
-      <span>{{ props.title }}</span>
+      <span>{{ title }}</span>
     </div>
     <div>
       <div class="content">
         <ul class="board-list">
-          <li class="board-list-wrap" v-for="post in props.dataList" :key="post.id">
+          <li class="board-list-wrap" v-for="post in dataList" :key="post.id">
             <div class="board-post-status-header">
               <div class="board-post-status-left">
                 <div class="board-post-author">
@@ -27,7 +35,7 @@ const props = defineProps({
                   <span>{{ post.createdAt }}</span>
                 </div>
               </div>
-              <div class="board-post-status-right">
+              <div class="board-post-status-right" v-if="showStatus">
                 <div class="board-post-right-detail">
                   <img src="../../../assets/icon/thumbIcon.svg" alt="Icon" width="20px">
                   <span class="board-post-right-detail-text">{{ post.likeCount }}</span>
@@ -55,6 +63,9 @@ const props = defineProps({
   --text-color: #19191A;
   --secondary-color: #19191ab7;
   --text-muted-color: #19191a92;
+}
+.post-list-container{
+  width: 100%;
 }
 
 .title {

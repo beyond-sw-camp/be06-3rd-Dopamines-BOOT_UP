@@ -1,15 +1,11 @@
-<template>
-  <!-- todo -> v-if 적용-->
-   <!-- 부모 컴포넌트에게 클릭 이벤트 전달 -->
-  <button :disabled="isDisabled" :class="{'submit-btn-primary': !isDisabled, 'submit-btn-disabled': isDisabled}" @click="handleSubmit">
-    <strong>회원가입</strong>
-  </button>
-</template>
-
 <script>
 export default {
   name:"SubmitBtnComponent",
   props:{
+    text:{
+      type: String,
+      required: true
+    },
     isDisabled: {
       type: Boolean,
       required: true
@@ -21,6 +17,14 @@ export default {
   }
 }
 </script>
+
+<template>
+  <!-- todo -> v-if 적용-->
+   <!-- 부모 컴포넌트에게 클릭 이벤트 전달 -->
+  <button :disabled="isDisabled" :class="{'submit-btn-primary': !isDisabled, 'submit-btn-disabled': isDisabled}" @click="handleSubmit">
+    <strong>{{ text }}</strong>
+  </button>
+</template>
 
 <style scoped>
 .submit-btn-primary{

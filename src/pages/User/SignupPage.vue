@@ -3,7 +3,6 @@ import MainHeader from "@/components/layout/MainHeader.vue";
 import { mapStores } from "pinia";
 import { useUserStore } from './stores/useUserStore';
 import UserInfoComponent from "@/pages/User/component/UserInfoComponent.vue";
-
 export default {
   name: "SignupPage",
   components:{

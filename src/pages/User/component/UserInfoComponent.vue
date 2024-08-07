@@ -18,60 +18,93 @@
 
       <div>
         <div class="signup-wrapper">
-          <Form :validation-schema="schema" class="signup-form" @submit="inputCheck">
+          <Form :validation-schema="schema" class="signup-form">
             <div><label for="email-address" class="signup-wrapper-text">이메일 </label>
               <div class="signup-wrapper-distance">
                 <div class="email-input-wrapper">
                   <!-- Todo : disabled되면 색깔 변하게-->
-                  <input
+                  <Field
                     id="email-address"
                     :disabled="disabledButton"
                     v-model="email"
-                    type="email"
-                    autocomplete="email"
-                    required
+                    name="email"  
+
                     class="signup-input-box signup-input-text email-input"
-                    placeholder="munchkin@okky.kr"
-                    name="email"
-                  />        
-                  <ErrorMessage name="email" />          
-            <button  @click="authenticate" :disabled="disabledButton" :class="{'email-check-btn': true, 'authentication-btn-disabled': disabledButton}">인증하기</button>
+                    placeholder="이메일@test.com"
+                  />       
+
+                  <button @click="authenticate" 
+                    :disabled="disabledButton" 
+                    :class="{'email-check-btn': true, 'authentication-btn-disabled': disabledButton}">인증하기
+                  </button>
                 </div>
+              <div><ErrorMessage name="email" /></div>   
+
                 <div v-if="showInput">
-                  <input type="text" name="emailCheck" :disabled="disabledButton" v-model="uuid" class="email-check-input"> <button @click="verify" :disabled="disabledButton" :class="{'email-check-btn': true, 'authentication-btn-disabled': disabledButton}"> 확인하기 </button>
+                  <Field type="text" name="emailCheck" :disabled="disabledButton" v-model="uuid" class="email-check-input" /> 
+                    <button @click="verify" 
+                      :disabled="disabledButton" 
+                      :class="{'email-check-btn': true, 'authentication-btn-disabled': disabledButton}"> 확인하기 
+                    </button>
                 </div>
               </div>
             </div>
-          </Form>
+  
           <div><label for="password" class="signup-wrapper-text">비밀번호</label>
             <div class="signup-wrapper-distance">
-              <Field id="password" v-model="password" type="password" autocomplete="current-password" required="" class="signup-input-box signup-input-text" placeholder="최소 6자 이상(알파벳, 숫자 필수)" name="password"></Field></div>
+              <Field id="password" name="password" v-model="password" type="password" autocomplete="current-password" required="" class="signup-input-box signup-input-text" placeholder="최소 6자 이상(알파벳, 숫자 필수)" ></Field></div>
+          </div>
+          <div><ErrorMessage name="password" /></div>   
+
+  
+          <div><label for="passwordConfirm" class="signup-wrapper-text">비밀번호 확인</label>
+            <div class="signup-wrapper-distance">
+              <Field id="passwordConfirm" name="passwordConfirm" v-model="passwordConfirm" type="password" autocomplete="current-password" required="" class="signup-input-box signup-input-text" placeholder="최소 6자 이상(알파벳, 숫자 필수)" ></Field></div>
           </div>
 
-          <div><label for="passwordCheck" class="signup-wrapper-text">비밀번호 확인</label>
-            <div class="signup-wrapper-distance">
-              <Field id="passwordCheck" v-model="passwordCheck" type="password" autocomplete="current-password" required="" class="signup-input-box signup-input-text" placeholder="최소 6자 이상(알파벳, 숫자 필수)" name="password"></Field></div>
-          </div>
+          <div><ErrorMessage name="passwordConfirm" /></div>   
+      
 
           <div><label for="fullName" class="signup-wrapper-text">실명</label>
             <div class="signup-wrapper-distance">
-              <Field id="fullName" v-model="name" type="text" required="" class="signup-input-box signup-input-text" placeholder="홍길동" name="fullName"></Field></div>
+              <Field id="fullName" name="name" v-model="name" type="text" required="" class="signup-input-box signup-input-text" placeholder="홍길동" ></Field></div>
           </div>
+          <div><ErrorMessage name="name" /></div>   
 
           <div><label for="nickname" class="signup-wrapper-text">닉네임</label>
             <div class="signup-wrapper-distance">
-              <Field id="nickname" v-model="nickname" type="text" required="" class="signup-input-box signup-input-text" placeholder="별명을 알파벳, 한글, 숫자를 20자 이하로 입력해주세요." name="nickname"></Field></div>
+              <Field id="nickname" name="nickname" v-model="nickname" type="text" required="" class="signup-input-box signup-input-text" placeholder="별명을 알파벳, 한글, 숫자를 20자 이하로 입력해주세요."></Field></div>
           </div>
+          <div><ErrorMessage name="nickname" /></div>   
 
           <div><label for="phoneNumber" class="signup-wrapper-text">휴대폰 번호</label>
             <div class="signup-wrapper-distance">
-              <Field id="phoneNumber" v-model="phoneNumber" type="text" required="" class="signup-input-box signup-input-text" placeholder="4~15자 이내로 입력해주세요" name="id"></Field></div>
+              <Field id="phoneNumber" 
+                v-model="phoneNumber" 
+                type="text" 
+                required="" 
+                class="signup-input-box signup-input-text" 
+                placeholder="4~15자 이내로 입력해주세요" 
+                name="phoneNumber">
+              </Field>
+            </div>
           </div>
+          <div><ErrorMessage name="phoneNumber" /></div>
 
           <div><label for="address" class="signup-wrapper-text">주소</label>
             <div class="signup-wrapper-distance">
-              <Field id="address" v-model="address" type="text" required="" class="signup-input-box signup-input-text" placeholder="4~15자 이내로 입력해주세요" name="id"></Field></div>
+              <Field id="address" 
+                v-model="address" 
+                type="text" 
+                required="" 
+                class="signup-input-box signup-input-text" 
+                placeholder="4~15자 이내로 입력해주세요" 
+                name="address">
+              </Field>
+            </div>
           </div>
+          <div><ErrorMessage name="address" /></div>
+        </Form>
         </div>
       </div>
  
@@ -92,6 +125,8 @@ import { useUserStore } from '../stores/useUserStore';
 import { Field,Form,ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
 
+var phoneRegExp = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/
+
 export default {
   name: "UserInfoComponent",
   components : {
@@ -107,7 +142,7 @@ export default {
       email:"",
       emailCheck:"",
       password: "",
-      passwordCheck: "",
+      passwordConfirm: "",
       name: "",
       nickname: "",
       phoneNumber: "",
@@ -120,21 +155,37 @@ export default {
       showInput: false,
       isDisabled : true,
 
+
       schema : yup.object({
         email: yup.string().email('유효한 이메일을 입력해주세요').required('이메일은 필수입니다'),
         password: yup.string().min(6, '비밀번호는 최소 6자 이상이어야 합니다').required('비밀번호는 필수입니다'),
-        passwordCheck: yup.string()
-          .oneOf([yup.ref('password'), null], '비밀번호가 일치하지 않습니다')
-          .required('비밀번호 확인은 필수입니다'),
+        passwordConfirm: yup.string().oneOf([yup.ref('password'), null], '비밀번호가 일치하지 않습니다.').required('비밀번호 확인은 필수입니다'),
         name: yup.string().required('실명은 필수입니다'),
         nickname: yup.string().max(20, '닉네임은 20자 이내로 입력해주세요').required('닉네임은 필수입니다'),
-        phoneNumber: yup.string().min(4, '휴대폰 번호는 4자 이상이어야 합니다').max(15, '휴대폰 번호는 15자 이내여야 합니다').required('휴대폰 번호는 필수입니다'),
-        address: yup.string().min(4, '주소는 4자 이상이어야 합니다').max(15, '주소는 15자 이내여야 합니다').required('주소는 필수입니다'),
+        phoneNumber: yup.string().matches(phoneRegExp, 'xxx-xxxx-xxxx 의 형식을 지켜주세요'),
+        address: yup.string().required('주소는 필수입니다'),
       })
     };
   },
   updated() {
     this.inputCheck();
+  },
+  watch: {
+    password() {
+      this.inputCheck();
+    },
+    passwordConfirm() {
+      this.inputCheck();
+    },
+    nickname() {
+      this.inputCheck();
+    },
+    phoneNumber() {
+      this.inputCheck();
+    },
+    address() {
+      this.inputCheck();
+    },
   },
 
   setup(){
@@ -142,7 +193,15 @@ export default {
 
   methods: {
     inputCheck(){
-      if (this.email && this.disabledButton && this.password && this.passwordCheck &&this.name && this.nickname && this.phoneNumber && this.address) {
+      // console.log(this.email);
+      // console.log(this.disabledButton);
+      // console.log(this.password);
+      // console.log(this.passwordConfirm);
+      // console.log(this.name);
+      // console.log(this.nickname);
+      // console.log(this.phoneNumber);
+      // console.log(this.address);
+      if (this.email && this.disabledButton && this.password && this.passwordConfirm &&this.name && this.nickname && this.phoneNumber && this.address) {
         this.isDisabled = false;
       }
     },

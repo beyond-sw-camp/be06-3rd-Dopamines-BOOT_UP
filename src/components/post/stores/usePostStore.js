@@ -26,7 +26,7 @@ export const usePostStore = defineStore("post", {
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZHgiOjIxLCJlbWFpbCI6IuycoOyGoeyXsEB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6IuycoOyGoeyXsCIsImlhdCI6MTcyMjkzMDc0OSwiZXhwIjoxNzIyOTQyNzQ5fQ.JhBcaVlZPPZ0R-wi8jvU5ue5i6C1Qwcp45tZGSGOxuE'
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZHgiOjIxLCJlbWFpbCI6IuycoOyGoeyXsEB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6IuycoOyGoeyXsCIsImlhdCI6MTcyMjk0Mjg3MSwiZXhwIjoxNzIyOTU0ODcxfQ.8x8nxjLmjHDhQErZNev7s4wC9ewKfJ5RXOJZ261b51Q'
 
                 }
             };

@@ -10,7 +10,7 @@ export const useReservationStore = defineStore('reservation', {
     actions: {
         async getReservationDetail() {
             const response = await axios.get(
-                `api/reservation/reservation-list`,{ // 쿠키 포함
+                `api/reservation/reservation-list?`,{ // 쿠키 포함
                     withCredentials: true
                 }
             );

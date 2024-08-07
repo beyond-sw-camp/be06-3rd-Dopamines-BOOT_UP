@@ -1,13 +1,32 @@
 <script setup>
-import { onMounted } from "vue";
-import { useProjectStore } from "@/pages/Project/store/useProjectStore";
+import { ref, onMounted } from "vue";
 import ProjectCardItem from "@/pages/Project/component/ProjectCardItem.vue";
 
-const projectStore = useProjectStore();
-const { projectDataList, readAllPosts } = projectStore;
+const projectDataList = ref([
+  {
+    id: 1,
+    projectTitle: "Project 1",
+    projectDescription: "Description for Project 1",
+    courseNum: 1,
+    gitUrl: "https://github.com/project1",
+    sourceUrl: "https://source.com/project1",
+    teamName: "Team 1",
+    nameList: ["Student A", "Student B"]
+  },
+  {
+    id: 2,
+    projectTitle: "Project 2",
+    projectDescription: "Description for Project 2",
+    courseNum: 2,
+    gitUrl: "https://github.com/project2",
+    sourceUrl: "https://source.com/project2",
+    teamName: "Team 2",
+    nameList: ["Student C", "Student D"]
+  }
+]);
 
 onMounted(() => {
-  readAllPosts( 1, 10 );
+  // Simulate fetching data
 });
 </script>
 

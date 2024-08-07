@@ -7,11 +7,20 @@ const props = defineProps({
   comments: {
     type: Array,
     required: true
+  },
+  commentCount: {
+    type: Number,
+    required: true
+  },
+  likeCount: {
+    type: Number,
+    required: true
   }
 });
 
-const emit = defineEmits(['update:comments']);
+const emit = defineEmits(['update:comments', 'update:likeCount']);
 const localComments = ref([...props.comments]);
+const localLikeCount = ref(props.likeCount);
 
 watch(() => props.comments, (newComments) => {
   localComments.value = [...newComments];
@@ -21,18 +30,42 @@ function commentSubmit(comment) {
   localComments.value.push(comment);
   emit('update:comments', localComments.value);
 }
+
+function postLike() {
+  const likeIcon = document.querySelector('.btn-like img');
+  let isLiked = likeIcon.src.includes('filled_marked.svg');
+  if (isLiked) {
+    likeIcon.src = '@/assets/icon/empty_marked.svg';
+    localLikeCount.value -= 1;
+  } else {
+    likeIcon.src = '@/assets/icon/filled_marked.svg';
+    localLikeCount.value += 1;
+  }
+  emit('update:likeCount', localLikeCount.value);
+}
 </script>
 
 <template>
   <div>
-    <CommentInput @comment-submit="commentSubmit"></CommentInput>
+    <div>
+      <div class="post-wrapper-bottom">
+        <h2 id="notes-title" class="post-count-text">{{ props.commentCount }}개의 답변</h2>
+        <div class="like-wrap">
+          <button class="btn-like" @click="postLike">
+            <img src="@/assets/icon/empty_marked.svg" alt="like icon">
+          </button>
+          <h2 class="post-count-text">{{ localLikeCount }}개의 좋아요</h2>
+        </div>
+      </div>
+    </div>
+    <CommentInput @comment-submit="commentSubmit" comment-submit=""></CommentInput>
     <div>
       <div class="comment-view-container">
         <div class="top-line"></div>
         <div class="comment-view-wrapper">
           <ul class="comment-view-detail-container">
             <li v-for="(comment, index) in localComments" :key="index" :id="'answer-' + index">
-              <CommentView v-bind="comment"></CommentView>
+              <CommentView v-bind="comment" author="" comment="" create-at=""></CommentView>
             </li>
           </ul>
         </div>
@@ -43,4 +76,21 @@ function commentSubmit(comment) {
 </template>
 
 <style scoped>
+.post-wrapper-bottom {
+  border-top-width: 1px;
+  border-color: hsla(220, 9%, 46%, .3);
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-count-text {
+  font-size: 17px;
+}
+
+.like-wrap {
+  display: flex;
+  gap: 5px;
+}
 </style>

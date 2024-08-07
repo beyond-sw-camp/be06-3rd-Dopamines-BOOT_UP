@@ -82,22 +82,18 @@ const props = defineProps({
 <!--                글자 넘침 시 해결 필요-->
                 <div class="post-content">{{ props.postContents }}</div>
               </div>
+              <div class="post-edit-wrap">
+<!--                TODO v-show="userIdx" 확인 로직 추가-->
+                <router-link to="/community/free/edit/{{props.postIdx}}" class="post-edit">수정하기</router-link>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="">
-      <div>
-        <div class="post-wrapper-bottom"></div>
-        <h2 id="notes-title" class="post-comment-count">{{ props.commentCount }}개의 답변</h2>
-      </div>
-    </div>
   </div>
   </div>
 </template>
-
-
 
 <style scoped>
 .post-container{
@@ -177,12 +173,16 @@ const props = defineProps({
   background-color: #fff;
   border-radius: 5px;
 }
-.post-wrapper-bottom{
-  border-top-width: 1px;
-  border-color: hsla(220, 9%, 46%, .3);
-  margin-bottom: 40px;
+.post-edit-wrap{
+  display: flex;
+  justify-content: flex-end;
 }
-.post-comment-count{
-  font-size: .875rem;
+.post-edit{
+  margin-top: 10px;
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: rgba(191, 184, 166, 0.7);
+  color: #212529;
+  border-radius: 5px;
 }
 </style>

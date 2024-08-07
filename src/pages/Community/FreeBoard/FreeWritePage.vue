@@ -32,7 +32,8 @@ const postCreate = (formData) => {
       <div class="board-create-title">
         <h1>자유게시판 작성</h1>
       </div>
-      <PostEditor @formData="postCreate"></PostEditor>
+      <PostEditor post-req="communityStore.postReq"
+                  @formData="postCreate" ></PostEditor>
     </main>
     <MainFooter></MainFooter>
   </div>

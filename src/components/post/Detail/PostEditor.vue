@@ -1,6 +1,5 @@
 <script setup>
-import { defineProps, onMounted, ref, defineEmits } from 'vue';
-import { useCommunityStore } from '@/pages/Community/stores/useCommunityStore';
+import { defineProps, onMounted, reactive, defineEmits } from 'vue';
 import axios from "axios";
 import {loadScript} from "vue-plugin-load-script";
 
@@ -8,14 +7,20 @@ const props = defineProps({
   postIndex: {
     type: Number,
     required: true
+  },
+
+  postReq: {
+    type: Object,
+    required: true
   }
 })
 
-const communityStore = useCommunityStore();
-
 const emit = defineEmits(['formData']);
 
-const freePostReq = ref(communityStore.freePostReq);
+const postReq = reactive({
+    ...props.postReq,
+    images: props.postReq.images || []
+});
 
 onMounted(async () => {
   await loadScript("https://code.jquery.com/jquery-3.6.0.min.js");
@@ -52,7 +57,7 @@ onMounted(async () => {
 
         for (let i = 0; i < response.data.result.length; i++) {
           let imageUrl = response.data.result[i];
-          freePostReq.value.images.push(imageUrl);
+          (postReq.images).push(imageUrl);
 
           // 이미지 태그 생성 및 삽입
           let imgTag = window.$("<img>").attr('src', imageUrl);
@@ -83,9 +88,9 @@ onMounted(async () => {
 const create = async () => {
   console.log(props.postIndex);
   console.log(window.$('#summernote').summernote('code'));
-  freePostReq.value.content = window.$('#summernote').summernote('code');
+  postReq.content = window.$('#summernote').summernote('code');
   const formData = new FormData();
-  const jsonBlob = new Blob([JSON.stringify(freePostReq.value)], { type: 'application/json' })
+  const jsonBlob = new Blob([JSON.stringify(postReq)], { type: 'application/json' })
   formData.append('req', jsonBlob);
 
   emit('formData', formData);
@@ -113,7 +118,7 @@ const create = async () => {
   <div class="board-create-container">
     <form @submit.prevent="create">
       <label for="title">제목:</label>
-      <input type="text" id="title" name="title" v-model="freePostReq.title" required>
+      <input type="text" id="title" name="title" v-model="postReq.title" required>
 
       <label for="content">내용:</label>
       <textarea id="summernote" name="content" rows="10" required></textarea>

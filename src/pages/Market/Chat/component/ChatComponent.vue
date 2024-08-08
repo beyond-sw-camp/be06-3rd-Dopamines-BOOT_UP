@@ -4,13 +4,6 @@ import ChatListItem from "@/pages/Market/Chat/component/ChatListItem.vue";
 import ChatMessageUser from "@/pages/Market/Chat/component/ChatMessageUser.vue";
 import ChatMessageOther from "@/pages/Market/Chat/component/ChatMessageOther.vue";
 const userInfo = ref(JSON.parse(localStorage.getItem("user")));
-// import { defineProps, onMounted } from "vue";
-// import { useChatStore } from "@/stores/UseChatStore.vue";
-
-// const chatStore = useChatStore();
-// onMounted(){
-
-// }
 </script>
 
 <template>
@@ -25,23 +18,26 @@ const userInfo = ref(JSON.parse(localStorage.getItem("user")));
   <div class="chat-window">
     <div class="chat-header">Chat with User 1</div>
     <div class="chat-messages">
-      <div v-for="message in chatStore.messages" v-bind:key="message.idx">
-        <ChatMessageUser
-          v-if="message.senderIdx == userInfo.userIdx"
-          :time="message.createdAt"
-          :user-message="message.content"
-        ></ChatMessageUser>
-        <ChatMessageOther
-          v-else
-          :time="message.createdAt"
-          :others-message="message.content"
-        ></ChatMessageOther>
+      <div class="chat-messages-container">
+        <div v-for="message in chatStore.messages" v-bind:key="message.idx">
+          <ChatMessageUser
+            v-if="message.senderIdx == userInfo.userIdx"
+            :time="message.createdAt"
+            :user-message="message.content"
+          ></ChatMessageUser>
+          <ChatMessageOther
+            v-else
+            :time="message.createdAt"
+            :others-message="message.content"
+          ></ChatMessageOther>
+        </div>
       </div>
     </div>
     <div class="chat-input">
       <input
         v-model="currentChat"
         type="text"
+        @keyup.enter="sendMessage"
         placeholder="Type your message..."
       />
       <button @click="sendMessage">Send</button>
@@ -71,8 +67,10 @@ export default {
       this.chatStore.joinRoom(roomIdx);
     },
     sendMessage() {
-      this.chatStore.sendMessage(this.currRoomIdx, this.currentChat);
-      this.currentChat = "";
+      if (this.currentChat !== "" && this.currentChat !== " ") {
+        this.chatStore.sendMessage(this.currRoomIdx, this.currentChat);
+        this.currentChat = "";
+      }
     },
   },
 };
@@ -103,6 +101,13 @@ export default {
   padding: 15px;
   overflow-y: auto;
   background-color: #fafafa;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  height: 100%;
+  overflow-y: auto;
+}
+.chat-messages-container {
   display: flex;
   flex-direction: column;
   gap: 10px;

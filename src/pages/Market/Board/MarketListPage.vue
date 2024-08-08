@@ -14,11 +14,7 @@ import PostList from "@/components/post/List/PostList.vue";
           <div class="market-area">
             <div class="search-container">
               <div class="search-area">
-                <PostList
-                  title="중고마켓 게시판"
-                  :data-list="dataList"
-                  :show-status="isStatusShow"
-                ></PostList>
+                <PostList title="중고마켓 게시판"></PostList>
                 <SearchBar></SearchBar>
                 <div v-show="isSearched" class="search-title">
                   <h2>

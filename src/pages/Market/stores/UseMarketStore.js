@@ -84,6 +84,22 @@ export const useMarketStore = defineStore("market", {
             });
 
             this.searchPage++;
+        },
+
+        async createChatRoom() {
+
+            let chatRoomReq = {
+                receiverIdx: this.product.authorIdx,
+                marketPostIdx: this.product.idx
+            }
+
+            await axios.post(
+                backend + '/chat/room',
+                chatRoomReq,
+                { withCredentials: true } // 쿠키 전달
+            );
+
+            return true
         }
     }
 })

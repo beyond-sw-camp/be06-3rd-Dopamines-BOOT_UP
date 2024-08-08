@@ -3,25 +3,48 @@
 import MainHeader from "@/components/layout/MainHeader.vue";
 import PostEditor from "@/components/post/Detail/PostEditor.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
-import { useRouter } from "vue-router";
 import { useProjectStore } from "@/pages/Project/store/useProjectStore";
 import ProjectWriteItem from "@/pages/Project/component/ProjectWriteItem.vue";
+import {ref} from "vue";
+import router from "@/router";
 
 const projectStore = useProjectStore();
-const router = useRouter();
+const updateValues = ref({});
 
-const postCreate = (formData) => {
-  console.log("formData", formData);
+const addValue = (newValues) => {
+  updateValues.value = newValues;
+  console.log("==newValues==")
+  console.log(newValues);
+};
 
-  const response = projectStore.createPost(formData);
+const postCreate = async (postReq) => {
 
-  if (response) {
-    router.push('/project');
-  } else {
-    alert("게시글 작성에 실패했습니다. 다시 요청해주세요.");
-    router.push('/project')
+  console.log("?filesToUpload=", updateValues.value.file);
+
+  const images = await projectStore.uploadFile(updateValues.value.file);
+  postReq.image = images;
+  postReq.courseNum = updateValues.value.selectedCourseNum;
+  postReq.teamIdx = updateValues.value.selectedTeam;
+  postReq.gitUrl = updateValues.value.githubUrl;
+  console.log("나올때 됐잔하")
+  console.log(postReq);
+  try{
+    const response = projectStore.createPost(postReq);
+
+    if (response) {
+      if (confirm("프로젝트 등록에 성공하였습니다.")) {
+        router.push('/project');
+      }
+    } else {
+      if (confirm("프로젝트 등록에 실패하였습니다. 다시 시도하여 주십시오.")) {
+        router.push('/project/write');
+      }
+    }
+  } catch (e) {
+    console.error(e);
   }
-}
+
+};
 
 
 </script>
@@ -33,9 +56,9 @@ const postCreate = (formData) => {
       <div class="board-create-title">
         <h1>프로젝트 게시판 작성</h1>
       </div>
-      <ProjectWriteItem></ProjectWriteItem>
-      <PostEditor post-req="projectStore.postReq"
-                  @formData="postCreate"></PostEditor>
+      <ProjectWriteItem @updateValues="addValue"></ProjectWriteItem>
+      <PostEditor :post-req="projectStore.postReq"
+                  @postReq="postCreate"></PostEditor>
     </main>
     <MainFooter></MainFooter>
   </div>

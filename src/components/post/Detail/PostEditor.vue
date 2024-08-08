@@ -16,15 +16,16 @@ const props = defineProps({
 
 const emit = defineEmits(['formData']);
 
-const postReq = reactive({
-    ...props.postReq,
-    images: props.postReq.images || []
-});
+const postReq = reactive(Object.assign({}, props.postReq, {
+  images: props.postReq.images || []
+}));
 
 onMounted(async () => {
   await loadScript("https://code.jquery.com/jquery-3.6.0.min.js");
   await loadScript("https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js");
 
+  console.log("넌뭔데");
+  console.log(postReq);
   window.$('#summernote').summernote({
     placeholder: '메시지를 입력해주세요',
     tabsize: 2,
@@ -46,7 +47,7 @@ onMounted(async () => {
           formData.append('files', files[i]);
         }
 
-        let response = await axios.post("http://localhost:8080/free/post/upload-image", formData, {
+        let response = await axios.post("/api/free/post/upload-image", formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -66,47 +67,48 @@ onMounted(async () => {
     }
   });
 });
-  // freePostReq.value.idx = 14;
+// freePostReq.value.idx = 14;
 
-  // 게시물 세부 정보 가져오기
-  // if (props.postIndex !== null && props.postIndex !== undefined) {
-  //     await communityStore.getPostDetail(14); // props.postIdx로 바꿔야함
-  //     if (communityStore.postDetail) {
-  //       postReq.title = communityStore.postDetail.title;
-  //       postReq.content = communityStore.postDetail.content;
-  //       window.$("#summernote").summernote("code", postReq.content);
-  //     }
-  // }
+// // 게시물 세부 정보 가져오기
+// if (props.postIndex !== null && props.postIndex !== undefined) {
+//
+//     await communityStore.getPostDetail(props.postIdx); // props.postIdx로 바꿔야함
+//     if (communityStore.postDetail) {
+//       postReq.title = communityStore.postDetail.title;
+//       postReq.content = communityStore.postDetail.content;
+//       window.$("#summernote").summernote("code", postReq.content);
+//     }
+// }
 
 // send 함수
-// const create = async () => {
-//   console.log(props.postIndex);
-//   console.log(window.$('#summernote').summernote('code'));
-//   postReq.content = window.$('#summernote').summernote('code');
-//   const formData = new FormData();
-//   const jsonBlob = new Blob([JSON.stringify(postReq)], { type: 'application/json' })
-//   formData.append('req', jsonBlob);
-//
-//   emit('formData', formData);
-// };
+const create = async () => {
+  postReq.content = window.$('#summernote').summernote('code');
+
+  console.log(postReq);
+  emit('postReq', postReq);
+};
 
 // update 함수
 const update = async () => {
   postReq.content = window.$('#summernote').summernote('code');
   postReq.idx = props.postIndex;
-  console.log(props.postIndex);
-  const formData = new FormData();
-  const jsonBlob = new Blob([JSON.stringify(postReq)], { type: 'application/json' });
-  formData.append('req', jsonBlob);
+  console.log(postReq);
 
-  emit('action', "update");
-  emit('formData', formData);
+  emit('postReq', postReq);
+}
+
+const handleAction = () => {
+  if (props.postIndex != null) {
+    update()
+  } else {
+    create()
+  }
 }
 </script>
 
 <template>
   <div class="board-create-container">
-    <form @submit.prevent="update">
+    <form @submit.prevent="handleAction">
       <label for="title">제목:</label>
       <input type="text" id="title" name="title" v-model="postReq.title" required>
 

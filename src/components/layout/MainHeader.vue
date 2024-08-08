@@ -1,25 +1,40 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import Cookies from 'js-cookie';
 
 const searchInput = ref('');
 const router = useRouter();
+const isLoggedIn = ref(false);
+
+const checkLoginStatus = () => {
+  const token = Cookies.get('token');
+  isLoggedIn.value = !!token;
+};
+
+onMounted(() => {
+  checkLoginStatus();
+});
+
+watch(
+    () => Cookies.get('token'),
+    () => {
+      checkLoginStatus();
+    }
+);
 
 const handleSearch = () => {
   router.push({ path: '/search', query: { q: searchInput.value } });
 };
 
-router.afterEach(() => {
-  const nav = document.querySelector('.category');
-  const navItems = nav.querySelectorAll('li');
-  navItems.forEach((item) => {
-    if (item.querySelector('a').href === window.location.href) {
-      item.classList.add('nav-on');
-    } else {
-      item.classList.remove('nav-on');
-    }
-  });
-});
+const toggleLogin = () => {
+  if (isLoggedIn.value) {
+    Cookies.remove('token');
+  } else {
+    Cookies.set('token', 'your-token-value');
+  }
+  checkLoginStatus();
+};
 </script>
 
 <template>
@@ -46,7 +61,7 @@ router.afterEach(() => {
         </div>
       </div>
       <nav>
-        <ul class="category">
+        <ul class="category menu">
           <li>
             <router-link to="/community">커뮤니티 게시판</router-link>
           </li>
@@ -63,9 +78,11 @@ router.afterEach(() => {
             <router-link to="/reservation">스터디 테이블 예약</router-link>
           </li>
         </ul>
-        <ul class="login">
+        <ul class="login menu">
           <li>
-            <router-link to="/user/login">로그인</router-link>
+            <button v-if="Cookies.get('Atoken')" @click="toggleLogin">로그아웃</button>
+            <router-link v-else to="/user/login">로그인</router-link>
+
           </li>
           <li>
             <router-link to="/user/signup/agree">회원가입</router-link>
@@ -77,13 +94,13 @@ router.afterEach(() => {
 </template>
 
 <style scoped>
-.header-wrap{
+.header-wrap {
   position: relative;
   max-width: 1000px;
   margin: 0 auto;
 }
 
-.header-area{
+.header-area {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -91,15 +108,15 @@ router.afterEach(() => {
   transition: all ease 0.3s;
 }
 
-.logo-area{
+.logo-area {
   padding-top: 5px;
 }
 
-.search-area{
+.search-area {
   position: relative;
 }
 
-.search-wrap{
+.search-wrap {
   position: relative;
   z-index: 2;
   width: 100%;
@@ -110,7 +127,7 @@ router.afterEach(() => {
   align-items: center;
 }
 
-.search-box{
+.search-box {
   width: 17px;
   height: 40px;
   padding: 0px 20px;
@@ -119,13 +136,16 @@ router.afterEach(() => {
   border-radius: 100px;
   border: 1px solid #E06139;
   transition: 0.5s;
+
   &:hover {
     width: 480px;
   }
-  &:focus-within{
+
+  &:focus-within {
     width: 480px;
   }
-  input{
+
+  input {
     width: 100%;
     box-sizing: border-box;
     padding: 0px 40px 0px 44px;
@@ -138,48 +158,58 @@ router.afterEach(() => {
     font-size: 16px;
     line-height: 24px;
   }
-  button{
+
+  button {
     position: absolute;
     left: 10px;
     top: 8px;
   }
 }
 
-nav{
+nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 56px;
   /* box-shadow: 2px 2px 10px 0px rgb(0 0 0 / 10%); */
-  .category{
+
+  .category {
     display: flex;
     margin-left: -20px;
-    li{
+  }
+
+  .menu {
+    li {
       height: 30px;
       align-items: center;
       display: flex;
       position: relative;
       transition: all 0.5s;
-      a{
+
+      a {
         padding: 0 10px;
         transition: all 0.5s;
-        &:hover{
+
+        &:hover {
           color: #fff;
         }
       }
-      &:hover, .nav-on{
+
+      &:hover, .nav-on {
         background-color: rgba(224, 97, 57, 0.8);
         border-radius: 5px;
         margin: 0 10px;
       }
     }
   }
-  .login{
+
+  .login {
     display: flex;
     margin-right: -12px;
     font-size: 14px;
     line-height: 20px;
-    li{
+
+    li {
       position: relative;
       padding: 0 12px;
     }

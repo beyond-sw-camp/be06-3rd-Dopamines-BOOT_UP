@@ -1,15 +1,13 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
-// const authorization = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZHgiOjMxLCJlbWFpbCI6ImFkbWluMDJAYWRtaW4uY29tIiwicm9sZSI6IlJPTEVfQURNSU4iLCJuaWNrbmFtZSI6Iuq0gOumrOunpOuLiOyggDAyIiwiaWF0IjoxNzIzMDQxOTI4LCJleHAiOjE3MjMwNTM5Mjh9.q0xiehAN2lFsKUJRVBJvBC6p757wVrLH_UWGyinNtus";
-
 export const useProjectStore = defineStore("project", {
     state: () => (
-          {
-              projectList: { idx: 0, title: "", contents: "", courseNum: "", gitUrl: "", sourceUrl: "", teamName: "", students: [] },
-              postReq: { idx:0, title: "", content: "", images: []},
-              teamList: [""],
-          }
+        {
+            projectList: { idx: 0, title: "", contents: "", courseNum: "", gitUrl: "", sourceUrl: "", teamName: "", students: [] },
+            postReq: { idx:0, title: "", content: ""},
+            teamList: { idx: 0, teamName: []},
+        }
     ),
     actions: {
         async getProjectList() {
@@ -22,20 +20,33 @@ export const useProjectStore = defineStore("project", {
 
             return this.projectList;
         },
-        async createPost(formData) {
+        async uploadFile(file) {
+            const formData = new FormData();
+            const fileName = file.getName;
+            const blob = new Blob([file], { type: "application/octet-stream" });
+
+            formData.append('file', blob, fileName);
+
+            const response = await axios.post(
+                "/api/project/upload-image",
+                formData, {
+                    isCredentials: true,
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    }
+                });
+            console.log(response);
+
+            return response.data.result;
+        },
+        async createPost(postReq) {
             try{
                 const response = await axios.post(
-                    `/api/project/create`, formData, {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                            // "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZHgiOjIwLCJlbWFpbCI6IuyEnOyLnO2YhEB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6IuyEnOyLnO2YhCIsImlhdCI6MTcyMjk5Mzg1OSwiZXhwIjoxNzIzMDA1ODU5fQ.g2SOJkzMw5iVLOTVtXUxILaS6x0GLaBvxphLGDq-mgk"
-                        }
+                    `/api/project/create`, postReq, {
+                        isCredential: true
                     }
                 )
-
-                console.log("==createPost==");
                 console.log(response);
-                console.log("==============");
 
                 return true;
             } catch (error) {
@@ -47,11 +58,7 @@ export const useProjectStore = defineStore("project", {
             console.log(courseNum)
             try{
                 const response = await axios.get(
-                    `http://localhost:8080/project/team-list?courseNum=${courseNum}`, {
-                        // headers: {
-                        //     'Content-type': 'application/json',
-                        //     'Authorization': authorization
-                        // }
+                    `/api/project/team-list?courseNum=${courseNum}`, {
                     }
                 )
 
@@ -60,7 +67,6 @@ export const useProjectStore = defineStore("project", {
             } catch (e) {
                 console.log(e)
             }
-
 
             return this.teamList;
         }

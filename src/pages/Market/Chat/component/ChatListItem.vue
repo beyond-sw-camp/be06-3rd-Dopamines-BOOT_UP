@@ -1,10 +1,27 @@
 <script setup>
+import { ref, computed, defineProps } from "vue";
+
+const userInfo = ref(JSON.parse(localStorage.getItem("user")));
+
+const props = defineProps({
+  chatRoom: {
+    type: Object,
+    required: true,
+  },
+});
+
+const computedBuyer = computed(() => {
+  if (props.chatRoom.buyer === userInfo.value.userNickName) {
+    return props.chatRoom.product.author;
+  }
+  return props.chatRoom.buyer;
+});
 </script>
 
 <template>
   <div class="chat-list-item" @click="$emit('isSelected', chatRoom.idx)">
     <div class="chat-list-item-title">
-      <strong>{{ chatRoom.buyer }}</strong>
+      <strong>{{ computedBuyer }}</strong>
       <span class="message-time">{{ chatRoom.updatedAt }}</span>
     </div>
     <div class="chat-list-item-content">
@@ -23,9 +40,7 @@
 <script>
 export default {
   name: "ChatListItem",
-  props: ["chatRoom"],
   emits: ["isSelected"],
-  computed: {},
 };
 </script>
 

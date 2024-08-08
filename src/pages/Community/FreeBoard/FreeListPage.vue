@@ -11,12 +11,12 @@ const freePostStore = useFreePostStore();
 const freePosts = ref([]);
 
 onMounted(async () => {
-  await freePostStore.readAllPosts(0, 10);
+  await freePostStore.readAllPosts(1, 10);
   freePosts.value = freePostStore.posts;
 });
 
 const onPageChanged = async (page) => {
-  await freePostStore.readAllPosts(page - 1, 10);
+  await freePostStore.readAllPosts(page -1, 10);
   freePosts.value = freePostStore.posts;
 };
 </script>
@@ -27,7 +27,7 @@ const onPageChanged = async (page) => {
     <main>
       <div class="main-container">
         <PostList
-            :posts="freePosts" title="자유 게시판" :data-list="freePosts" >
+            :posts="freePosts" title="자유 게시판" :data-list="freePosts"  board-link="free">
         </PostList>
         <PaginationComponent
             :totalItems="freePosts.length"

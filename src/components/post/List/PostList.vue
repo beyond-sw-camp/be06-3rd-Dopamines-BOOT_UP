@@ -24,7 +24,7 @@ const props = defineProps({
 
 <template>
   <div class="post-list-container">
-    <router-link :to="`${props.boardLink}`" class="title">
+    <router-link :to="`/${props.boardLink}`" class="title">
       <h3>{{ props.title }}</h3>
     </router-link>
     <div>
@@ -52,7 +52,10 @@ const props = defineProps({
               </div>
             </div>
             <div>
-              <router-link class="board-post-title" :to="`/${props.boardLink}/${post.id}`">{{ post.postTitle }}</router-link>
+              <router-link class="board-post-title" :to="`/${props.boardLink}/${post.id}`">{{
+                  post.postTitle
+                }}
+              </router-link>
             </div>
             <hr>
           </li>
@@ -69,7 +72,8 @@ const props = defineProps({
   --secondary-color: #19191ab7;
   --text-muted-color: #19191a92;
 }
-.post-list-container{
+
+.post-list-container {
   width: 100%;
 }
 
@@ -84,6 +88,7 @@ const props = defineProps({
   box-sizing: border-box;
   align-items: center;
   box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
+
   span {
     align-items: center;
     display: flex;
@@ -97,33 +102,40 @@ const props = defineProps({
   li {
     padding-top: 1rem;
     padding-bottom: 1rem;
+
     .board-post-status-header {
       margin-bottom: 0.5rem;
       display: flex;
       justify-content: space-between;
+
       .board-post-status-left {
         align-items: center;
         display: flex;
+
         .board-post-author {
           font-weight: 500;
           color: #19191ab7;
           margin: 0;
         }
+
         .board-post-time {
           font-size: 0.875rem;
           color: #19191a92;
           margin-left: 0.5rem;
         }
       }
+
       .board-post-status-right {
         display: flex;
         color: #19191a92;
         gap: 0.5rem;
+
         .board-post-right-detail {
           column-gap: 0.125rem;
           align-items: center;
           flex: 1 1 0%;
           display: flex;
+
           svg {
             flex-shrink: 0;
             width: 1rem;
@@ -131,6 +143,7 @@ const props = defineProps({
         }
       }
     }
+
     .board-post-title {
       font-weight: 600;
       word-break: break-all;

@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref} from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/pages/User/stores/useUserStore';
 
@@ -8,10 +8,6 @@ const router = useRouter();
 const userStore = useUserStore();
 
 const isLoggedIn = computed(() => userStore.isLoggedIn);
-const handleLogout = () => {
-  userStore.isLoggedIn = false;
-  router.push('/user/login');
-};
 
 const handleSearch = () => {
   router.push({ path: '/search', query: { q: searchInput.value } });
@@ -74,7 +70,7 @@ router.afterEach(() => {
         <ul class="login menu">
           <li>
             <router-link v-if="!isLoggedIn" to="/user/login">로그인</router-link>
-            <button v-else @click="handleLogout">로그아웃</button>
+            <button v-else>로그아웃</button>
           </li>
           <li>
             <router-link to="/user/signup/agree">회원가입</router-link>

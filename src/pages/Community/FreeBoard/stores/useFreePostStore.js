@@ -34,8 +34,17 @@ export const useFreePostStore = defineStore('post', {
         async readPost(idx) {
             try {
                 const response = await axios.get(`/free/post/read?idx=${idx}`);
-                this.post = response.data;
-                return response.data;
+                this.post = {
+                    idx: response.data.idx,
+                    title: response.data.title,
+                    content: response.data.content,
+                    author: response.data.author,
+                    imageUrlList: response.data.imageUrlList,
+                    created_at: response.data.created_at,
+                    likeCount: response.data.likeCount,
+                    freeCommentList: response.data.freeCommentList
+                };
+                return this.post;
             } catch (error) {
                 console.error('Failed to read post:', error);
                 throw error;
@@ -44,8 +53,22 @@ export const useFreePostStore = defineStore('post', {
         async readAllPosts(page, size) {
             try {
                 const response = await axios.get(`/free/post/read-all?page=${page}&size=${size}`);
-                this.posts = response.data;
-                return response.data;
+                if (response.data && Array.isArray(response.data.result)) {
+                    this.posts = response.data.result.map(post => ({
+                        idx: post.idx,
+                        title: post.title,
+                        content: post.content,
+                        author: post.author,
+                        imageUrlList: post.imageUrlList,
+                        created_at: post.created_at,
+                        likeCount: post.likeCount,
+                        freeCommentList: post.freeCommentList
+                    }));
+                } else {
+                    console.error('Unexpected response format:', response.data);
+                    this.posts = [];
+                }
+                return this.posts;
             } catch (error) {
                 console.error('Failed to read all posts:', error);
                 throw error;
@@ -72,8 +95,22 @@ export const useFreePostStore = defineStore('post', {
         async searchPosts(page, size, keyword) {
             try {
                 const response = await axios.get(`/free/post/search?page=${page}&size=${size}&keyword=${keyword}`);
-                this.posts = response.data;
-                return response.data;
+                if (response.data && Array.isArray(response.data.result)) {
+                    this.posts = response.data.result.map(post => ({
+                        idx: post.idx,
+                        title: post.title,
+                        content: post.content,
+                        author: post.author,
+                        imageUrlList: post.imageUrlList,
+                        created_at: post.created_at,
+                        likeCount: post.likeCount,
+                        freeCommentList: post.freeCommentList
+                    }));
+                } else {
+                    console.error('Unexpected response format:', response.data);
+                    this.posts = [];
+                }
+                return this.posts;
             } catch (error) {
                 console.error('Failed to search posts:', error);
                 throw error;

@@ -1,55 +1,71 @@
+<script setup>
+import MainHeader from "@/components/layout/MainHeader.vue";
+import MainFooter from "@/components/layout/MainFooter.vue";
+</script>
+
+
 <template>
-  <div class="detail-container">
-    <Carousel>
-      <Slide v-for="image in this.marketStore.product.images" :key="image">
-        <div class="detail-images-wrapper">
-          <img class="carousel__item" :src="image" />
-        </div>
-      </Slide>
-
-      <template #addons>
-        <Navigation />
-        <Pagination />
-      </template>
-    </Carousel>
-
-    <section class="author-detail-wrapper">
-      <div class="space-between">
-        <div style="display: flex">
-          <div id="detail-left-area">
-            <div id="nickname">{{ marketStore.product.author }}</div>
-          </div>
-          <div id="detail-right-area">
-            <div class="marked">
-              <label for=":r1:" class="relative">
-                <img
-                  :src="require(`@/assets/icon/${marked_status}_marked.svg`)"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 32 32"
-                  fill="none"
-                  @click="changeImg"
-                />
-              </label>
-              <input id=":r1:" type="checkbox" class="a11yHidden" />
+  <div class="body-container">
+    <MainHeader></MainHeader>
+    <main>
+      <div class="detail-container">
+        <Carousel>
+          <Slide v-for="image in this.marketStore.product.images" :key="image">
+            <div class="detail-images-wrapper">
+              <img class="carousel__item" :src="image" />
             </div>
-            <button id="chat-btn">채팅하기</button>
-          </div>
-        </div>
-      </div>
-    </section>
+          </Slide>
 
-    <section class="content-description-wrapper">
-      <h1 class="description-title">{{ marketStore.product.title }}</h1>
-      <p class="description-post-time">{{ marketStore.product.createdAt }}</p>
-      <p id="description-price">{{ marketStore.product.price }}원</p>
-      <div id="description-detail">
-        <p>
-          {{ marketStore.product.content }}
-        </p>
+          <template #addons>
+            <Navigation />
+            <Pagination />
+          </template>
+        </Carousel>
+
+        <section class="author-detail-wrapper">
+          <div class="space-between">
+            <div style="display: flex">
+              <div id="detail-left-area">
+                <div id="nickname">{{ marketStore.product.author }}</div>
+              </div>
+              <div id="detail-right-area">
+                <div class="marked">
+                  <label for=":r1:" class="relative">
+                    <img
+                      :src="
+                        require(`@/assets/icon/${marked_status}_marked.svg`)
+                      "
+                      width="32"
+                      height="32"
+                      viewBox="0 0 32 32"
+                      fill="none"
+                      @click="changeImg"
+                    />
+                  </label>
+                  <input id=":r1:" type="checkbox" class="a11yHidden" />
+                </div>
+                <button id="chat-btn">채팅하기</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-description-wrapper">
+          <h1 class="description-title">{{ marketStore.product.title }}</h1>
+          <p class="description-post-time">
+            {{ marketStore.product.createdAt }}
+          </p>
+          <p id="description-price">{{ marketStore.product.price }}원</p>
+          <div id="description-detail">
+            <p>
+              {{ marketStore.product.content }}
+            </p>
+          </div>
+        </section>
       </div>
-    </section>
+    </main>
   </div>
+  <MainFooter></MainFooter>
 </template>
 
 <script>

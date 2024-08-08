@@ -22,7 +22,6 @@ const postCreate = (formData) => {
   }
 }
 
-
 </script>
 
 <template>

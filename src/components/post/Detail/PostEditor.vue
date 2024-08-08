@@ -1,25 +1,24 @@
 <script setup>
-import { defineProps, onMounted, reactive, defineEmits } from 'vue';
+import { reactive, onMounted, watch } from "vue";
+import { defineEmits } from "vue";
 import axios from "axios";
-import {loadScript} from "vue-plugin-load-script";
+import { loadScript } from "vue-plugin-load-script";
 
-const props = defineProps({
-  postIndex: {
-    type: Number,
-    required: true
-  },
-  postReq: {
-    type: Object,
-    required: true
-  }
-})
-
-const emit = defineEmits(['formData']);
+const emit = defineEmits(['edit']);
 
 const postReq = reactive({
-    ...props.postReq,
-    images: props.postReq.images || []
+  title: '',
+  content: '',
+  imageUrlList: []
 });
+
+watch(postReq, () => {
+  emit('edit', { ...postReq });
+}, { deep: true });
+
+const submitPostEdit = () => {
+  emit('edit', { ...postReq });
+};
 
 onMounted(async () => {
   await loadScript("https://code.jquery.com/jquery-3.6.0.min.js");
@@ -41,89 +40,39 @@ onMounted(async () => {
     callbacks: {
       onImageUpload: async function (files) {
         const formData = new FormData();
-
         for (let i = 0; i < files.length; i++) {
           formData.append('files', files[i]);
         }
-
         let response = await axios.post("http://localhost:8080/free/post/upload-image", formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         });
 
-        console.log(response);
-
         for (let i = 0; i < response.data.result.length; i++) {
           let imageUrl = response.data.result[i];
-          (postReq.images).push(imageUrl);
+          postReq.imageUrlList.push(imageUrl);
 
-          // 이미지 태그 생성 및 삽입
           let imgTag = window.$("<img>").attr('src', imageUrl);
           window.$("#summernote").summernote("insertNode", imgTag[0]);
         }
+        submitPostEdit();
       }
     }
   });
 });
-  // freePostReq.value.idx = 14;
-
-  // 게시물 세부 정보 가져오기
-  // if (props.postIndex !== null && props.postIndex !== undefined) {
-  //     await communityStore.getPostDetail(14); // props.postIdx로 바꿔야함
-  //     if (communityStore.postDetail) {
-  //       postReq.title = communityStore.postDetail.title;
-  //       postReq.content = communityStore.postDetail.content;
-  //       window.$("#summernote").summernote("code", postReq.content);
-  //     }
-  // }
-
-// send 함수
-// const create = async () => {
-//   console.log(props.postIndex);
-//   console.log(window.$('#summernote').summernote('code'));
-//   postReq.content = window.$('#summernote').summernote('code');
-//   const formData = new FormData();
-//   const jsonBlob = new Blob([JSON.stringify(postReq)], { type: 'application/json' })
-//   formData.append('req', jsonBlob);
-//
-//   emit('formData', formData);
-// };
-
-// update 함수
-const update = async () => {
-  postReq.content = window.$('#summernote').summernote('code');
-  postReq.idx = props.postIndex;
-  console.log(props.postIndex);
-  const formData = new FormData();
-  const jsonBlob = new Blob([JSON.stringify(postReq)], { type: 'application/json' });
-  formData.append('req', jsonBlob);
-
-  emit('action', "update");
-  emit('formData', formData);
-}
 </script>
 
 <template>
-  <div class="board-create-container">
-    <form @submit.prevent="update">
-      <label for="title">제목:</label>
-      <input type="text" id="title" name="title" v-model="postReq.title" required>
+  <div>
+    <label for="title">제목:</label>
+    <input type="text" id="title" v-model="postReq.title" required />
 
-      <label for="content">내용:</label>
-      <textarea id="summernote" name="content" rows="10" required></textarea>
-
-      <button type="submit">제출</button>
-    </form>
+    <label for="content">내용:</label>
+    <textarea id="summernote" v-model="postReq.content" rows="10" required></textarea>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'PostEditor',
-
-}
-</script>
 <style scoped>
 .board-create-container {
   max-width: 1000px;
@@ -165,17 +114,5 @@ textarea {
   margin-right: 10px;
 }
 
-button {
-  padding: 10px;
-  background-color: #E06139;
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-}
 
-button:hover {
-  background-color: #cd3d11;
-}
 </style>

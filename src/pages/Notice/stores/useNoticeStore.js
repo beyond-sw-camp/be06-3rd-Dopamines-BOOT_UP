@@ -3,38 +3,48 @@ import axios from 'axios';
 
 export const useNoticeStore = defineStore('notice', {
     state: () => ({
-        notices: [],
-        notice: null,
-        totalNotices: 0,
-        isLoading: false,
-        error: null,
+        postDetail: { id:0, title: "", content: "", date: "", category: "", isPrivate: false, imageUrls: []},
+        postReq: { id:0, title: "", content: "", category: [], isPrivate: false, imageUrls: []}
     }),
 
     actions: {
         // 공지사항 작성 엑시오스
-        async createNotice(req) {
-            this.isLoading = true;
-            try {
-                const response = await axios.post('http://localhost:8080/notices', req);
-                this.notices.push(response.data.data);
+        async createNotice(formData) {
+            try{
+                const response = await axios.post(
+                    `notice/create`, formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZHgiOjIwLCJlbWFpbCI6IuyEnOyLnO2YhEB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6IuyEnOyLnO2YhCIsImlhdCI6MTcyMjk5Mzg1OSwiZXhwIjoxNzIzMDA1ODU5fQ.g2SOJkzMw5iVLOTVtXUxILaS6x0GLaBvxphLGDq-mgk"
+                        }
+                    }
+                )
+
+                console.log("==createNotice==");
+                console.log(response);
+                console.log("==============");
+
+                return true;
             } catch (error) {
-                this.error = error.response && error.response.data ? error.response.data.message : error.message;
-            } finally {
-                this.isLoading = false;
+                console.log(error);
+                return false;
             }
         },
 
         // 공지사항 조회 엑시어스
-        async fetchNotice(id) {
-            this.isLoading = true;
-            try {
-                const response = await axios.get(`http://localhost:8080/notices/${id}`);
-                this.notice = response.data.data;
-            } catch (error) {
-                this.error = error.response && error.response.data ? error.response.data.message : error.message;
-            } finally {
-                this.isLoading = false;
-            }
+        async getNoticeDetail(id) {
+            const response = await axios.get(
+                `api/notice/idx=${id}`,{ // 쿠키 포함
+                    headers: {
+                        // 'Content-Type': 'multipart/form-data',
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZHgiOjIwLCJlbWFpbCI6IuyEnOyLnO2YhEB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6IuyEnOyLnO2YhCIsImlhdCI6MTcyMjk5Mzg1OSwiZXhwIjoxNzIzMDA1ODU5fQ.g2SOJkzMw5iVLOTVtXUxILaS6x0GLaBvxphLGDq-mgk'
+                    }
+                }
+            );
+
+            console.log(response);
+
+            this.postDetail = response.data.result;
         },
 
         // 비공개 공지사항 조회 엦시어스

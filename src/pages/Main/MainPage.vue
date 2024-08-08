@@ -47,7 +47,7 @@ onMounted(async () => {
   width: 100%;
   margin: 0px auto;
   box-shadow: 3px 3px 10px 0px rgb(0 0 0 / 30%);
-  //margin-top: -150px;
+  /* margin-top: -150px; */
 
   .banner {
     width: 100%;

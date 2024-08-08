@@ -28,9 +28,9 @@ signupUser.value = '회원1';
               </p>
             </div>
           </div>
-          <div class="button-container">
+          <router-link class="button-container" to="/user/login">
             <SubmitBtn text="로그인"></SubmitBtn>
-          </div>
+          </router-link>
         </div>
       </div>
     </div>

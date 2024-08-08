@@ -63,7 +63,7 @@ const isDisabled = computed(() => {
             </div>
             <p class="not-member-wrapper">
               <span>아직 회원이 아니신가요?</span>
-              <router-link class="signup-link" to="/signup/agree">회원가입</router-link>
+              <router-link class="signup-link" to="/user/signup/agree">회원가입</router-link>
             </p>
             <p v-if="error" class="error-message">{{ error }}</p>
           </form>

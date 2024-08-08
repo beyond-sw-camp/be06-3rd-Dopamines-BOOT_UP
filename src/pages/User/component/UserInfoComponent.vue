@@ -111,7 +111,7 @@
         <SubmitBtn :isDisabled="isDisabled" text="회원가입" handle-submit=""></SubmitBtn>  <!--자식 컴포넌트한테 emit 으로 이벤트 전달받기-->
       </div>
       <p class="lead-login-url-text"><span>이미 회원이신가요?</span>
-        <router-link to="/login" class="lead-login-url">로그인</router-link>
+        <router-link to="/user/login" class="lead-login-url">로그인</router-link>
       </p>
   </div>
 </template>
@@ -238,7 +238,7 @@ export default {
       if(!this.isDisabled){
         const userStore = useUserStore();
         userStore.signup(this.email, this.password, this.nickname, this.name, this.phoneNumber,this.address);
-        this.$router.push('/info');
+        this.$router.push('/user/signup/success');
       }
     }
   }

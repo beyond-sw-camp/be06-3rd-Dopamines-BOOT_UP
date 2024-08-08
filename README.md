@@ -45,26 +45,7 @@
 ## 📚 기술 스택
 ### Backend
 <div>   
-<!--   <img src="https://img.shields.io/badge/java-F7DF1E?style=for-the-badge&logo=java&logoColor=white">   -->
-  <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> 
-  <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white"> 
-  <img src="https://img.shields.io/badge/Spring data jpa-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white">
-  <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-badge&logo=Spring Security&logoColor=white">
-  <img src="https://img.shields.io/badge/QueryDSL-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white">
-  <img src="https://img.shields.io/badge/OAuth2-6DB33F?style=for-the-badge&logo=spring-security&logoColor=white">
-  <br>
-  <img src="https://img.shields.io/badge/SMTP-black?style=for-the-badge&logo=Gmail&logoColor=white">
-  <img src="https://img.shields.io/badge/Json Web Tokens-000000?style=for-the-badge&logo=Json Web Tokens&logoColor=purple">
-  <img src="https://img.shields.io/badge/Web Socket-black?style=for-the-badge&logo=websocket&logoColor=white">
-  <img src="https://img.shields.io/badge/Kafka-231F20?style=for-the-badge&logo=Kafka&logoColor=white"> 
-  <img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=skyblue"> 
-  <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=green">
-  <br>
-  <img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=white"/>  
-  <img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=for-the-badge&logo=Amazon%20EC2&logoColor=white">  
-  <img src="https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"> 
-  <img src="https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=white"/>
-  <img src="https://img.shields.io/badge/IntelliJ_IDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white" style="border-radius: 5px;"> 
+   <a href="https://github.com/beyond-sw-camp/be06-2nd-Dopamines-BOOT_UP"> BackEnd 링크</a>
 
 </div>
 
@@ -74,6 +55,15 @@
 <img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white"/>
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black"/>
 <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=flat-square&logo=Vue.js&logoColor=white"/>
+<img src="https://img.shields.io/badge/nginx-009639?style=flat-the-badge&logo=nginx&logoColor=white"/>
+<img src="https://img.shields.io/badge/pinia-138a68?style=flat-the-badge&logoColor=white"/>
+
+<img src="https://img.shields.io/badge/Ubuntu-f18a1c?style=flat-the-badge&logo=ubuntu&logoColor=black"/>
+<img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=flat-the-badge&logo=Amazon%20EC2&logoColor=white">  
+<img src="https://img.shields.io/badge/amazon S3-569A31?style=for-flat-badge&logo=amazons3&logoColor=white"/>  
+
+<img src="https://img.shields.io/badge/mariadb-003545?style=flat-the-badge&logo=mariadb&logoColor=white">
+<img src="https://img.shields.io/badge/AWS%20RDS-blue?style=flat-the-badge&logo=amazonaws&logoColor=white">
 
 </div>
 
@@ -165,13 +155,18 @@ Frontend : 🐱 **이철수**
 
 
 ## 🖥️ 시스템 아키텍처
-<a href="https://github.com/beyond-sw-camp/be06-2nd-Dopamines-BOOT_UP/wiki/5.-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98">시스템 아키텍처</a>
+<a href="https://github.com/beyond-sw-camp/be06-3rd-Dopamines-BOOT_UP/wiki/1.-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98">시스템 아키텍처</a>
+<br><br>
+
+## 주요 적용 기술
+
+<a href="https://github.com/beyond-sw-camp/be06-3rd-Dopamines-BOOT_UP/wiki/2.-%EC%A3%BC%EC%9A%94-%EC%A0%81%EC%9A%A9-%EA%B8%B0%EC%88%A0">시스템 아키텍처</a>
+<br><br>
+
+## 💭 상세 기능
+
+<a href="https://github.com/beyond-sw-camp/be06-3rd-Dopamines-BOOT_UP/wiki/3.%EC%83%81%EC%84%B8-%EA%B8%B0%EB%8A%A5">시스템 아키텍처</a>
 <br><br>
 
 
 ## 🔍 코딩 컨벤션
-
-
-## 💭 상세 기능
-
-

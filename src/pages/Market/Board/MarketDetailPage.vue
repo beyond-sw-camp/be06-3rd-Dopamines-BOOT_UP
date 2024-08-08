@@ -66,7 +66,6 @@ export default defineComponent({
     ...mapStores(useMarketStore),
   },
   created() {
-    console.log(this.$route.params.idx);
     this.marketStore.getProduct(this.$route.params.idx);
   },
   data() {
@@ -101,7 +100,6 @@ article {
 .detail-container {
   max-width: 1200px;
   margin: 0 auto;
-  margin-top: 180px;
 }
 
 .detail-images-wrapper {

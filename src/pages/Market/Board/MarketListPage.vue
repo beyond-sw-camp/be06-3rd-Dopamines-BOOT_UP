@@ -15,7 +15,7 @@ import PostList from "@/components/post/List/PostList.vue";
             <div class="search-container">
               <div class="search-area">
                 <PostList title="중고마켓 게시판"></PostList>
-                <SearchBar></SearchBar>
+                <SearchBar writelink="/market/write"></SearchBar>
                 <div v-show="isSearched" class="search-title">
                   <h2>
                     <strong>'{{ searchQuery }}'</strong> 검색 결과

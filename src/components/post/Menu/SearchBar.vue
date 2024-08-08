@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, defineProps } from "vue";
 import { useRouter } from "vue-router";
 
 const searchInput = ref("");
@@ -8,6 +8,10 @@ const router = useRouter();
 const handleSearch = () => {
   router.push({ path: "/search", query: { q: searchInput.value } });
 };
+
+const props = defineProps({
+  writelink: String,
+});
 </script>
 
 <template>
@@ -26,7 +30,7 @@ const handleSearch = () => {
         </button>
       </div>
       <div class="post-write">
-        <router-link to="/market/write">글 작성</router-link>
+        <router-link :to="`${props.writelink}`">글 작성</router-link>
       </div>
     </div>
   </div>

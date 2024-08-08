@@ -19,14 +19,12 @@ signupUser.value = '회원1';
             </p>
           </h2>
         </div>
-        <div class="">
-          <div class="success-container-down">
-            <div class="">
+        <div class="success-down-container">
+          <div class="success-ment">
               <p class="success-text">
                 회원가입이 성공적으로 완료되었습니다. <br>
                 아래 로그인 버튼을 눌러 다시한번 로그인 해주세요.
               </p>
-            </div>
           </div>
           <router-link class="button-container" to="/user/login">
             <SubmitBtn text="로그인"></SubmitBtn>
@@ -64,8 +62,12 @@ signupUser.value = '회원1';
 .welcome-name{
   color: #E06139;
 }
-
-.success-container-down{
+.success-down-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.success-ment{
   padding: 1rem;
   width: 100%;
 }
@@ -73,7 +75,6 @@ signupUser.value = '회원1';
   text-align: center
 }
 .button-container{
-  width: 200px;
-  margin-left: 100px;
+  width: 100%;
 }
 </style>

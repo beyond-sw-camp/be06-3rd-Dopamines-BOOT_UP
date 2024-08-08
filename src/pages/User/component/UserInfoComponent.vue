@@ -14,68 +14,81 @@
       </div>
     </div>
 
-      <div>
+      <div class="signup-area">
         <div class="signup-wrapper">
           <Form :validation-schema="schema" class="signup-form">
-            <div><label for="email-address" class="signup-wrapper-text">이메일 </label>
               <div class="signup-wrapper-distance">
+                <label for="email-address" class="signup-wrapper-text">이메일 </label>
                 <div class="email-input-wrapper">
                   <!-- Todo : disabled되면 색깔 변하게-->
-                  <Field
-                    id="email-address"
-                    :disabled="disabledButton"
-                    v-model="email"
-                    name="email"  
+                  <div style="display: flex; justify-content: space-between">
+                    <Field
+                        id="email-address"
+                        :disabled="disabledButton"
+                        v-model="email"
+                        name="email"
 
-                    class="signup-input-box signup-input-text email-input"
-                    placeholder="이메일@test.com"
-                  />       
-
-                  <button @click="authenticate" 
-                    :disabled="disabledButton" 
-                    :class="{'email-check-btn': true, 'authentication-btn-disabled': disabledButton}">인증하기
-                  </button>
-                </div>
-              <div><ErrorMessage name="email" /></div>   
-
-                <div v-if="showInput">
-                  <Field type="text" name="emailCheck" :disabled="disabledButton" v-model="uuid" class="email-check-input" /> 
-                    <button @click="verify" 
-                      :disabled="disabledButton" 
-                      :class="{'email-check-btn': true, 'authentication-btn-disabled': disabledButton}"> 확인하기 
+                        class="signup-input-box signup-input-text email-input"
+                        placeholder="이메일@test.com"
+                    />
+                    <button @click="authenticate"
+                            :disabled="!email"
+                            :class="{'email-check-btn': true, 'authentication-btn-disabled': !email}">인증하기
                     </button>
-                </div>
+<!--                   email-address Field에 value 들어왔을 때 authenticate email-check btn이 활성화 됐으면 좋겠어 -->
+                  </div>
+                  <div class="email-verify-wrapper">
+                    <ErrorMessage name="email" class="warning-alert" style="margin-bottom: 0; width: 70%"/>
+                    <div v-if="showInput" class="email-verify-input">
+                      <Field type="text" name="emailCheck" :disabled="disabledButton" v-model="uuid" class="email-check-input signup-input-box"/>
+                      <button @click="verify" :disabled="disabledButton" :class="{'email-check-btn': true, 'authentication-btn-disabled': !uuid}"> 확인하기 </button>
+                    </div>
+                  </div>
               </div>
             </div>
   
-          <div><label for="password" class="signup-wrapper-text">비밀번호</label>
+          <div class="input-wrapper">
+            <label for="password" class="signup-wrapper-text">비밀번호</label>
             <div class="signup-wrapper-distance">
-              <Field id="password" name="password" v-model="password" type="password" autocomplete="current-password" required="" class="signup-input-box signup-input-text" placeholder="최소 6자 이상(알파벳, 숫자 필수)" ></Field></div>
+              <Field id="password" name="password" v-model="password" type="password" autocomplete="current-password" required="" class="signup-input-box signup-input-text" placeholder="최소 6자 이상(알파벳, 숫자 필수)" ></Field>
+            </div>
+            <div class="warning-alert-wrapper">
+              <ErrorMessage name="password" class="warning-alert"/>
+            </div>
           </div>
-          <div><ErrorMessage name="password" /></div>   
-
   
-          <div><label for="passwordConfirm" class="signup-wrapper-text">비밀번호 확인</label>
+          <div class="input-wrapper">
+            <label for="passwordConfirm" class="signup-wrapper-text">비밀번호 확인</label>
             <div class="signup-wrapper-distance">
-              <Field id="passwordConfirm" name="passwordConfirm" v-model="passwordConfirm" type="password" autocomplete="current-password" required="" class="signup-input-box signup-input-text" placeholder="최소 6자 이상(알파벳, 숫자 필수)" ></Field></div>
+              <Field id="passwordConfirm" name="passwordConfirm" v-model="passwordConfirm" type="password" autocomplete="current-password" required="" class="signup-input-box signup-input-text" placeholder="최소 6자 이상(알파벳, 숫자 필수)" ></Field>
+            </div>
+            <div class="warning-alert-wrapper">
+              <ErrorMessage name="passwordConfirm" class="warning-alert"/>
+            </div>
           </div>
 
-          <div><ErrorMessage name="passwordConfirm" /></div>   
-      
-
-          <div><label for="fullName" class="signup-wrapper-text">실명</label>
+          <div class="input-wrapper">
+            <label for="fullName" class="signup-wrapper-text">실명</label>
             <div class="signup-wrapper-distance">
-              <Field id="fullName" name="name" v-model="name" type="text" required="" class="signup-input-box signup-input-text" placeholder="홍길동" ></Field></div>
+              <Field id="fullName" name="name" v-model="name" type="text" required="" class="signup-input-box signup-input-text" placeholder="홍길동" ></Field>
+            </div>
+            <div class="warning-alert-wrapper">
+              <ErrorMessage name="name" class="warning-alert"/>
+            </div>
           </div>
-          <div><ErrorMessage name="name" /></div>   
 
-          <div><label for="nickname" class="signup-wrapper-text">닉네임</label>
+          <div class="input-wrapper">
+            <label for="nickname" class="signup-wrapper-text">닉네임</label>
             <div class="signup-wrapper-distance">
-              <Field id="nickname" name="nickname" v-model="nickname" type="text" required="" class="signup-input-box signup-input-text" placeholder="별명을 알파벳, 한글, 숫자를 20자 이하로 입력해주세요."></Field></div>
+              <Field id="nickname" name="nickname" v-model="nickname" type="text" required="" class="signup-input-box signup-input-text" placeholder="별명을 알파벳, 한글, 숫자를 20자 이하로 입력해주세요."></Field>
+            </div>
+            <div class="warning-alert-wrapper">
+              <ErrorMessage name="nickname" class="warning-alert"/>
+            </div>
           </div>
-          <div><ErrorMessage name="nickname" /></div>   
 
-          <div><label for="phoneNumber" class="signup-wrapper-text">휴대폰 번호</label>
+          <div class="input-wrapper">
+            <label for="phoneNumber" class="signup-wrapper-text">휴대폰 번호</label>
             <div class="signup-wrapper-distance">
               <Field id="phoneNumber" 
                 v-model="phoneNumber" 
@@ -86,10 +99,13 @@
                 name="phoneNumber">
               </Field>
             </div>
+            <div class="warning-alert-wrapper">
+              <ErrorMessage name="phoneNumber" class="warning-alert"/>
+            </div>
           </div>
-          <div><ErrorMessage name="phoneNumber" /></div>
 
-          <div><label for="address" class="signup-wrapper-text">주소</label>
+          <div class="input-wrapper">
+            <label for="address" class="signup-wrapper-text">주소</label>
             <div class="signup-wrapper-distance">
               <Field id="address" 
                 v-model="address" 
@@ -100,8 +116,10 @@
                 name="address">
               </Field>
             </div>
+            <div class="warning-alert-wrapper">
+              <ErrorMessage name="address" class="warning-alert"/>
+            </div>
           </div>
-          <div><ErrorMessage name="address" /></div>
         </Form>
         </div>
       </div>
@@ -246,6 +264,14 @@ export default {
 </script>
 
 <style scoped>
+signup-area{
+  margin-bottom: 20px;
+}
+.signup-form{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 .signup-container{
   justify-content: center;
   display: flex;
@@ -272,8 +298,7 @@ export default {
   gap: 20px;
 }
 .signup-wrapper-text{
-  /* font-size: .875rem;
-  line-height: 1.25rem; */
+  margin-bottom: 10px;
 }
 .signup-input-box{
   padding-left: 10px;
@@ -291,9 +316,9 @@ export default {
   /* line-height: 1.25rem; */
 }
 .email-input-wrapper{
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
-  gap:10px
 }
 .email-input{
   width: calc(100% - 150px);
@@ -308,23 +333,30 @@ export default {
   display: flex;
   gap: 10px;
   align-items: center;
+  justify-content: flex-end;
   input{
     margin-bottom: 0;
   }
   button{
     margin-bottom: 0;
+    width: 130px;
   }
 }
-.email-alert{
+
+.warning-alert{
   background-color: rgba(224, 97, 57, 0.1);
   color: #e06139;
   padding: 10px;
   border-radius: 5px;
   width: 100%;
+  display: flex;
+  margin-bottom: 20px;
+  box-sizing: border-box;
 }
 .email-check-input{
   border-radius: 5px;
   border-color: hsla(220, 9%, 46%, .3);
+  width: fit-content;
 }
 .email-check-btn{
   width: 130px;
@@ -337,7 +369,7 @@ export default {
 }
 
 .signup-wrapper-distance {
-  margin-top: 10px;
+  //margin-top: 10px;
 }
 .authentication-btn{
   width: 130px;
@@ -369,5 +401,10 @@ export default {
   text-align: center;
   --tw-text-opacity: 1;
   color : #E06139
+}
+.input-wrapper{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 </style>

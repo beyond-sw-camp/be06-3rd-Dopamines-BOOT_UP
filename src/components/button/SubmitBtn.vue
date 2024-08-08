@@ -32,16 +32,15 @@ export default {
   background-color: #E06139;
   color : white;
   width: 100%;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .submit-btn-disabled{
   border-radius: 5px;
   background-color: #82827F;
   color : white;
   width: 100%;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
-
 </style>

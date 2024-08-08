@@ -1,14 +1,12 @@
 <script setup>
-
-import { defineProps } from "vue";
+import { defineProps } from 'vue';
 
 const props = defineProps({
-  teamName: String,
-  projectTitle: String,
-  projectDescription: String,
-  nameList: Array,
-  courseNum: String,
-});
+  data: {
+    type: Object,
+    required: true
+  }
+})
 
 </script>
 
@@ -16,15 +14,15 @@ const props = defineProps({
   <li class="project-card-list">
     <div class="project-card-item">
       <div class="top">
-        <div class="team">{{ props.teamName }}</div>
-        <div class="title">{{ props.projectTitle }}</div>
-        <p class="description">{{ props.projectDescription }}</p>
+        <div class="team">{{ props.data.teamName }}</div>
+        <div class="title">{{ props.data.title }}</div>
+        <p class="add"></p>
       </div>
-      <div class="name">
-        <ul>
-          <li v-for="(name, index) in props.nameList" v-bind:key="index">{{ name }}</li>
+      <div>
+        <ul class="name">
+          <li v-for="(name, index) in props.data.students" v-bind:key="index">{{ name }}</li>
         </ul>
-        <div class="course-num">{{ props.courseNum }}</div>
+        <div class="course-num">{{ props.data.courseNum }}기</div>
       </div>
     </div>
   </li>
@@ -32,30 +30,12 @@ const props = defineProps({
 
 <style scoped>
 .project-card-list {
-  width: 33%;
+  width: 33.2%;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
   position: relative;
   min-height: 315px;
-  transition: box-shadow 0.3s ease;
-
-}
-
-.project-card-list:hover {
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, .15);
-}
-
-.project-card-list > li:hover:before {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  content: '';
-  z-index: 1;
-}
-
-.project-card-list > li:hover .course-num {
-  color: rgba(224, 97, 57, 0.5);
-  text-shadow: none;
+  transition: all ease-in-out .15s;
 }
 
 .project-card-item {

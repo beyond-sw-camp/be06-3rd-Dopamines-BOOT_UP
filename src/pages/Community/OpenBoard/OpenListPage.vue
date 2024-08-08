@@ -28,7 +28,7 @@ const onPageChanged = async (page) => {
     <MainHeader></MainHeader>
     <main>
       <div class="main-container">
-        <PostList :posts="openPosts" title="공개 게시판" :data-list="openPosts" board-link="open">
+        <PostList :posts="openPosts" title="공개 게시판" :data-list="openPosts" boardlink="open">
         </PostList>
         <PaginationComponent
             :totalItems="openPosts.length"

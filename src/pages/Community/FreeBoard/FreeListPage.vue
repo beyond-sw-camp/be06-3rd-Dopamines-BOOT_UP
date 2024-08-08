@@ -26,7 +26,7 @@ const onPageChanged = async (page) => {
             :posts="freePostStore.posts"
             title="자유 게시판"
             :data-list="freePostStore.posts"
-            board-link="free">
+            :boardlink="free">
         </PostList>
         <PaginationComponent
             :totalItems="freePostStore.posts.length"

@@ -1,9 +1,17 @@
 <script setup>
-import { ref } from 'vue';
+import {computed, ref} from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/pages/User/stores/useUserStore';
 
 const searchInput = ref('');
 const router = useRouter();
+const userStore = useUserStore();
+
+const isLoggedIn = computed(() => userStore.isLoggedIn);
+const handleLogout = () => {
+  userStore.isLoggedIn = false;
+  router.push('/user/login');
+};
 
 const handleSearch = () => {
   router.push({ path: '/search', query: { q: searchInput.value } });
@@ -46,7 +54,7 @@ router.afterEach(() => {
         </div>
       </div>
       <nav>
-        <ul class="category">
+        <ul class="category menu">
           <li>
             <router-link to="/community">커뮤니티 게시판</router-link>
           </li>
@@ -63,9 +71,10 @@ router.afterEach(() => {
             <router-link to="/reservation">스터디 테이블 예약</router-link>
           </li>
         </ul>
-        <ul class="login">
+        <ul class="login menu">
           <li>
-            <router-link to="/user/login">로그인</router-link>
+            <router-link v-if="!isLoggedIn" to="/user/login">로그인</router-link>
+            <button v-else @click="handleLogout">로그아웃</button>
           </li>
           <li>
             <router-link to="/user/signup/agree">회원가입</router-link>
@@ -154,6 +163,8 @@ nav{
   .category{
     display: flex;
     margin-left: -20px;
+  }
+  .menu{
     li{
       height: 30px;
       align-items: center;

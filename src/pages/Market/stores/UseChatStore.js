@@ -56,16 +56,18 @@ export const useChatStore = defineStore("chat", {
             let response = await axios.get(url, { withCredentials: true });
 
             this.chatRoomList = response.data.result;
+
+            this.chatRoomList.forEach((room) => {
+                if (this.stompClient) { //구독 
+                    this.stompClient.subscribe(`/sub/room/${room.idx}`, this.onMessageReceived); ///sub/room/${roomId}
+                }
+            })
+
             console.log(this.chatRoomList)
         },
 
         async joinRoom(roomIdx) {
             console.log("[UseChatStore] joinRoom() ==========>")
-
-            if (this.stompClient) { //구독 
-                this.stompClient.subscribe(`/sub/room/${roomIdx}`, this.onMessageReceived); ///sub/room/${roomId}
-            }
-
             console.log("roomIdx = " + roomIdx)
 
             let url = backend + `/chat/rooms/${roomIdx}/messages`

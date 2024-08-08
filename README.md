@@ -58,26 +58,28 @@
 <img src="https://img.shields.io/badge/nginx-009639?style=flat-the-badge&logo=nginx&logoColor=white"/>
 <img src="https://img.shields.io/badge/pinia-138a68?style=flat-the-badge&logoColor=white"/>
 
+
+</div>
+
+### Infra
+<div>
 <img src="https://img.shields.io/badge/Ubuntu-f18a1c?style=flat-the-badge&logo=ubuntu&logoColor=black"/>
 <img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=flat-the-badge&logo=Amazon%20EC2&logoColor=white">  
 <img src="https://img.shields.io/badge/amazon S3-569A31?style=for-flat-badge&logo=amazons3&logoColor=white"/>  
-
-<img src="https://img.shields.io/badge/mariadb-003545?style=flat-the-badge&logo=mariadb&logoColor=white">
-<img src="https://img.shields.io/badge/AWS%20RDS-blue?style=flat-the-badge&logo=amazonaws&logoColor=white">
-
 </div>
+
 
 
 ### Database
 <div>
-  <img src="https://img.shields.io/badge/mariadb-003545?style=for-the-badge&logo=mariadb&logoColor=white">
-  <img src="https://img.shields.io/badge/AWS%20RDS-blue?style=for-the-badge&logo=amazonaws&logoColor=white">
+  <img src="https://img.shields.io/badge/mariadb-003545?style=flat-the-badge&logo=mariadb&logoColor=white">
+  <img src="https://img.shields.io/badge/AWS%20RDS-blue?style=flat-the-badge&logo=amazonaws&logoColor=white">
 </div>
 
-### 협업
+### Communication
 <div>
-  <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white">
-  <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white" style="border-radius: 5px;">
+  <img src="https://img.shields.io/badge/github-%23121011.svg?style=flat-the-badge&logo=github&logoColor=white">
+  <img src="https://img.shields.io/badge/git-F05032?style=flat-the-badge&logo=git&logoColor=white" style="border-radius: 5px;">
 </div>
 
 

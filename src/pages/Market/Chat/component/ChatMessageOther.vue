@@ -1,16 +1,16 @@
 <script setup>
-import {defineProps} from 'vue';
+import { defineProps } from "vue";
 
 const props = defineProps({
   time: {
     type: String,
-    required: true
+    required: true,
   },
   othersMessage: {
     type: String,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 </script>
 
 <template>
@@ -23,7 +23,7 @@ const props = defineProps({
 </template>
 
 <style scoped>
-.chat-message-wrap other{
+.chat-message-wrap {
   display: flex;
   align-content: center;
   flex-wrap: wrap;
@@ -31,7 +31,6 @@ const props = defineProps({
   gap: 10px;
 }
 .chat-message {
-  margin-bottom: 15px;
   max-width: 70%;
   padding: 10px 15px;
   border-radius: 20px;
@@ -42,7 +41,15 @@ const props = defineProps({
 .message-time {
   font-size: 12px;
   color: #888;
-  position: absolute;
-  top: -20px;
+  height: fit-content;
+  margin-top: auto;
+}
+.chat-message.other {
+  background-color: #e1e1e1;
+  color: black;
+  border-bottom-left-radius: 0;
+}
+.other .message-time {
+  left: 0;
 }
 </style>

@@ -23,7 +23,9 @@
     "vue-slick-carousel": "^1.0.6",
     "vue3-carousel": "^0.3.3",
     "yarn": "^1.22.22",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "webstomp-client": "^1.2.6",
+    "sockjs-client": "^1.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

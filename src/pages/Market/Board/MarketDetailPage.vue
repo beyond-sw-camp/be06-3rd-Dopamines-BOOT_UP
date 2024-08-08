@@ -44,7 +44,7 @@ import MainFooter from "@/components/layout/MainFooter.vue";
                   </label>
                   <input id=":r1:" type="checkbox" class="a11yHidden" />
                 </div>
-                <button id="chat-btn">채팅하기</button>
+                <button id="chat-btn" @click="createChatRoom">채팅하기</button>
               </div>
             </div>
           </div>
@@ -95,6 +95,12 @@ export default defineComponent({
         this.marked_status = "fill";
       } else {
         this.marked_status = "empty";
+      }
+    },
+
+    createChatRoom() {
+      if (this.marketStore.createChatRoom()) {
+        this.$router.push("/market/chat");
       }
     },
   },

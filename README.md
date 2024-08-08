@@ -148,17 +148,17 @@ Frontend : 🐱 **이철수**
 <br>
 
 ## 🔍 배포 URL
-
+<br><br>
 
 ## 📃 프로젝트 페이지
 <a href="https://www.figma.com/design/iW1AQ8zDHebDGWhVQpFRI8/%EB%8F%84%ED%8C%8C%EB%AF%BC%EC%A6%88?node-id=70-2&t=dgwY8mE7FtxCz7v3-1">프로젝트 Figma</a>
-
+<br><br>
 
 ## 🖥️ 시스템 아키텍처
 <a href="https://github.com/beyond-sw-camp/be06-3rd-Dopamines-BOOT_UP/wiki/1.-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98">[Wiki] 시스템 아키텍처</a>
 <br><br>
 
-## 주요 적용 기술
+## 주요 적용 기술 
 
 <a href="https://github.com/beyond-sw-camp/be06-3rd-Dopamines-BOOT_UP/wiki/2.-%EC%A3%BC%EC%9A%94-%EC%A0%81%EC%9A%A9-%EA%B8%B0%EC%88%A0">[Wiki] 주요 적용 기술</a>
 <br><br>

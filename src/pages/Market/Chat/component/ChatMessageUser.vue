@@ -1,16 +1,16 @@
 <script setup>
-import {defineProps} from 'vue';
+import { defineProps } from "vue";
 
 const props = defineProps({
   time: {
     type: String,
-    required: true
+    required: true,
   },
   userMessage: {
     type: String,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 </script>
 
 <template>
@@ -23,7 +23,14 @@ const props = defineProps({
 </template>
 
 <style scoped>
-.chat-messages-wrap user{
+.chat-messages-wrap {
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.chat-messages-wrap user {
   display: flex;
   align-content: center;
   flex-wrap: wrap;
@@ -31,18 +38,27 @@ const props = defineProps({
   gap: 10px;
 }
 .chat-message {
-  margin-bottom: 15px;
   max-width: 70%;
   padding: 10px 15px;
   border-radius: 20px;
-  position: relative;
   font-size: 14px;
   word-wrap: break-word;
 }
 .message-time {
   font-size: 12px;
   color: #888;
-  position: absolute;
   top: -20px;
+  height: fit-content;
+  margin-top: auto;
+}
+.chat-message.user {
+  background-color: #e06139;
+  color: white;
+  border-bottom-right-radius: 0;
+  text-align: right;
+}
+.user .message-time {
+  height: fit-content;
+  margin-top: auto;
 }
 </style>

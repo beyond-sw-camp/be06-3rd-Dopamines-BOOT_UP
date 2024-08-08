@@ -100,6 +100,9 @@ article {
 .detail-container {
   max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .detail-images-wrapper {
@@ -263,5 +266,9 @@ article {
   border: 0;
   padding: 0;
   white-space: nowrap;
+}
+
+.carousel {
+  width: 800px;
 }
 </style>

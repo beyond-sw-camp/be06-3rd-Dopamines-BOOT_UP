@@ -37,15 +37,6 @@ import MainFooter from "@/components/layout/MainFooter.vue";
 
             <ul class="sort-list">
               <li>
-                <button class="px-2">최신순</button>
-              </li>
-              <li>
-                <button class="px-2">낮은가격순</button>
-              </li>
-              <li>
-                <button class="px-2">높은가격순</button>
-              </li>
-              <li>
                 <button class="px-2">찜한 목록</button>
               </li>
             </ul>

@@ -1,7 +1,7 @@
 <script setup>
 import { defineProps } from 'vue';
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true
@@ -13,19 +13,24 @@ defineProps({
   showStatus: {
     type: Boolean,
     default: true
+  },
+  boardLink: {
+    type: String,
+    default: '/',
+    required: true
   }
 });
 </script>
 
 <template>
   <div class="post-list-container">
-    <div class="title">
-      <span>{{ title }}</span>
-    </div>
+    <router-link :to="`/${props.boardLink}`" class="title">
+      <h3>{{ props.title }}</h3>
+    </router-link>
     <div>
       <div class="content">
         <ul class="board-list">
-          <li class="board-list-wrap" v-for="post in dataList" :key="post.id">
+          <li class="board-list-wrap" v-for="post in props.dataList" :key="post.id">
             <div class="board-post-status-header">
               <div class="board-post-status-left">
                 <div class="board-post-author">
@@ -35,7 +40,7 @@ defineProps({
                   <span>{{ post.createdAt }}</span>
                 </div>
               </div>
-              <div class="board-post-status-right" v-if="showStatus">
+              <div class="board-post-status-right" v-if="props.showStatus">
                 <div class="board-post-right-detail">
                   <img src="../../../assets/icon/thumbIcon.svg" alt="Icon" width="20px">
                   <span class="board-post-right-detail-text">{{ post.likeCount }}</span>
@@ -47,7 +52,10 @@ defineProps({
               </div>
             </div>
             <div>
-              <a class="board-post-title" :href="post.postLink">{{ post.postTitle }}</a>
+              <router-link class="board-post-title" :to="`/${props.boardLink}/${post.id}`">{{
+                  post.postTitle
+                }}
+              </router-link>
             </div>
             <hr>
           </li>
@@ -64,7 +72,8 @@ defineProps({
   --secondary-color: #19191ab7;
   --text-muted-color: #19191a92;
 }
-.post-list-container{
+
+.post-list-container {
   width: 100%;
 }
 
@@ -79,6 +88,7 @@ defineProps({
   box-sizing: border-box;
   align-items: center;
   box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
+
   span {
     align-items: center;
     display: flex;
@@ -92,33 +102,40 @@ defineProps({
   li {
     padding-top: 1rem;
     padding-bottom: 1rem;
+
     .board-post-status-header {
       margin-bottom: 0.5rem;
       display: flex;
       justify-content: space-between;
+
       .board-post-status-left {
         align-items: center;
         display: flex;
+
         .board-post-author {
           font-weight: 500;
           color: #19191ab7;
           margin: 0;
         }
+
         .board-post-time {
           font-size: 0.875rem;
           color: #19191a92;
           margin-left: 0.5rem;
         }
       }
+
       .board-post-status-right {
         display: flex;
         color: #19191a92;
         gap: 0.5rem;
+
         .board-post-right-detail {
           column-gap: 0.125rem;
           align-items: center;
           flex: 1 1 0%;
           display: flex;
+
           svg {
             flex-shrink: 0;
             width: 1rem;
@@ -126,6 +143,7 @@ defineProps({
         }
       }
     }
+
     .board-post-title {
       font-weight: 600;
       word-break: break-all;

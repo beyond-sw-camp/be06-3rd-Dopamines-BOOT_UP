@@ -1,6 +1,8 @@
 <script setup>
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
+import SearchBar from "@/components/post/Menu/SearchBar.vue";
+import PostList from "@/components/post/List/PostList.vue";
 </script>
 
 <template>
@@ -11,30 +13,41 @@ import MainFooter from "@/components/layout/MainFooter.vue";
         <div class="market-wrapper">
           <div class="market-area">
             <div class="search-container">
-              <SearchBarComponent
-                class="search-bar"
-                @isSearched="search"
-              ></SearchBarComponent>
-              <div v-show="isSearched" class="search-title">
-                <h2>
-                  <strong>'{{ searchQuery }}'</strong> 검색 결과
-                </h2>
+              <div class="search-area">
+                <PostList
+                  title="중고마켓 게시판"
+                  :data-list="dataList"
+                  :show-status="isStatusShow"
+                ></PostList>
+                <SearchBar></SearchBar>
+                <div v-show="isSearched" class="search-title">
+                  <h2>
+                    <strong>'{{ searchQuery }}'</strong> 검색 결과
+                  </h2>
+                </div>
+                <table class="filter-table">
+                  <tbody>
+                    <tr>
+                      <td>가격</td>
+                      <td class="price-filter">
+                        <input
+                          type="text"
+                          placeholder="최소 가격"
+                          data-idx="0"
+                        />
+                        <span class="mx-[6px]">~</span>
+                        <input
+                          type="text"
+                          placeholder="최대 가격"
+                          data-idx="1"
+                        />
+                        <button class="apply-btn">적용</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <table class="filter-table">
-                <tbody>
-                  <tr>
-                    <td>가격</td>
-                    <td class="price-filter">
-                      <input type="text" placeholder="최소 가격" data-idx="0" />
-                      <span class="mx-[6px]">~</span>
-                      <input type="text" placeholder="최대 가격" data-idx="1" />
-                      <button class="apply-btn">적용</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
             </div>
-
             <ul class="sort-list">
               <li>
                 <button class="px-2">찜한 목록</button>
@@ -83,7 +96,6 @@ import MainFooter from "@/components/layout/MainFooter.vue";
 <script>
 import { mapStores } from "pinia";
 import CardViewComponent from "@/pages/Market/Board/components/CardViewComponent.vue";
-import SearchBarComponent from "@/pages/Market/Board/components/SearchBarComponent.vue";
 import { useMarketStore } from "@/pages/Market/stores/UseMarketStore";
 
 export default {
@@ -113,7 +125,6 @@ export default {
   },
   components: {
     CardViewComponent,
-    SearchBarComponent,
   },
 };
 </script>
@@ -148,6 +159,14 @@ p {
 
 .search-container {
   position: relative;
+}
+
+.search-area {
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+  max-width: 1000px;
+  width: 100%;
 }
 
 .market-area {

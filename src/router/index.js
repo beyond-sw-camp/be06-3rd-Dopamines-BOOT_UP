@@ -22,14 +22,14 @@ const router = createRouter({
 
         // Community
         { path: '/community', component: () => import('../pages/Community/CommunityBoardListPage.vue') },
-        { path: '/community/free', component: () => import('../pages/Community/FreeBoard/FreeListPage.vue') },
-        { path: '/community/free/detail', component: () => import('../pages/Community/FreeBoard/FreeDetailPage.vue') },
-        { path: '/community/free/write', component: () => import('../pages/Community/FreeBoard/FreeWritePage.vue') },
-        { path: '/community/free/edit/:id', component: () => import('../pages/Community/FreeBoard/FreeEditPage.vue') },
-        { path: '/community/open', component: () => import('../pages/Community/OpenBoard/OpenListPage.vue') },
-        { path: '/community/open/detail/:id', component: () => import('../pages/Community/OpenBoard/OpenDetailPage.vue') },
-        { path: '/community/open/write', component: () => import('../pages/Community/OpenBoard/OpenWritePage.vue') },
-        { path: '/community/open/edit/:id', component: () => import('../pages/Community/OpenBoard/OpenEditPage.vue') },
+        { path: '/free', component: () => import('../pages/Community/FreeBoard/FreeListPage.vue') },
+        { path: '/free/detail', component: () => import('../pages/Community/FreeBoard/FreeDetailPage.vue') },
+        { path: '/free/write', component: () => import('../pages/Community/FreeBoard/FreeWritePage.vue') },
+        { path: '/free/edit/:id', component: () => import('../pages/Community/FreeBoard/FreeEditPage.vue') },
+        { path: '/open', component: () => import('../pages/Community/OpenBoard/OpenListPage.vue') },
+        { path: '/open/detail/:id', component: () => import('../pages/Community/OpenBoard/OpenDetailPage.vue') },
+        { path: '/open/write', component: () => import('../pages/Community/OpenBoard/OpenWritePage.vue') },
+        { path: '/open/edit/:id', component: () => import('../pages/Community/OpenBoard/OpenEditPage.vue') },
 
         // Notice Board
         { path: '/notice', component: () => import('../pages/Notice/NoticeListPage.vue') },

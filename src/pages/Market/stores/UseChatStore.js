@@ -85,7 +85,6 @@ export const useChatStore = defineStore("chat", {
 
         },
 
-
         async sendMessage(roomIdx, message) {
             console.log("[UseChatStore] sendMessage() ==========>")
 

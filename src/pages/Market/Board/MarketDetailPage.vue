@@ -81,12 +81,19 @@ export default defineComponent({
   computed: {
     ...mapStores(useMarketStore),
   },
-  created() {
-    this.marketStore.getProduct(this.$route.params.idx);
+  async created() {
+    await this.marketStore.getProduct(this.$route.params.idx);
+
+    if (this.marketStore.product.marked === true) {
+      this.marked_status = "fill";
+    } else {
+      this.marked_status = "empty";
+    }
   },
+
   data() {
     return {
-      marked_status: "empty",
+      marked_status: "fill",
     };
   },
   methods: {
@@ -96,6 +103,7 @@ export default defineComponent({
       } else {
         this.marked_status = "empty";
       }
+      this.marketStore.setOrDeleteMarked(this.$route.params.idx);
     },
 
     createChatRoom() {

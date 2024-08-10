@@ -27,7 +27,7 @@ const handleImageUpload = (event) => {
 
   emit("updateContent", {
     price: price.value,
-    uploadedImages: uploadedImages.value,
+    images: uploadedImages.value,
   });
 };
 
@@ -40,7 +40,7 @@ const removeImage = (id) => {
 
   emit("updateContent", {
     price: price.value,
-    uploadedImages: uploadedImages.value,
+    images: uploadedImages.value,
   });
 };
 
@@ -57,7 +57,7 @@ const filterNumericInput = (event) => {
 
   emit("updateContent", {
     price: price.value,
-    uploadedImages: uploadedImages.value,
+    images: uploadedImages.value,
   });
 };
 </script>

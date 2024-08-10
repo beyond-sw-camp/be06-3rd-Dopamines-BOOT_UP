@@ -3,6 +3,26 @@
 import MainHeader from "@/components/layout/MainHeader.vue";
 import PostEditor from "@/components/post/Detail/PostEditor.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
+import { useCommunityStore } from "@/pages/Community/stores/useCommunityStore";
+import router from "@/router";
+// import { useRouter } from "vue-router";
+
+const communityStore = useCommunityStore();
+// const router = useRouter();
+
+const postCreate = (postReq) => {
+  console.log("postCreate in postReq", postReq);
+
+  const response = communityStore.createPost(postReq, "open");
+
+  if (response) {
+    if(confirm("게시글이 등록되었습니다.")) {
+      router.push('/open')
+    }
+  } else {
+    alert("게시글 작성에 실패했습니다. 다시 요청해주세요.");
+  }
+}
 </script>
 
 <template>
@@ -12,7 +32,9 @@ import MainFooter from "@/components/layout/MainFooter.vue";
       <div class="board-create-title">
         <h1>공개게시판 작성</h1>
       </div>
-      <PostEditor></PostEditor>
+      <PostEditor :post-req= "communityStore.postReq"
+                  board-type="open"
+                  @postReq="postCreate" ></PostEditor>
     </main>
     <MainFooter></MainFooter>
   </div>
@@ -21,7 +43,7 @@ import MainFooter from "@/components/layout/MainFooter.vue";
 <style scoped>
 main {
   flex-direction: column;
-} 
+}
 
 .board-create-title {
   max-width: 1000px;

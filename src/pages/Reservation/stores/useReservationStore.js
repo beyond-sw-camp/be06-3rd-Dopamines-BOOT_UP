@@ -28,7 +28,8 @@ export const useReservationStore = defineStore('reservation', {
             console.log(response);
 
             this.reservationTimeList = response.data.result;
-            console.log(this.reservationTimeList);
+
+            return response.data.result;
         },
 
         async createReservation(reservationData) {

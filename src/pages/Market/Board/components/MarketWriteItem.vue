@@ -13,20 +13,22 @@ const handleImageUpload = (event) => {
 
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
-    uploadedImages.value.push({ id: Date.now() + i, file: file });
-    emit("updateContent", {
-      price: price.value,
-      uploadedImages: uploadedImages.value,
-    });
-  }
+    const id = Date.now() + i;
 
-  for (let i = 0; i < files.length; i++) {
+    uploadedImages.value.push({ id: id, file: file });
+
     const reader = new FileReader();
     reader.onload = (e) => {
-      previewImages.value.push({ id: Date.now() + i, src: e.target.result });
+      previewImages.value.push({ id: id, src: e.target.result });
     };
+
     reader.readAsDataURL(files[i]);
   }
+
+  emit("updateContent", {
+    price: price.value,
+    uploadedImages: uploadedImages.value,
+  });
 };
 
 const removeImage = (id) => {

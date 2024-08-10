@@ -60,6 +60,7 @@ onMounted(async () => {
   });
 });
 
+
 // 필터링된 데이터 목록
 const filteredDataList = computed(() => {
   if (selectedCourse.value === 'all') {

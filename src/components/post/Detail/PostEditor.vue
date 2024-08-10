@@ -15,6 +15,10 @@ const props = defineProps({
   postDetail: {
     type: Object,
     required: false
+  },
+  boardType: {
+    type: String,
+    required: false
   }
 })
 
@@ -27,7 +31,7 @@ const postReq = reactive(Object.assign({}, props.postReq, {
 // props.postReq 변경 감지
 watch(() => props.postReq, (newVal) => {
   // postReq.idx = newVal.idx;
-  postReq.idx = 31;
+  postReq.idx = newVal.idx;
   postReq.title = newVal.title;
   postReq.images = newVal.images || [];
 }, { immediate: true });
@@ -63,7 +67,7 @@ onMounted(async () => {
             formData.append('files', files[i]);
           }
 
-          let response = await axios.post("/api/free/post/upload-image", formData, {
+          let response = await axios.post(`/api/${props.boardType}/post/upload-image`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
@@ -88,6 +92,7 @@ onMounted(async () => {
 
   watch(() => props.postDetail, (newVal) => {
     if (newVal) {
+      postReq.idx = newVal.idx;
       postReq.title = newVal.title;
       postReq.content = newVal.content;
       window.$("#summernote").summernote("code", newVal.content);
@@ -106,9 +111,8 @@ const create = async () => {
 // update 함수
 const update = async () => {
   postReq.content = window.$('#summernote').summernote('code');
-  postReq.idx = props.postIndex;
-  console.log(postReq);
 
+  console.log(postReq);
   emit('postReq', postReq);
 }
 

@@ -1,21 +1,24 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits } from "vue";
 
 const props = defineProps({
   searchInput: {
     type: String,
-    default: ''
-  }
+    default: "",
+  },
+  writelink: {
+    type: String,
+  },
 });
 
-const emit = defineEmits(['update:searchInput', 'performSearch']);
+const emit = defineEmits(["update:searchInput", "performSearch"]);
 
 const handleInput = (event) => {
-  emit('update:searchInput', event.target.value);
+  emit("update:searchInput", event.target.value);
 };
 
 const handleSearch = () => {
-  emit('performSearch');
+  emit("performSearch");
 };
 </script>
 
@@ -23,18 +26,18 @@ const handleSearch = () => {
   <div class="search-wrap">
     <div class="search-box">
       <input
-          :value="searchInput"
-          @input="handleInput"
-          @keyup.enter="handleSearch"
-          autocomplete="off"
-          type="text"
-          placeholder="검색어를 입력하세요"
+        :value="searchInput"
+        @input="handleInput"
+        @keyup.enter="handleSearch"
+        autocomplete="off"
+        type="text"
+        placeholder="검색어를 입력하세요"
       />
       <button aria-label="search" type="button" @click="handleSearch">
         <img src="../../../assets/icon/searchIcon.svg" alt="" />
       </button>
     </div>
-    <div class="post-write" v-if="showWriteLink">
+    <div class="post-write">
       <router-link :to="`${props.writelink}`">글 작성</router-link>
     </div>
   </div>

@@ -1,5 +1,6 @@
 <script setup>
-import { defineProps } from 'vue';
+import {computed, defineProps} from 'vue';
+import { useRoute } from 'vue-router';
 
 const props = defineProps({
   postIdx: {
@@ -37,7 +38,16 @@ const props = defineProps({
   postContents: {
     type: String,
     required: true,
+  },
+  editlnk: {
+    type: String,
+    required: true,
   }
+});
+const route = useRoute();
+
+const showCategoryTitle = computed(() => {
+  return route.path.startsWith('/free') || route.path.startsWith('/open');
 });
 </script>
 
@@ -49,8 +59,9 @@ const props = defineProps({
       </div>
       <div class="post-category-wrapper">
         <div class="post-category-content">
-          <!-- category-title은 url이 free나 open으로 시작할 때만 보여야해 -->
-          <router-link class="post-category-title" :to="props.category">{{ props.categoryTitle }}</router-link>
+          <router-link v-if="showCategoryTitle" class="post-category-title" :to="props.category">
+            {{ props.categoryTitle }}
+          </router-link>
           /
           <router-link class="post-board-title" :to="props.board">{{ props.boardTitle }}</router-link>
         </div>
@@ -81,7 +92,7 @@ const props = defineProps({
               </div>
               <div class="post-edit-wrap">
                 <!-- TODO v-show="userIdx" 확인 로직 추가 -->
-                <router-link :to="`${props.board}/edit/${props.postIdx}`" class="post-edit">수정하기</router-link>
+                <router-link :to="`${props.editlnk}`" class="post-edit">수정하기</router-link>
               </div>
             </div>
           </div>

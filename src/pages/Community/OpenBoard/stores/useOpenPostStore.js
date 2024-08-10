@@ -10,6 +10,8 @@ export const useOpenPostStore = defineStore('post', {
         imageUrlList: [],
         created_at: new Date,
         likeCount: 0,
+        commentCount: 0,
+        boardIdx: 0,
         posts: [],
     }),
     actions: {
@@ -37,36 +39,45 @@ export const useOpenPostStore = defineStore('post', {
                 throw error;
             }
         },
-        async readPost(idx) {
+        async readPost(postId) {
             try {
-                const response = await axios.get(`/open/post/read?idx=${idx}`);
+                const response = await axios.get(`/open/post/read/${postId}`);
+                let values = JSON.parse(localStorage.getItem('user'));
                 this.idx = response.data.idx;
                 this.title = response.data.title;
                 this.content = response.data.content;
-                this.author = response.data.author;
+                this.author = values.author;
                 this.imageUrlList = response.data.imageUrlList;
                 this.created_at = response.data.created_at;
                 this.likeCount = response.data.likeCount;
-                this.openCommentList = response.data.openCommentList;
-                return response.data;
+                this.commentCount = response.data.commentCount;
+                this.boardIdx = response.data.boardIdx;
+                this.$state.idx = postId;
+                this.author = values.userIdx;
             } catch (error) {
-                console.error('Failed to read post:', error);
+                if (error.response && error.response.status === 404) {
+                    console.error('해당 게시글을 찾을 수 없습니다.:', error);
+                } else {
+                    console.error('게시글을 가져오는 데에 실패하였습니다.:', error);
+                }
                 throw error;
             }
         },
         async readAllPosts(page, size) {
             try {
                 const response = await axios.get(`/open/post/read-all?page=${page}&size=${size}`);
+                let values = JSON.parse(localStorage.getItem('user'));
                 if (response.data && Array.isArray(response.data.result)) {
                     this.posts = response.data.result.map(post => ({
                         idx: post.idx,
                         title: post.title,
                         content: post.content,
-                        author: post.author,
+                        author: values.userIdx,
                         imageUrlList: post.imageUrlList,
                         created_at: post.created_at,
                         likeCount: post.likeCount,
-                        openCommentList: post.openCommentList
+                        commentCount: post.commentCount,
+                        boardIdx: post.boardIdx,
                     }));
                 } else {
                     console.error('Unexpected response format:', response.data);
@@ -96,29 +107,30 @@ export const useOpenPostStore = defineStore('post', {
                 throw error;
             }
         },
-        async searchPosts(page, size, keyword) {
-            try {
-                const response = await axios.get(`/open/post/search?page=${page}&size=${size}&keyword=${keyword}`);
-                if (response.data && Array.isArray(response.data.result)) {
-                    this.posts = response.data.result.map(post => ({
-                        idx: post.idx,
-                        title: post.title,
-                        content: post.content,
-                        author: post.author,
-                        imageUrlList: post.imageUrlList,
-                        created_at: post.created_at,
-                        likeCount: post.likeCount,
-                        openCommentList: post.openCommentList
-                    }));
-                } else {
-                    console.error('Unexpected response format:', response.data);
-                    this.posts = [];
-                }
-                return this.posts;
-            } catch (error) {
-                console.error('Failed to search posts:', error);
-                throw error;
+        async search(query) {
+            if (this.lastSearchQuery !== query) {
+                this.lastSearchQuery = query;
+                this.searchResults = [];
+                this.searchPage = 0;
+                this.isSearchResultEnd = false;
             }
+
+            let url = `/api/open/search?page=${this.searchPage}&size=10&keyword=${query}`;
+            const response = await axios.get(url);
+
+            let data = response.data.result;
+
+            if (data.length === 0) {
+                this.isSearchResultEnd = true;
+                return;
+            }
+
+            if (data.length > 10) {
+                data.pop();
+            }
+
+            this.searchResults.push(...data);
+            this.searchPage++;
         },
     },
 });

@@ -1,16 +1,25 @@
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
+import { ref } from 'vue';
 
-defineProps({
+const props = defineProps({
   commentContent: {
     type: String,
     required: false
   },
-  commentSubmit: {
-    type: Function,
-    required: true
-  }
+  // commentSubmit: {
+  //   type: Function,
+  //   required: true
+  // }
 });
+
+const emit = defineEmits(['update:commentContent']);
+const textareaValue = ref(props.commentContent || '');
+
+const handleSubmit = () => {
+  emit('update:commentContent', textareaValue.value);
+  props.commentSubmit();
+};
 </script>
 
 <template>
@@ -18,13 +27,13 @@ defineProps({
     <div class="comment-input-wrapper">
       <div class="comment-input-wrapper2">
         <div class="comment-input-box">
-          <textarea id="answer" name="answer" placeholder="댓글을 입력해주세요/"
-                    class="comment-input-textarea"></textarea>
+          <textarea id="answer" name="answer" placeholder="댓글을 입력해주세요"
+                    class="comment-input-textarea" v-model="textareaValue"></textarea>
           <p style="display: flex; margin-left: 10px;" class="comment-authentication">
             {{ commentContent }}
           </p>
           <div class="comment-btn-shape">
-            <button type="submit" class="comment-btn-primary" @click="commentSubmit">작성</button>
+            <button type="submit" class="comment-btn-primary" @click="handleSubmit">작성</button>
           </div>
         </div>
       </div>

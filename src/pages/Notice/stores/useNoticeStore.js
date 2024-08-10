@@ -102,11 +102,11 @@ export const useNoticeStore = defineStore('notice', {
         },
 
         // 기준으로 공지사항 검색 axios
-        async findNoticesByCriteria(isPrivate, category, page = 0, size = 10) {
+        async findNoticesByCriteria(isPrivate, category) {
             this.isLoading = true;
             try {
                 const response = await axios.get('http://localhost:8080/notices/notices/criteria', {
-                    params: { isPrivate, category, page, size },
+                    params: { isPrivate, category },
                 });
                 this.notices = response.data.content;
                 this.totalNotices = response.data.totalElements;
@@ -118,19 +118,31 @@ export const useNoticeStore = defineStore('notice', {
         },
 
         // 제목 및 내용으로 공지사항 검색 axios
-        async findNoticesByTitleAndContent(title, content, page = 0, size = 10) {
-            this.isLoading = true;
-            try {
-                const response = await axios.get('http://localhost:8080/notices/notices/search', {
-                    params: { title, content, page, size },
-                });
-                this.notices = response.data.content;
-                this.totalNotices = response.data.totalElements;
-            } catch (error) {
-                this.error = error.response && error.response.data ? error.response.data.message : error.message;
-            } finally {
-                this.isLoading = false;
+        async search(title, content){
+            const query = `${title} ${content}`;
+            if (this.lastSearchQuery !== query) {
+                this.lastSearchQuery = query;
+                this.searchResults = [];
+                this.searchPage = 0;
+                this.isSearchResultEnd = false;
             }
+
+            let url = `/api/notice/search?page=${this.searchPage}&size=10&keyword=${query}`;
+            const response = await axios.get(url);
+
+            let data = response.data.result;
+
+            if (data.length === 0) {
+                this.isSearchResultEnd = true;
+                return;
+            }
+
+            if (data.length > 10) {
+                data.pop();
+            }
+
+            this.searchResults.push(...data);
+            this.searchPage++;
         },
 
         // 공지사항 수정

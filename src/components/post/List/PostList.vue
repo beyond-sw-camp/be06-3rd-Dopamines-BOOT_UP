@@ -1,6 +1,8 @@
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import PostListItem from '@/pages/component/List/PostListItem.vue';
+import SearchBar from "@/components/post/Menu/SearchBar.vue";
 
 defineProps({
   title: {
@@ -22,6 +24,13 @@ defineProps({
     required: false,
   }
 });
+
+const route = useRoute();
+const showMarketContent = computed(() =>
+    !route.path.includes('market') &&
+    !route.path.includes('reservation') &&
+    !route.path.includes('main')
+);
 </script>
 
 <template>
@@ -29,25 +38,26 @@ defineProps({
     <router-link :to="board" class="title">
       <h3>{{ title }}</h3>
     </router-link>
-    <div>
-      <div class="content">
-        <ul class="board-list" v-if="dataList && dataList.length">
-          <li class="board-list-wrap" v-for="post in dataList" :key="post.id">
-            <div>
-              <router-link class="board-post-title" :to="`${board}/detail/${post.idx}`">
-                <PostListItem
-                    :post-title="post.title"
-                    :content="post.content"
-                    :idx="post.idx"
-                    :author="post.author" :created-at="post.created_at"
-                />
-              </router-link>
-            </div>
-            <hr>
-          </li>
-        </ul>
-        <p v-else>등록된 게시글이 없습니다.</p>
-      </div>
+      <div v-show="showMarketContent">
+        <SearchBar></SearchBar>
+        <div class="content">
+          <ul class="board-list" v-if="dataList && dataList.length">
+            <li class="board-list-wrap" v-for="post in dataList" :key="post.id">
+              <div>
+                <router-link class="board-post-title" :to="`${board}/detail/${post.idx}`">
+                  <PostListItem
+                      :post-title="post.title"
+                      :content="post.content"
+                      :idx="post.idx"
+                      :author="post.author" :created-at="post.created_at"
+                  />
+                </router-link>
+              </div>
+              <hr>
+            </li>
+          </ul>
+          <p v-else>등록된 게시글이 없습니다.</p>
+        </div>
     </div>
   </div>
 </template>
@@ -75,6 +85,7 @@ defineProps({
   box-sizing: border-box;
   align-items: center;
   box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
+  margin-bottom: 10px;
 }
 
 .board-list {

@@ -25,12 +25,13 @@ defineProps({
   <div class="search-result">
     <div class="search-result">
       <h2>자유 게시판</h2>
-      <div class="search-result-list">
+      <div>
         <div v-if="freeResults.length === 0">검색 결과가 없습니다</div>
-        <div v-else>
-          <div v-for="result in freeResults" :key="result.id">
-            <div class="search-result-item">
-              {{ result.title }}
+        <div v-else class="search-result-list">
+          <div v-for="result in freeResults" :key="result.id" class="search-result-item">
+            <div >
+              <h3>{{ result.title }}</h3>
+              <p>{{ result.content }}</p>
             </div>
           </div>
         </div>
@@ -39,12 +40,13 @@ defineProps({
     <hr>
     <div class="search-result">
       <h2>공개 게시판</h2>
-      <div class="search-result-list">
+      <div>
         <div v-if="openResults.length === 0">검색 결과가 없습니다</div>
-        <div v-else>
-          <div v-for="result in openResults" :key="result.id">
-            <div class="search-result-item">
-              {{ result.title }}
+        <div v-else class="search-result-list">
+          <div v-for="result in openResults" :key="result.id" class="search-result-item">
+            <div >
+              <h3>{{ result.title }}</h3>
+              <p>{{ result.content }}</p>
             </div>
           </div>
         </div>
@@ -53,27 +55,12 @@ defineProps({
     <hr>
     <div class="search-result">
       <h2>장터 게시판</h2>
-      <div class="search-result-list">
+      <div>
         <div v-if="marketResults.length === 0">검색 결과가 없습니다</div>
-        <div v-else>
-          <div v-for="result in marketResults" :key="result.id">
-            <div class="search-result-item">
-              {{ result.title }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="search-result">
-      <h2>공지사항</h2>
-      <div class="search-result-list">
-        <div v-if="noticeResults.length === 0">검색 결과가 없습니다</div>
-        <div v-else>
-          <div v-for="result in noticeResults" :key="result.id">
-            <div class="search-result-item">
-              {{ result.title }}
-            </div>
+        <div v-else class="search-result-list">
+          <div v-for="result in marketResults" :key="result.id" class="search-result-item">
+            <h3>{{ result.title }}</h3>
+            <p>{{ result.content }}</p>
           </div>
         </div>
       </div>
@@ -92,7 +79,26 @@ h2{
   background-color: rgba(191, 184, 166, 0.2);
   border-radius: 10px;
 }
-.title[data-v-2062c2e0] {
+.search-result-list{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.search-result-item{
+  background-color: #ffffff8a;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  h3{
+    margin: 0;
+  }
+  p{
+    margin: 0;
+  }
+}
+.title{
     display: flex;
     background-color: rgb(224 97 57);
     color: #fff;

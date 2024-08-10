@@ -1,20 +1,19 @@
 <script setup>
-import { onMounted } from 'vue';
+import {onMounted, ref} from 'vue';
 import MainHeader from "@/components/layout/MainHeader.vue";
 import PostList from "@/components/post/List/PostList.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
-import SearchBar from "@/components/post/Menu/SearchBar.vue";
 import { useNoticeStore } from '@/pages/Notice/stores/useNoticeStore';
 
 const noticeStore = useNoticeStore();
-const dataList = noticeStore.dataList;
-const fetchAllPublicNotices = noticeStore.fetchAllPublicNotices;
+const noticePosts = ref([]);
 
-onMounted(() => {
-  fetchAllPublicNotices(1, 10);
-});
-
-const isStatusShow = false;
+onMounted(async () => {
+  try {
+    noticePosts.value = await noticeStore.fetchAllNotices();
+  } catch (error) {
+    console.error('Failed to fetch posts:', error);
+  }});
 </script>
 
 <template>
@@ -22,8 +21,7 @@ const isStatusShow = false;
     <MainHeader></MainHeader>
     <main>
       <div class="content-area">
-        <PostList title="공지사항 게시판" :data-list="dataList" :show-status="isStatusShow"></PostList>
-        <SearchBar></SearchBar>
+        <PostList title="공지사항 게시판" :data-list="noticePosts"></PostList>
       </div>
     </main>
     <MainFooter></MainFooter>

@@ -9,18 +9,18 @@ import {onMounted, ref} from "vue";
 
 const freePostStore = useFreePostStore();
 const openPostStore = useOpenPostStore();
-const isDataLoaded = ref(true);
 
-onMounted( async ()=> {
+const freePosts = ref([]);
+const openPosts = ref([]);
+
+onMounted(async () => {
   try {
-    await freePostStore.readAllPosts(1, 10);
-    await openPostStore.readAllPosts(1, 10);
-    isDataLoaded.value = true;
+    freePosts.value = await freePostStore.readAllPosts(1, 3);
+    openPosts.value = await openPostStore.readAllPosts(1, 3);
   } catch (error) {
-    console.error("Error loading posts:", error);
+    console.error('Failed to fetch posts:', error);
   }
-})
-
+});
 </script>
 
 <template>
@@ -34,8 +34,8 @@ onMounted( async ()=> {
           </p>
         </div>
         <div class="content-container">
-          <PostList :data-list="freePostStore.posts" title="자유 게시판" board="free"></PostList>
-          <PostList :data-list="openPostStore.posts" title="공개 게시판" board="open"></PostList>
+          <PostList :data-list="freePosts" title="자유 게시판" board="free"></PostList>
+          <PostList :data-list="openPosts" title="공개 게시판" board="open"></PostList>
         </div>
       </div>
     </main>

@@ -127,31 +127,32 @@ export const useNoticeStore = defineStore('notice', {
             }
         },
 
-        async search(title, content) {
-            const query = `${title} ${content}`;
-            if (this.lastSearchQuery !== query) {
-                this.lastSearchQuery = query;
-                this.searchResults = [];
-                this.searchPage = 0;
-                this.isSearchResultEnd = false;
+        async search(category, page = 0, size = 10) {
+            try {
+                const response = await axios.get(`/notices/criteria?isPrivate=false&category=${category}&page=${page}&size=${size}`, { withCredentials: true });
+                console.log('notice response', response);
+                if (response.data && Array.isArray(response.data.result)) {
+                    let posts = response.data.result.map(post => ({
+                        idx: post.idx,
+                        title: post.title,
+                        content: post.content,
+                        author: post.author,
+                        created_at: post.created_at,
+                    }));
+                    console.log('notice posts', posts);
+                    this.searchResults.push(...posts);
+                    this.searchPage++;
+                    return posts;
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    console.error('No search results found:', error);
+                    this.isSearchResultEnd = true;
+                } else {
+                    console.error('Failed to search:', error);
+                    throw error;
+                }
             }
-
-            let url = `/api/notice/search?page=${this.searchPage}&size=10&keyword=${query}`;
-            const response = await axios.get(url);
-
-            let data = response.data.result;
-
-            if (data.length === 0) {
-                this.isSearchResultEnd = true;
-                return;
-            }
-
-            if (data.length > 10) {
-                data.pop();
-            }
-
-            this.searchResults.push(...data);
-            this.searchPage++;
         },
 
         async updateNotice(id, req) {

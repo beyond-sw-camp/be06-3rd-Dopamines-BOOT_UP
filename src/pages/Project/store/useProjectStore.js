@@ -12,16 +12,20 @@ export const useProjectStore = defineStore("project", {
     ),
     actions: {
         async getProjectList() {
-            const response = await axios.get(
-                `/api/project/read-all`, {
-                    isCredentials: true
-                }
-            )
+            try {
+                const response = await axios.get(
+                    `/api/project/read-all`, {
+                        isCredentials: true
+                    }
+                )
 
-            console.log(response);
-            this.projectList = response.data.result;
+                console.log(response);
+                this.projectList = response.data.result;
 
-            return this.projectList;
+                return this.projectList;
+            } catch (error) {
+                console.log(error);
+            }
         },
         async uploadFile(file) {
             const formData = new FormData();

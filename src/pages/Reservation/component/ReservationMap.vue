@@ -1,9 +1,6 @@
 
 <template>
   <div class="container-wrap">
-    <div class="title">
-      <h1>좌석 예약</h1>
-    </div>
     <div class="container">
       <div class="seat-wrap">
         <div class="seat-table-wrap f3">
@@ -138,6 +135,7 @@ export default {
 .container {
   display: flex;
   gap: 10px;
+  justify-content: center;
 }
 
 .seat-wrap {
@@ -312,7 +310,7 @@ export default {
 }
 
 .seat-time-table {
-  z-index: 10;
+  z-index: 2;
   display: flex;
   /* width: 100%; */
   background-color: rgb(242, 239, 234);

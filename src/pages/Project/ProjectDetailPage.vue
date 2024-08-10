@@ -63,10 +63,17 @@ onMounted(async () => {
 }
 
 main {
-  flex: 1;
-  padding: 20px;
-  max-width: 800px;
-  margin: auto;
+  height: auto !important;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 150px !important;
+  max-width: 1000px;
+  min-height: 100vh;
+}
+
+main > div {
+  width: 100%;
 }
 
 section {
@@ -87,7 +94,6 @@ h1 {
 
 .student-team-container {
   align-items: center;
-  margin-bottom: 30px;
 }
 
 .student-list {
@@ -100,7 +106,7 @@ h1 {
 .student-item {
   background: #e9ecef;
   border-radius: 4px;
-  margin: 5px;
+  margin: 20px 10px 20px 0;
   padding: 10px 15px;
   transition: background 0.3s;
   font-weight: bold;
@@ -133,7 +139,13 @@ a {
 }
 
 footer {
-  margin-top: auto;
+  margin-top: 5rem;
+  padding: 1.75rem 0;
+  border-color: hsla(220, 9%, 46%, .3);
+  border-top-width: 1px;
+  z-index: 10;
+  background-color: #f4f4f4;
+  width: 100%;
 }
 
 label {

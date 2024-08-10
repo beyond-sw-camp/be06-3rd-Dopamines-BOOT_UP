@@ -1,10 +1,10 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import { useFreePostStore } from '@/pages/Community/FreeBoard/stores/useFreePostStore';
-import { useOpenPostStore } from '@/pages/Community/OpenBoard/stores/useOpenPostStore';
-import { useMarketStore } from '@/pages/Market/stores/UseMarketStore'; // Corrected import statement
-import { useNoticeStore } from '@/pages/Notice/stores/useNoticeStore';
+import {ref, onMounted, watch} from 'vue';
+import {useRoute} from 'vue-router';
+import {useFreePostStore} from '@/pages/Community/FreeBoard/stores/useFreePostStore';
+import {useOpenPostStore} from '@/pages/Community/OpenBoard/stores/useOpenPostStore';
+import {useMarketStore} from '@/pages/Market/stores/UseMarketStore'; // Corrected case
+import {useNoticeStore} from '@/pages/Notice/stores/useNoticeStore';
 import MainHeader from '@/components/layout/MainHeader.vue';
 import SearchBar from '@/components/post/Menu/SearchBar.vue';
 import MainFooter from '@/components/layout/MainFooter.vue';
@@ -17,11 +17,11 @@ const marketPostStore = useMarketStore();
 const noticeStore = useNoticeStore();
 const route = useRoute();
 
-const performSearch = async () => {
-  await freePostStore.search(searchQuery.value);
-  await openPostStore.search(searchQuery.value);
-  await marketPostStore.search(searchQuery.value);
-  await noticeStore.search(searchQuery.value, searchQuery.value);
+const performSearch = () => {
+  freePostStore.search(searchQuery.value);
+  openPostStore.search(searchQuery.value);
+  marketPostStore.search(searchQuery.value);
+  noticeStore.search(searchQuery.value);
 };
 
 const handleSearch = (query) => {
@@ -53,10 +53,10 @@ watch(searchQuery, () => {
             @performSearch="performSearch"
         ></SearchBar>
         <SearchList
-            :freeResults="freePostStore.searchResults"
-            :openResults="openPostStore.searchResults"
-            :marketResults="marketPostStore.searchResults"
-            :noticeResults="noticeStore.searchResults"
+            :freeResults="freePostStore.filteredPosts"
+            :openResults="openPostStore.filteredPosts"
+            :marketResults="marketPostStore.filteredPosts"
+            :noticeResults="noticeStore.filteredPosts"
         ></SearchList>
       </div>
     </main>

@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import MainHeader from "@/components/layout/MainHeader.vue";
-import PostDetail from "@/components/post/Detail/PostDetail.vue";
+import PostDetailComponent from "@/components/post/Detail/PostDetailComponent.vue";
 import useProjectStore from '@/pages/Project/store/useProjectStore';
 
 const projectStore = useProjectStore();
@@ -18,19 +18,17 @@ onMounted(() => {
     <main>
       <div class="main-container">
         <div :id="'post-' + project.boardIdx" v-for="project in dataList" :key="project.idx">
-          <PostDetail
-              :post-title="project.title"
-              :post-created-at="project.createdAt"
-              :post-contents="project.contents"
+          <PostDetailComponent
+              :post-idx="project.idx"
+              :board="project.boardTitle"
+              :board-title="project.boardTitle"
+              :category="project"
+              :category-title="프로젝트게시판"
               :post-author="project.author"
-              category-title="프로젝트"
-              board-title="6기 프로젝트"
-              board-list-link="#"
-              board-link="#"
-              :post-idx="project.postIdx"
-              :board-idx="project.boardIdx"
-              :data-list="dataList"
-          ></PostDetail>
+              :post-created-at="project.created_at"
+              :post-title="project.title"
+              :post-contents="project.content"
+          ></PostDetailComponent>
         </div>
       </div>
     </main>

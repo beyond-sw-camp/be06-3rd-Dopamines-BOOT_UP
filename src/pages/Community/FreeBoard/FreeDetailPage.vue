@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import MainHeader from '@/components/layout/MainHeader.vue';
-import PostDetail from '@/components/post/Detail/PostDetail.vue';
+import PostDetailComponent from '@/components/post/Detail/PostDetailComponent.vue';
 import CommentComponent from '@/components/post/Detail/Comment/CommentComponent.vue';
 import MainFooter from "@/components/layout/MainFooter.vue";
 import { useFreePostStore } from "@/pages/Community/FreeBoard/stores/useFreePostStore";
@@ -45,18 +45,17 @@ onMounted(async () => {
     <main>
       <div class="main-container">
         <div v-if="post">
-          <PostDetail
-              :post-title="post.title"
-              :post-created-at="post.createdAt"
-              :post-contents="post.content"
-              :post-author="post.author"
-              :comment-count="comments.length"
-              :category-title="post.categoryTitle"
-              :board-title="자유게시판"
-              :board-list-link="post.boardListLink"
-              :board-link="post.boardLink"
+          <PostDetailComponent
               :post-idx="post.idx"
-          ></PostDetail>
+              :board="free"
+              :board-title="자유게시판"
+              :category="community"
+              :category-title="커뮤니티게시판"
+              :post-author="post.author"
+              :post-created-at="post.created_at"
+              :post-title="post.title"
+              :post-contents="post.content"
+          ></PostDetailComponent>
           <CommentComponent :comments="comments" :like-count="likeCount" :comment-count="comments.length"></CommentComponent>
         </div>
         <p v-else>포스트 로딩중...</p>

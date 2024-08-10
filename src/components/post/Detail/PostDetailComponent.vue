@@ -81,7 +81,7 @@ const props = defineProps({
               </div>
               <div class="post-edit-wrap">
                 <!-- TODO v-show="userIdx" 확인 로직 추가 -->
-                <router-link :to="`/community/free/edit/${props.postIdx}`" class="post-edit">수정하기</router-link>
+                <router-link :to="`/community/${props.board}/edit/${props.postIdx}`" class="post-edit">수정하기</router-link>
               </div>
             </div>
           </div>

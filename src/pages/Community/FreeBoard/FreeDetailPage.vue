@@ -1,24 +1,25 @@
 <script setup>
-import {onMounted, ref} from 'vue';
-import {useRoute} from 'vue-router';
-import MainHeader from '@/components/layout/MainHeader.vue';
-import PostDetail from '@/components/post/Detail/PostDetail.vue';
-import CommentComponent from '@/components/post/Detail/Comment/CommentComponent.vue';
+import { onMounted } from 'vue';
+import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
-import {useFreePostStore} from "@/pages/Community/FreeBoard/stores/useFreePostStore";
-import {useFreeCommentStore} from "@/pages/Community/FreeBoard/stores/useFreeCommentStore";
+import PostDetail from "@/components/post/Detail/PostDetail.vue";
+import CommentComponent from "@/components/post/Detail/Comment/CommentComponent.vue";
+import { useFreePostStore } from "@/pages/Community/FreeBoard/stores/useFreePostStore";
+import { useFreeCommentStore } from "@/pages/Community/FreeBoard/stores/useFreeCommentStore";
+import { useRoute } from 'vue-router';
 
-const route = useRoute();
-const comments = ref([]);
-const post = ref({});
-
-const freeBoardStore = useFreePostStore();
+const freePostStore = useFreePostStore();
 const freeCommentStore = useFreeCommentStore();
+const route = useRoute();
 
 onMounted(async () => {
   const postId = route.params.id;
-  post.value = await freeBoardStore.fetchPostDetail(postId);
-  comments.value = await freeCommentStore.fetchComments(postId);
+  try {
+    await freePostStore.readPost(postId);
+    await freeCommentStore.fetchComments(postId);
+  } catch (error) {
+    console.error('Failed to fetch post or comments:', error);
+  }
 });
 </script>
 
@@ -27,21 +28,22 @@ onMounted(async () => {
     <MainHeader></MainHeader>
     <main>
       <div class="main-container">
-        <div>
+        <div v-if="freePostStore.post">
           <PostDetail
-              :post-title="post.title"
-              :post-created-at="post.createdAt"
-              :post-contents="post.contents"
-              :post-author="post.author"
-              :comment-count="post.commentCount"
-              :category-title="post.categoryTitle"
-              :board-title="post.boardTitle"
-              :board-list-link="post.boardListLink"
-              :board-link="post.boardLink"
-              :post-idx="post.idx"
-              :board-idx="post.boardIdx"></PostDetail>
-          <CommentComponent :comments="comments"></CommentComponent>
+              :post-title="freePostStore.post.title"
+              :post-created-at="freePostStore.post.createdAt"
+              :post-contents="freePostStore.post.contents"
+              :post-author="freePostStore.post.author"
+              :comment-count="freePostStore.post.commentCount"
+              :category-title="freePostStore.post.categoryTitle"
+              :board-title="freePostStore.post.boardTitle"
+              :board-list-link="freePostStore.post.boardListLink"
+              :board-link="freePostStore.post.boardLink"
+              :post-idx="freePostStore.post.idx"
+              :board-idx="freePostStore.post.boardIdx"></PostDetail>
+          <CommentComponent :comments="freePostStore.comments"></CommentComponent>
         </div>
+        <p v-else>포스트 로딩중...</p>
       </div>
     </main>
     <MainFooter></MainFooter>
@@ -49,4 +51,16 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.body-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
 </style>

@@ -3,8 +3,14 @@ import axios from '@/config/axiosConfig';
 
 export const useFreePostStore = defineStore('post', {
     state: () => ({
+        idx: 0,
+        title: '',
+        content: '',
+        author: '',
+        imageUrlList: [],
+        created_at: new Date,
+        likeCount: 0,
         posts: [],
-        post: null,
     }),
     actions: {
         async createPost(postData) {
@@ -34,17 +40,15 @@ export const useFreePostStore = defineStore('post', {
         async readPost(idx) {
             try {
                 const response = await axios.get(`/free/post/read?idx=${idx}`);
-                this.post = {
-                    idx: response.data.idx,
-                    title: response.data.title,
-                    content: response.data.content,
-                    author: response.data.author,
-                    imageUrlList: response.data.imageUrlList,
-                    created_at: response.data.created_at,
-                    likeCount: response.data.likeCount,
-                    freeCommentList: response.data.freeCommentList
-                };
-                return this.post;
+                this.idx = response.data.idx;
+                this.title = response.data.title;
+                this.content = response.data.content;
+                this.author = response.data.author;
+                this.imageUrlList = response.data.imageUrlList;
+                this.created_at = response.data.created_at;
+                this.likeCount = response.data.likeCount;
+                this.freeCommentList = response.data.freeCommentList;
+                return response.data;
             } catch (error) {
                 console.error('Failed to read post:', error);
                 throw error;

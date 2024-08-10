@@ -1,7 +1,8 @@
 <script setup>
 import { defineProps } from 'vue';
+import PostListItem from '@/pages/component/List/PostListItem.vue';
 
-const props = defineProps({
+defineProps({
   title: {
     type: String,
     required: true
@@ -10,11 +11,7 @@ const props = defineProps({
     type: Array,
     required: true
   },
-  showStatus: {
-    type: Boolean,
-    default: true
-  },
-  boardlink: {
+  board: {
     type: String,
     default: '/',
     required: true
@@ -24,42 +21,28 @@ const props = defineProps({
 
 <template>
   <div class="post-list-container">
-    <router-link :to="`/${props.boardLink}`" class="title">
-      <h3>{{ props.title }}</h3>
+    <router-link :to="board" class="title">
+      <h3>{{ title }}</h3>
     </router-link>
     <div>
       <div class="content">
-        <ul class="board-list">
-          <li class="board-list-wrap" v-for="post in props.dataList" :key="post.id">
-            <div class="board-post-status-header">
-              <div class="board-post-status-left">
-                <div class="board-post-author">
-                  <span>{{ post.author }}</span>
-                </div>
-                <div class="board-post-time">
-                  <span>{{ post.createdAt }}</span>
-                </div>
-              </div>
-              <div class="board-post-status-right" v-if="props.showStatus">
-                <div class="board-post-right-detail">
-                  <img src="../../../assets/icon/thumbIcon.svg" alt="Icon" width="20px">
-                  <span class="board-post-right-detail-text">{{ post.likeCount }}</span>
-                </div>
-                <div class="board-post-right-detail">
-                  <img src="../../../assets/icon/commentIcon.svg" alt="Icon" width="20px">
-                  <span class="board-post-right-detail-text">{{ post.commentCount }}</span>
-                </div>
-              </div>
-            </div>
+        <ul class="board-list" v-if="dataList && dataList.length">
+          <li class="board-list-wrap" v-for="post in dataList" :key="post.id">
             <div>
-              <router-link class="board-post-title" :to="`/${props.boardlink}/${post.id}`">{{
-                  post.postTitle
-                }}
+              <router-link class="board-post-title" :to="`${board}/detail/${post.idx}`">
+                <PostListItem
+                    :comment-count="post.commentCount"
+                    :like-count="post.likeCount"
+                    :created-at="post.createdAt"
+                    :author="post.author"
+                    :post-title="post.title"
+                    :idx="post.idx"/>
               </router-link>
             </div>
             <hr>
           </li>
         </ul>
+        <p v-else>등록된 게시글이 없습니다.</p>
       </div>
     </div>
   </div>
@@ -79,8 +62,8 @@ const props = defineProps({
 
 .title {
   display: flex;
-  background-color: #bfb8a6a2;
-  color: var(--text-color);
+  background-color: rgb(224 97 57);
+  color: #fff;
   border-radius: 0.75rem;
   height: 4rem;
   padding: 0 2rem;
@@ -88,61 +71,12 @@ const props = defineProps({
   box-sizing: border-box;
   align-items: center;
   box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
-
-  span {
-    align-items: center;
-    display: flex;
-    height: 100%;
-    font-weight: 700;
-    font-size: 20px;
-  }
 }
 
 .board-list {
   li {
     padding-top: 1rem;
     padding-bottom: 1rem;
-
-    .board-post-status-header {
-      margin-bottom: 0.5rem;
-      display: flex;
-      justify-content: space-between;
-
-      .board-post-status-left {
-        align-items: center;
-        display: flex;
-
-        .board-post-author {
-          font-weight: 500;
-          color: #19191ab7;
-          margin: 0;
-        }
-
-        .board-post-time {
-          font-size: 0.875rem;
-          color: #19191a92;
-          margin-left: 0.5rem;
-        }
-      }
-
-      .board-post-status-right {
-        display: flex;
-        color: #19191a92;
-        gap: 0.5rem;
-
-        .board-post-right-detail {
-          column-gap: 0.125rem;
-          align-items: center;
-          flex: 1 1 0%;
-          display: flex;
-
-          svg {
-            flex-shrink: 0;
-            width: 1rem;
-          }
-        }
-      }
-    }
 
     .board-post-title {
       font-weight: 600;

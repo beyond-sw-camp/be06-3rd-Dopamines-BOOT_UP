@@ -10,7 +10,7 @@ axios.defaults.withCredentials = true;
 //
 axios.interceptors.request.use(
     config => {
-        const token = Cookies.get('jwt');
+        const token = Cookies.get('Atoken');
         if (token) {
             config.headers['Authorization'] = `${token}`;
         }

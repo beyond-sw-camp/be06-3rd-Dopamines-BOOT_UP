@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import PostList from "@/components/post/List/PostList.vue";
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
@@ -8,13 +8,19 @@ import PaginationComponent from "@/components/layout/PaginationComponent.vue";
 
 const freePostStore = useFreePostStore();
 
+const freePosts = ref([]);
+
 onMounted(async () => {
   await freePostStore.readAllPosts(1, 10);
+  freePosts.value = freePostStore.posts;
 });
 
 const onPageChanged = async (page) => {
-  await freePostStore.readAllPosts(page - 1, 10);
+  const validPage = Math.max(1, page);
+  await freePostStore.readAllPosts(validPage - 1, 10);
+  freePosts.value = freePostStore.posts;
 };
+
 </script>
 
 <template>
@@ -23,13 +29,13 @@ const onPageChanged = async (page) => {
     <main>
       <div class="main-container">
         <PostList
-            :posts="freePostStore.posts"
+            :posts="freePosts"
             title="자유 게시판"
-            :data-list="freePostStore.posts"
-            :boardlink="free">
-        </PostList>
+            :data-list="freePosts"
+            board="free"
+        ></PostList>
         <PaginationComponent
-            :totalItems="freePostStore.posts.length"
+            :totalItems="freePosts.length"
             :itemsPerPage="10"
             :currentPage="1"
             @page-changed="onPageChanged"
@@ -44,7 +50,6 @@ const onPageChanged = async (page) => {
 .body-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
 }
 
 .main-container {

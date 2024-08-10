@@ -3,8 +3,14 @@ import axios from '@/config/axiosConfig';
 
 export const useOpenPostStore = defineStore('post', {
     state: () => ({
+        idx: 0,
+        title: '',
+        content: '',
+        author: '',
+        imageUrlList: [],
+        created_at: new Date,
+        likeCount: 0,
         posts: [],
-        post: null,
     }),
     actions: {
         async createPost(postData) {
@@ -34,7 +40,14 @@ export const useOpenPostStore = defineStore('post', {
         async readPost(idx) {
             try {
                 const response = await axios.get(`/open/post/read?idx=${idx}`);
-                this.post = response.data;
+                this.idx = response.data.idx;
+                this.title = response.data.title;
+                this.content = response.data.content;
+                this.author = response.data.author;
+                this.imageUrlList = response.data.imageUrlList;
+                this.created_at = response.data.created_at;
+                this.likeCount = response.data.likeCount;
+                this.openCommentList = response.data.openCommentList;
                 return response.data;
             } catch (error) {
                 console.error('Failed to read post:', error);
@@ -44,8 +57,22 @@ export const useOpenPostStore = defineStore('post', {
         async readAllPosts(page, size) {
             try {
                 const response = await axios.get(`/open/post/read-all?page=${page}&size=${size}`);
-                this.posts = response.data;
-                return response.data;
+                if (response.data && Array.isArray(response.data.result)) {
+                    this.posts = response.data.result.map(post => ({
+                        idx: post.idx,
+                        title: post.title,
+                        content: post.content,
+                        author: post.author,
+                        imageUrlList: post.imageUrlList,
+                        created_at: post.created_at,
+                        likeCount: post.likeCount,
+                        openCommentList: post.openCommentList
+                    }));
+                } else {
+                    console.error('Unexpected response format:', response.data);
+                    this.posts = [];
+                }
+                return this.posts;
             } catch (error) {
                 console.error('Failed to read all posts:', error);
                 throw error;
@@ -72,8 +99,22 @@ export const useOpenPostStore = defineStore('post', {
         async searchPosts(page, size, keyword) {
             try {
                 const response = await axios.get(`/open/post/search?page=${page}&size=${size}&keyword=${keyword}`);
-                this.posts = response.data;
-                return response.data;
+                if (response.data && Array.isArray(response.data.result)) {
+                    this.posts = response.data.result.map(post => ({
+                        idx: post.idx,
+                        title: post.title,
+                        content: post.content,
+                        author: post.author,
+                        imageUrlList: post.imageUrlList,
+                        created_at: post.created_at,
+                        likeCount: post.likeCount,
+                        openCommentList: post.openCommentList
+                    }));
+                } else {
+                    console.error('Unexpected response format:', response.data);
+                    this.posts = [];
+                }
+                return this.posts;
             } catch (error) {
                 console.error('Failed to search posts:', error);
                 throw error;

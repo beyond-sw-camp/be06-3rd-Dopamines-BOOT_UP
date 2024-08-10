@@ -98,7 +98,6 @@ onMounted(async () => {
   margin-top: 2rem;
   margin-bottom: 2rem;
   border-radius: 10px;
-  background-color: rgba(191, 184, 166, 0.1);
 }
 
 .content-content {

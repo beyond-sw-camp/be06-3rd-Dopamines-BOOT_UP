@@ -20,7 +20,8 @@ export const useOpenCommentStore = defineStore('freeComment', {
                     },
                 });
 
-                this.comments.push(response.data.data);
+                this.comments.push(response.data.response);
+                console.log(response.data.response);
             } catch (error) {
                 this.error = error.response && error.response.data ? error.response.data.message : 'An error occurred';
             } finally {
@@ -37,8 +38,8 @@ export const useOpenCommentStore = defineStore('freeComment', {
                 const response = await axios.get('http://localhost:8080/free/comment', {
                     params: { idx, page, size },
                 });
-
-                this.comments = response.data.data;
+                console.log('hi',response.data.response);
+                 return response.data.response;
             } catch (error) {
                 this.error = error.response && error.response.data ? error.response.data.message : 'An error occurred';
             } finally {

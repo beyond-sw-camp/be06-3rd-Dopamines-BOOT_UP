@@ -22,14 +22,6 @@ const props = defineProps({
     type: String,
     required: true
   },
-  likeCount: {
-    type: Number,
-    required: true
-  },
-  commentCount: {
-    type: Number,
-    required: true
-  },
 });
 </script>
 
@@ -37,22 +29,14 @@ const props = defineProps({
   <div class="board-post-status-header">
     <div class="board-post-status-left">
       <div class="board-post-author">
+        <span>{{ props.author }}</span>
+        |
+        <span class="board-post-time">{{ props.createdAt }}</span>
+      </div>
+      <div class="board-post-title">
         <span>{{ props.postTitle }}</span>
       </div>
-<!--      <div class="board-post-time">-->
-<!--        <span>{{ props.createdAt }}</span>-->
-<!--      </div>-->
     </div>
-<!--    <div class="board-post-status-right">-->
-<!--      <div class="board-post-right-detail">-->
-<!--        <img src="@/assets/icon/thumbIcon.svg" alt="Icon" width="20px">-->
-<!--        <span class="board-post-right-detail-text">{{ props.likeCount }}</span>-->
-<!--      </div>-->
-<!--      <div class="board-post-right-detail">-->
-<!--        <img src="@/assets/icon/commentIcon.svg" alt="Icon" width="20px">-->
-<!--        <span class="board-post-right-detail-text">{{ props.commentCount }}</span>-->
-<!--      </div>-->
-<!--    </div>-->
   </div>
   <div>
     <a class="board-post-title" :href="`${props.idx}`">{{ props.content }}</a>

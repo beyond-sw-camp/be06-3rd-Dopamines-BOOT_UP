@@ -37,17 +37,15 @@ defineProps({
     <div>
       <div class="content">
         <ul class="board-list" v-if="dataList && dataList.length">
-          <li class="board-list-wrap" v-for="post in `${listlength}`" :key="post.id">
+          <li class="board-list-wrap" v-for="post in dataList.slice(0, listlength)" :key="post.idx">
             <div>
               <router-link class="board-post-title" :to="`${board}/detail/${post.idx}`">
                 <PostListItem
                     :post-title="post.title"
                     :content="post.content"
-                    :idx="post.idx"/>
-                <!--                    :comment-count="post.commentCount"-->
-                <!--                    :like-count="post.likeCount"-->
-                <!--                    :created-at="post.createdAt"-->
-                <!--                    :author="post.author"-->
+                    :idx="post.idx"
+                    :author="post.author" :created-at="post.created_at"
+                />
               </router-link>
             </div>
             <hr>

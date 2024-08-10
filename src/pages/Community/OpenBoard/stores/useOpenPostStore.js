@@ -8,7 +8,7 @@ export const useOpenPostStore = defineStore('post', {
         content: '',
         author: '',
         imageUrlList: [],
-        created_at: new Date,
+        created_at: '',
         likeCount: 0,
         commentCount: 0,
         boardIdx: 0,
@@ -40,28 +40,24 @@ export const useOpenPostStore = defineStore('post', {
             }
         },
         async readPost(postId) {
-            try {
-                const response = await axios.get(`/open/post/read/${postId}`);
-                let values = JSON.parse(localStorage.getItem('user'));
-                this.idx = response.data.idx;
-                this.title = response.data.title;
-                this.content = response.data.content;
-                this.author = values.author;
-                this.imageUrlList = response.data.imageUrlList;
-                this.created_at = response.data.created_at;
-                this.likeCount = response.data.likeCount;
-                this.commentCount = response.data.commentCount;
-                this.boardIdx = response.data.boardIdx;
-                this.$state.idx = postId;
-                this.author = values.userIdx;
-            } catch (error) {
-                if (error.response && error.response.status === 404) {
-                    console.error('해당 게시글을 찾을 수 없습니다.:', error);
-                } else {
-                    console.error('게시글을 가져오는 데에 실패하였습니다.:', error);
-                }
-                throw error;
-            }
+            const response = await axios.get(`/open/post/read?idx=${postId}`);
+            console.log('response', response);
+            // let values = JSON.parse(localStorage.getItem('user'));
+
+            let readResult = {
+                idx: response.data.result.idx,
+                title: response.data.result.title,
+                content: response.data.result.content,
+                author: response.data.result.author,
+                imageUrlList: response.data.result.imageUrlList,
+                created_at: response.data.result.created_at,
+                likeCount: response.data.result.likeCount,
+                commentCount: response.data.result.commentCount,
+                boardIdx: response.data.result.boardIdx,
+                posts: [],
+            };
+            return readResult;
+
         },
         async readAllPosts(page, size) {
             try {

@@ -8,7 +8,7 @@ export const useFreePostStore = defineStore('post', {
         content: '',
         author: '',
         imageUrlList: [],
-        created_at: new Date,
+        created_at: '',
         likeCount: 0,
         posts: [],
     }),
@@ -40,43 +40,36 @@ export const useFreePostStore = defineStore('post', {
         async readPost(idx) {
             try {
                 const response = await axios.get(`/free/post/read?idx=${idx}`, {withCredentials: true});
-                this.post = {
-                    idx: response.data.idx,
-                    title: response.data.title,
-                    content: response.data.content,
-                    author: response.data.author,
-                    imageUrlList: response.data.imageUrlList,
-                    createdAt: response.data.created_at,
-                    likeCount: response.data.likeCount
+                let readResult = {
+                    idx: response.data.result.idx,
+                    title: response.data.result.title,
+                    content: response.data.result.content,
+                    author: response.data.result.author,
+                    imageUrlList: response.data.result.imageUrlList,
+                    created_at: response.data.result.created_at,
+                    likeCount: response.data.result.likeCount,
+                    commentCount: response.data.result.commentCount,
+                    boardIdx: response.data.result.boardIdx,
+                    posts: [],
                 };
-                return this.post;
+                return readResult;
             } catch (error) {
                 console.error('Failed to read post:', error);
                 throw error;
             }
         },
         async readAllPosts(page, size) {
-            try {
-                const response = await axios.get(`/free/post/read-all?page=${page}&size=${size}`, {withCredentials: true});
-                if (response.data && Array.isArray(response.data.result)) {
-                    this.posts = response.data.result.map(post => ({
-                        idx: post.idx,
-                        title: post.title,
-                        content: post.content,
-                        author: post.author,
-                        imageUrlList: post.imageUrlList,
-                        created_at: post.created_at,
-                        likeCount: post.likeCount,
-                        freeCommentList: post.freeCommentList
-                    }));
-                } else {
-                    console.error('Unexpected response format:', response.data);
-                    this.posts = [];
-                }
-                return this.posts;
-            } catch (error) {
-                console.error('Failed to read all posts:', error);
-                throw error;
+            const response = await axios.get(`/free/post/read-all?page=${page}&size=${size}`, {withCredentials: true});
+            if (response.data && Array.isArray(response.data.result)) {
+                let posts = response.data.result.map(post => ({
+                    idx: post.idx,
+                    title: post.title,
+                    content: post.content,
+                    author: post.author,
+                    created_at: post.created_at,
+                }));
+                console.log('posts', posts);
+                return posts;
             }
         },
         async updatePost(postData) {

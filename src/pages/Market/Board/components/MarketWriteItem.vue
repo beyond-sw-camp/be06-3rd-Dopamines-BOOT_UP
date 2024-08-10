@@ -1,28 +1,29 @@
 <script setup>
 import { ref, defineEmits } from "vue";
 
-const uploadedImages = ref([]); // 이미지 배열
+const uploadedImages = ref([]); // 부모로 전달할 이미지 배열
+const previewImages = ref([]); // preview 이미지 배열
+
 const price = ref(0); // 가격
 
 const emit = defineEmits(["updateContent"]);
 
 const handleImageUpload = (event) => {
   const files = event.target.files;
-  let filesProcessed = 0;
-  const totalFiles = files.length;
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    uploadedImages.value.push({ id: Date.now() + i, file: file });
+    emit("updateContent", {
+      price: price.value,
+      uploadedImages: uploadedImages.value,
+    });
+  }
 
   for (let i = 0; i < files.length; i++) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      uploadedImages.value.push({ id: Date.now() + i, src: e.target.result });
-      filesProcessed++;
-
-      if (filesProcessed == totalFiles) {
-        emit("updateContent", {
-          price: price.value,
-          uploadedImages: uploadedImages.value,
-        });
-      }
+      previewImages.value.push({ id: Date.now() + i, src: e.target.result });
     };
     reader.readAsDataURL(files[i]);
   }
@@ -32,6 +33,8 @@ const removeImage = (id) => {
   uploadedImages.value = uploadedImages.value.filter(
     (image) => image.id !== id
   );
+
+  previewImages.value = previewImages.value.filter((image) => image.id !== id);
 
   emit("updateContent", {
     price: price.value,
@@ -77,11 +80,7 @@ const filterNumericInput = (event) => {
       </label>
     </div>
     <div class="image-preview-container">
-      <div
-        v-for="image in uploadedImages"
-        :key="image.id"
-        class="image-preview"
-      >
+      <div v-for="image in previewImages" :key="image.id" class="image-preview">
         <img :src="image.src" alt="Uploaded Image" />
         <button @click="removeImage(image.id)" class="remove-image-btn">
           X

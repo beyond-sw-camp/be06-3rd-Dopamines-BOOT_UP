@@ -20,24 +20,28 @@
 </template>
 
 <script>
+import { ref } from "vue";
+
 export default {
-  name: "App",
-  data() {
-    return {
-      marked_status: "empty",
-    };
-  },
-  props: ["product"],
-  methods: {
-    changeImg() {
-      if (this.marked_status === "empty") {
-        this.marked_status = "fill";
-      } else {
-        this.marked_status = "empty";
-      }
+  name: "CardViewComponent",
+  props: {
+    product: {
+      type: Object,
+      required: true,
     },
   },
-  components: {},
+  setup() {
+    const markedStatus = ref("empty");
+
+    const changeImg = () => {
+      markedStatus.value = markedStatus.value === "empty" ? "fill" : "empty";
+    };
+
+    return {
+      markedStatus,
+      changeImg,
+    };
+  },
 };
 </script>
 

@@ -14,9 +14,9 @@ defineProps({
     type: Array,
     default: () => []
   },
-  noticeResults: {
-    type: Array,
-    default: () => []
+  searchQuery: {
+    type: String,
+    default: ''
   }
 });
 </script>
@@ -34,6 +34,9 @@ defineProps({
               <p>{{ result.content }}</p>
             </div>
           </div>
+          <div class="search-more-btn">
+            <router-link :to="{ name: 'FreeListPage', query: { q: searchQuery } }" class="btn">더보기</router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -49,6 +52,9 @@ defineProps({
               <p>{{ result.content }}</p>
             </div>
           </div>
+          <div class="search-more-btn">
+            <router-link  :to="{ name: 'OpenListPage', query: { q: searchQuery } }" class="btn">더보기</router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -61,6 +67,9 @@ defineProps({
           <div v-for="result in marketResults" :key="result.id" class="search-result-item">
             <h3>{{ result.title }}</h3>
             <p>{{ result.content }}</p>
+          </div>
+          <div class="search-more-btn">
+            <router-link  :to="{ name: 'MarketListPage', query: { q: searchQuery } }" class="btn">더보기</router-link>
           </div>
         </div>
       </div>
@@ -99,15 +108,15 @@ h2{
   }
 }
 .title{
-    display: flex;
-    background-color: rgb(224 97 57);
-    color: #fff;
-    border-radius: 0.75rem;
-    height: 4rem;
-    padding: 0 2rem;
-    width: 100%;
-    box-sizing: border-box;
-    align-items: center;
-    box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
+  display: flex;
+  background-color: rgb(224 97 57);
+  color: #fff;
+  border-radius: 0.75rem;
+  height: 4rem;
+  padding: 0 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
 }
 </style>

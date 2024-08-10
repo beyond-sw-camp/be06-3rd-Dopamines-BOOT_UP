@@ -52,6 +52,14 @@ const router = createRouter({
 
         // Reservation
         { path: '/reservation', component: () => import('../pages/Reservation/ReservationPage.vue') },
+
+        // Free List Page
+        {
+            path: '/free-list',
+            name: 'FreeListPage',
+            component: () => import('../pages/Community/FreeBoard/FreeListPage.vue'),
+            props: (route) => ({ query: route.query.q })
+        },
     ]
 });
 

@@ -1,13 +1,13 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import { useFreePostStore } from '@/pages/Community/FreeBoard/stores/useFreePostStore';
-import { useOpenPostStore } from '@/pages/Community/OpenBoard/stores/useOpenPostStore';
+import {ref, onMounted} from 'vue';
+import {useRoute} from 'vue-router';
+import {useFreePostStore} from '@/pages/Community/FreeBoard/stores/useFreePostStore';
+import {useOpenPostStore} from '@/pages/Community/OpenBoard/stores/useOpenPostStore';
+import {useMarketStore} from '@/pages/Market/stores/UseMarketStore.js';
 import MainHeader from '@/components/layout/MainHeader.vue';
 import SearchBar from '@/components/post/Menu/SearchBar.vue';
 import MainFooter from '@/components/layout/MainFooter.vue';
 import SearchList from '@/pages/Main/component/SearchList.vue';
-import {useMarketStore} from "@/pages/Market/stores/UseMarketStore";
 
 const freePostStore = useFreePostStore();
 const openPostStore = useOpenPostStore();
@@ -18,11 +18,25 @@ const searchQuery = ref('');
 const freePosts = ref([]);
 const openPosts = ref([]);
 const marketPosts = ref([]);
+const errorMessage = ref('');
 
 const performSearch = async () => {
-  freePosts.value = await freePostStore.search(1, 3, searchQuery.value);
-  openPosts.value = await openPostStore.search(1, 3, searchQuery.value);
-  marketPosts.value = await marketPostStore.search(1, 3, searchQuery.value);
+  try {
+    if (searchQuery.value) {
+      freePosts.value = await freePostStore.search(1, 3, searchQuery.value);
+      openPosts.value = await openPostStore.search(1, 3, searchQuery.value);
+      marketPosts.value = await marketPostStore.search(1, 3, searchQuery.value);
+
+      if (freePosts.value.length === 0 && openPosts.value.length === 0 && marketPosts.value.length === 0) {
+        errorMessage.value = '검색 결과가 없습니다';
+      } else {
+        errorMessage.value = '';
+      }
+    }
+  } catch (error) {
+    errorMessage.value = 'An error occurred while performing the search.';
+    console.error(error);
+  }
 };
 
 const handleSearch = (query) => {
@@ -31,15 +45,16 @@ const handleSearch = (query) => {
 };
 
 onMounted(async () => {
-  const query = route.query.q;
-  if (query) {
-    searchQuery.value = query;
-    performSearch();
+  try {
+    const query = route.query.q;
+    if (query) {
+      searchQuery.value = query;
+      performSearch();
+    }
+  } catch (error) {
+    errorMessage.value = 'An error occurred while initializing the search.';
+    console.error(error);
   }
-});
-
-watch(searchQuery, () => {
-  performSearch();
 });
 </script>
 
@@ -58,13 +73,15 @@ watch(searchQuery, () => {
             :searchInput="searchQuery"
             @update:searchInput="searchQuery = $event"
             @performSearch="performSearch"
+            @keyup.enter="performSearch"
         ></SearchBar>
-        {{ noticePosts }}
         <SearchList
             :freeResults="freePosts"
             :openResults="openPosts"
             :marketResults="marketPosts"
+            :searchQuery="searchQuery"
         />
+        <p v-if="errorMessage">{{ errorMessage }}</p>
       </div>
     </main>
     <MainFooter></MainFooter>

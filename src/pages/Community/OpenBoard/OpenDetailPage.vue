@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
 import PostDetail from "@/components/post/Detail/PostDetail.vue";
@@ -12,10 +12,13 @@ const openPostStore = useOpenPostStore();
 const openCommentStore = useOpenCommentStore();
 const route = useRoute();
 
+const post = ref(null);
+
 onMounted(async () => {
   const postId = route.params.id;
   try {
-    await openPostStore.readPost(postId);
+    const fetchedPost = await openPostStore.readPost(postId);
+    post.value = fetchedPost;
     await openCommentStore.fetchComments(postId);
   } catch (error) {
     console.error('Failed to fetch post or comments:', error);
@@ -28,20 +31,20 @@ onMounted(async () => {
     <MainHeader></MainHeader>
     <main>
       <div class="main-container">
-        <div v-if="openPostStore.post">
+        <div v-if="post" class="post-detail-container">
           <PostDetail
-              :post-title="openPostStore.post.title"
-              :post-created-at="openPostStore.post.createdAt"
-              :post-contents="openPostStore.post.contents"
-              :post-author="openPostStore.post.author"
-              :comment-count="openPostStore.post.commentCount"
-              :category-title="openPostStore.post.categoryTitle"
-              :board-title="openPostStore.post.boardTitle"
-              :board-list-link="openPostStore.post.boardListLink"
-              :board-link="openPostStore.post.boardLink"
-              :post-idx="openPostStore.post.idx"
-              :board-idx="openPostStore.post.boardIdx"></PostDetail>
-          <CommentComponent :comments="openPostStore.comments"></CommentComponent>
+              :post-title="post.title"
+              :post-created-at="post.created_at"
+              :post-contents="post.content"
+              :post-author="익명"
+              :comment-count="post.openCommentList ? post.openCommentList.length : 0"
+              :category-title="post.categoryTitle"
+              :board-title="post.boardTitle"
+              :board-list-link="post.boardListLink"
+              :board-link="post.boardLink"
+              :post-idx="post.idx"
+              :board-idx="post.boardIdx"></PostDetail>
+          <CommentComponent :comments="openCommentStore.comments"></CommentComponent>
         </div>
         <p v-else>포스트 로딩중...</p>
       </div>
@@ -51,16 +54,7 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.body-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
-.main-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
+.post-detail-container{
+  width: 100%;
 }
 </style>

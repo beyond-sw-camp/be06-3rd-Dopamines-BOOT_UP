@@ -10,24 +10,22 @@ import router from "@/router";
 
 const projectStore = useProjectStore();
 const updateValues = ref({});
+let images = null;
 
 const addValue = (newValues) => {
   updateValues.value = newValues;
-  console.log("==newValues==")
-  console.log(newValues);
 };
 
 const postCreate = async (postReq) => {
 
-  console.log("?filesToUpload=", updateValues.value.file);
+  if (updateValues.value.file != null) {
+    images = await projectStore.uploadFile(updateValues.value.file);
+    postReq.image = images;
+  }
 
-  const images = await projectStore.uploadFile(updateValues.value.file);
-  postReq.image = images;
   postReq.courseNum = updateValues.value.selectedCourseNum;
   postReq.teamIdx = updateValues.value.selectedTeam;
   postReq.gitUrl = updateValues.value.githubUrl;
-  console.log("나올때 됐잔하")
-  console.log(postReq);
   try{
     const response = projectStore.createPost(postReq);
 

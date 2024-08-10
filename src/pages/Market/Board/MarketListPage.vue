@@ -1,8 +1,34 @@
 <script setup>
+import { ref, onMounted, computed } from "vue";
+import { useMarketStore } from "@/pages/Market/stores/UseMarketStore";
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
 import SearchBar from "@/components/post/Menu/SearchBar.vue";
 import PostList from "@/components/post/List/PostList.vue";
+import CardViewComponent from "@/pages/Market/Board/components/CardViewComponent.vue";
+
+const marketStore = useMarketStore();
+const isSearched = ref(false);
+const searchQuery = ref("");
+
+const products = computed(() => marketStore.list);
+const searchResults = computed(() => marketStore.searchResults);
+const isEnd = computed(() => marketStore.isEnd);
+const isSearchResultEnd = computed(() => marketStore.isSearchResultEnd);
+
+const getData = () => {
+  marketStore.getProducts();
+};
+
+const search = (query) => {
+  isSearched.value = true;
+  searchQuery.value = query;
+  marketStore.search(query);
+};
+
+onMounted(() => {
+  marketStore.getProducts();
+});
 </script>
 
 <template>
@@ -52,32 +78,32 @@ import PostList from "@/components/post/List/PostList.vue";
             <ul class="market-content-container">
               <li
                 v-show="!isSearched"
-                v-for="product in this.marketStore.list"
-                v-bind:key="product.idx"
+                v-for="product in products"
+                :key="product.idx"
               >
                 <CardViewComponent :product="product"></CardViewComponent>
               </li>
 
               <li
                 v-show="isSearched"
-                v-for="product in this.marketStore.searchResults"
-                v-bind:key="product.idx"
+                v-for="product in searchResults"
+                :key="product.idx"
               >
                 <CardViewComponent :product="product"></CardViewComponent>
               </li>
             </ul>
             <button
-              :disabled="this.marketStore.isEnd === true"
-              v-show="!this.marketStore.isEnd && !isSearched"
+              :disabled="isEnd"
+              v-show="!isEnd && !isSearched"
               @click="getData"
               class="apply-btn"
             >
               더보기
             </button>
             <button
-              :disabled="this.marketStore.isSearchResultEnd === true"
-              v-show="!this.marketStore.isSearchResultEnd && isSearched"
-              @click="search(this.searchQuery)"
+              :disabled="isSearchResultEnd"
+              v-show="!isSearchResultEnd && isSearched"
+              @click="search(searchQuery)"
               class="apply-btn"
             >
               더보기
@@ -89,41 +115,6 @@ import PostList from "@/components/post/List/PostList.vue";
     <MainFooter></MainFooter>
   </div>
 </template>
-<script>
-import { mapStores } from "pinia";
-import CardViewComponent from "@/pages/Market/Board/components/CardViewComponent.vue";
-import { useMarketStore } from "@/pages/Market/stores/UseMarketStore";
-
-export default {
-  name: "MarketListPage",
-  data() {
-    return {
-      isSearched: false,
-      searchQuery: "",
-    };
-  },
-  computed: {
-    ...mapStores(useMarketStore),
-  },
-  created() {
-    this.marketStore.getProducts();
-  },
-  methods: {
-    getData() {
-      this.marketStore.getProducts();
-    },
-    search(searchQuery) {
-      this.isSearched = true;
-      this.searchQuery = searchQuery;
-
-      this.marketStore.search(searchQuery);
-    },
-  },
-  components: {
-    CardViewComponent,
-  },
-};
-</script>
 
 <style scoped>
 *,

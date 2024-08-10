@@ -4,6 +4,7 @@ import MainHeader from "@/components/layout/MainHeader.vue";
 import PostEditor from "@/components/post/Detail/PostEditor.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
 import { useCommunityStore } from "@/pages/Community/stores/useCommunityStore";
+import router from "@/router";
 // import { useRouter } from "vue-router";
 
 const communityStore = useCommunityStore();
@@ -15,7 +16,9 @@ const postCreate = (postReq) => {
   const response = communityStore.createPost(postReq);
 
   if (response) {
-    alert("게시글이 등록되었습니다.")
+    if(confirm("게시글이 등록되었습니다.")) {
+      router.push('/free')
+    }
   } else {
     alert("게시글 작성에 실패했습니다. 다시 요청해주세요.");
   }

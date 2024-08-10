@@ -1,16 +1,20 @@
 <script setup>
-import { defineProps, onMounted, reactive, defineEmits } from 'vue';
+import {defineProps, onMounted, reactive, defineEmits, watch, nextTick} from 'vue';
 import axios from "axios";
 import {loadScript} from "vue-plugin-load-script";
 
 const props = defineProps({
   postIndex: {
-    type: Number,
-    required: true
+    type: String,
+    required: false
   },
   postReq: {
     type: Object,
-    required: true
+    required: false
+  },
+  postDetail: {
+    type: Object,
+    required: false
   }
 })
 
@@ -20,65 +24,76 @@ const postReq = reactive(Object.assign({}, props.postReq, {
   images: props.postReq.images || []
 }));
 
+// props.postReq 변경 감지
+watch(() => props.postReq, (newVal) => {
+  // postReq.idx = newVal.idx;
+  postReq.idx = 31;
+  postReq.title = newVal.title;
+  postReq.images = newVal.images || [];
+}, { immediate: true });
+
 onMounted(async () => {
-  await loadScript("https://code.jquery.com/jquery-3.6.0.min.js");
-  await loadScript("https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js");
+  try {
+    console.log("내용췍!!!: ", props.postDetail)
+    await loadScript("https://code.jquery.com/jquery-3.6.0.min.js");
+    await loadScript("https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js");
 
-  console.log("넌뭔데");
-  console.log(postReq);
-  window.$('#summernote').summernote({
-    placeholder: '메시지를 입력해주세요',
-    tabsize: 2,
-    height: 200,
-    toolbar: [
-      ['style', ['style']],
-      ['font', ['bold', 'underline', 'clear']],
-      ['color', ['color']],
-      ['para', ['ul', 'ol', 'paragraph']],
-      ['table', ['table']],
-      ['insert', ['link', 'picture', 'video']],
-      ['view', ['fullscreen', 'codeview', 'help']]
-    ],
-    callbacks: {
-      onImageUpload: async function (files) {
-        const formData = new FormData();
+    await nextTick(); // DOM이 준비될 때까지 기다립니다.
 
-        for (let i = 0; i < files.length; i++) {
-          formData.append('files', files[i]);
-        }
+    console.log("넌뭔데");
+    console.log(postReq);
+    window.$('#summernote').summernote({
+      placeholder: '메시지를 입력해주세요',
+      tabsize: 2,
+      height: 200,
+      toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'underline', 'clear']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['table', ['table']],
+        ['insert', ['link', 'picture', 'video']],
+        ['view', ['fullscreen', 'codeview', 'help']]
+      ],
+      callbacks: {
+        onImageUpload: async function (files) {
+          const formData = new FormData();
 
-        let response = await axios.post("/api/free/post/upload-image", formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
+          for (let i = 0; i < files.length; i++) {
+            formData.append('files', files[i]);
           }
-        });
 
-        console.log(response);
+          let response = await axios.post("/api/free/post/upload-image", formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
 
-        for (let i = 0; i < response.data.result.length; i++) {
-          let imageUrl = response.data.result[i];
-          (postReq.images).push(imageUrl);
+          console.log(response);
 
-          // 이미지 태그 생성 및 삽입
-          let imgTag = window.$("<img>").attr('src', imageUrl);
-          window.$("#summernote").summernote("insertNode", imgTag[0]);
+          for (let i = 0; i < response.data.result.length; i++) {
+            let imageUrl = response.data.result[i];
+            (postReq.images).push(imageUrl);
+
+            // 이미지 태그 생성 및 삽입
+            let imgTag = window.$("<img>").attr('src', imageUrl);
+            window.$("#summernote").summernote("insertNode", imgTag[0]);
+          }
         }
       }
-    }
-  });
-});
-// freePostReq.value.idx = 14;
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
-// // 게시물 세부 정보 가져오기
-// if (props.postIndex !== null && props.postIndex !== undefined) {
-//
-//     await communityStore.getPostDetail(props.postIdx); // props.postIdx로 바꿔야함
-//     if (communityStore.postDetail) {
-//       postReq.title = communityStore.postDetail.title;
-//       postReq.content = communityStore.postDetail.content;
-//       window.$("#summernote").summernote("code", postReq.content);
-//     }
-// }
+  watch(() => props.postDetail, (newVal) => {
+    if (newVal) {
+      postReq.title = newVal.title;
+      postReq.content = newVal.content;
+      window.$("#summernote").summernote("code", newVal.content);
+    }
+  }, { immediate: true });
+});
 
 // send 함수
 const create = async () => {
@@ -98,7 +113,8 @@ const update = async () => {
 }
 
 const handleAction = () => {
-  if (props.postIndex != null) {
+  if (props.postDetail != null) {
+    console.log("update실행")
     update()
   } else {
     create()

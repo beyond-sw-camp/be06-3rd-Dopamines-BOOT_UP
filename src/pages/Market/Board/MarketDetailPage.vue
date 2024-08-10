@@ -1,8 +1,40 @@
 <script setup>
+import { ref, onMounted } from "vue";
+import { Carousel, Navigation, Pagination, Slide } from "vue3-carousel";
+import "vue3-carousel/dist/carousel.css";
+
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
-</script>
+import { useRoute, useRouter } from "vue-router";
+import { useMarketStore } from "@/pages/Market/stores/UseMarketStore";
 
+const marketStore = useMarketStore();
+const route = useRoute();
+const router = useRouter();
+
+const markedStatus = ref("fill");
+
+const changeImg = () => {
+  markedStatus.value = markedStatus.value === "empty" ? "fill" : "empty";
+  marketStore.setOrDeleteMarked(route.params.idx);
+};
+
+const createChatRoom = () => {
+  if (marketStore.createChatRoom()) {
+    router.push("/market/chat");
+  }
+};
+
+onMounted(async () => {
+  await marketStore.getProduct(route.params.idx);
+
+  if (marketStore.product.marked) {
+    markedStatus.value = "fill";
+  } else {
+    markedStatus.value = "empty";
+  }
+});
+</script>
 
 <template>
   <div class="body-container">
@@ -10,7 +42,7 @@ import MainFooter from "@/components/layout/MainFooter.vue";
     <main>
       <div class="detail-container">
         <Carousel>
-          <Slide v-for="image in this.marketStore.product.images" :key="image">
+          <Slide v-for="image in marketStore.product.images" :key="image">
             <div class="detail-images-wrapper">
               <img class="carousel__item" :src="image" />
             </div>
@@ -32,9 +64,7 @@ import MainFooter from "@/components/layout/MainFooter.vue";
                 <div class="marked">
                   <label for=":r1:" class="relative">
                     <img
-                      :src="
-                        require(`@/assets/icon/${marked_status}_marked.svg`)
-                      "
+                      :src="require(`@/assets/icon/${markedStatus}_marked.svg`)"
                       width="32"
                       height="32"
                       viewBox="0 0 32 32"
@@ -67,51 +97,6 @@ import MainFooter from "@/components/layout/MainFooter.vue";
   </div>
   <MainFooter></MainFooter>
 </template>
-
-<script>
-import { defineComponent } from "vue";
-import { Carousel, Navigation, Pagination, Slide } from "vue3-carousel";
-import "vue3-carousel/dist/carousel.css";
-
-import { mapStores } from "pinia";
-import { useMarketStore } from "@/pages/Market/stores/UseMarketStore";
-
-export default defineComponent({
-  name: "MarketDetailPage",
-  computed: {
-    ...mapStores(useMarketStore),
-  },
-  created() {
-    this.marketStore.getProduct(this.$route.params.idx);
-  },
-  data() {
-    return {
-      marked_status: "empty",
-    };
-  },
-  methods: {
-    changeImg() {
-      if (this.marked_status === "empty") {
-        this.marked_status = "fill";
-      } else {
-        this.marked_status = "empty";
-      }
-    },
-
-    createChatRoom() {
-      if (this.marketStore.createChatRoom()) {
-        this.$router.push("/market/chat");
-      }
-    },
-  },
-  components: {
-    Carousel,
-    Slide,
-    Pagination,
-    Navigation,
-  },
-});
-</script>
 
 <style scoped>
 section,

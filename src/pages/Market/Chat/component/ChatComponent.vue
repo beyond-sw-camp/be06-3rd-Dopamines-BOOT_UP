@@ -16,7 +16,7 @@ const userInfo = ref(JSON.parse(localStorage.getItem("user")));
     </div>
   </div>
   <div class="chat-window">
-    <div class="chat-header">Chat with User 1</div>
+    <div class="chat-header"></div>
     <div class="chat-messages">
       <div class="chat-messages-container">
         <div v-for="message in chatStore.messages" v-bind:key="message.idx">

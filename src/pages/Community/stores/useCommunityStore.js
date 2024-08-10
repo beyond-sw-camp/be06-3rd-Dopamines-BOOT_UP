@@ -7,13 +7,12 @@ export const useCommunityStore = defineStore('community', {
         {
             postDetail: { idx:0, title: "", content: "", author: "", imageUrlList: [], created_at: "", likeCount: 0, freeCommentList: []},
             postReq: { idx:0, title: "", content: "", images: []}
-
         }
     ),
     actions: {
         async getPostDetail(idx) {
             const response = await axios.get(
-                `/api/free/post/read?idx=${idx}`,{ // 쿠키 포함
+                `/api/free/post/read?idx=${idx}`,{
                     isCredential: true,
                 }
             );
@@ -21,6 +20,8 @@ export const useCommunityStore = defineStore('community', {
             console.log(response);
 
             this.postDetail = response.data.result;
+
+            return this.postDetail;
         },
 
         async createPost(formData) {
@@ -48,18 +49,16 @@ export const useCommunityStore = defineStore('community', {
         async updatePost(formData) {
             const response = await axios.put(
                 `/api/free/post/update`, formData, {
-                    isCredential: true,
                     headers: {
-                        "Content-Type": "multipart/form-data",
+                        "Content-Type": "application/json"
                     },
+                    isCredential: true,
                 }
             )
 
             console.log("==updatePost==");
             console.log(response);
             console.log("==============");
-        }
-
-
+        },
     }
 });

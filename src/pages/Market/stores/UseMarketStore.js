@@ -13,7 +13,8 @@ export const useMarketStore = defineStore("market", {
         searchPage: 0,
         isEnd: false,
         isSearchResultEnd: false,
-        lastSearchQuery: ""
+        lastSearchQuery: "",
+        postReq: { idx: 0, title: "", content: "", images: [] },
     }),
     actions: {
         async getProducts() {
@@ -49,8 +50,9 @@ export const useMarketStore = defineStore("market", {
 
             this.product = response.data.result;
 
-
             console.log("images : " + this.product.images)
+
+            return true;
         },
 
         async search(query) {
@@ -88,6 +90,8 @@ export const useMarketStore = defineStore("market", {
 
         async createChatRoom() {
 
+            console.log("author idx : " + this.product.authorIdx)
+
             let chatRoomReq = {
                 receiverIdx: this.product.authorIdx,
                 marketPostIdx: this.product.idx
@@ -100,6 +104,14 @@ export const useMarketStore = defineStore("market", {
             );
 
             return true
+        },
+
+        async setOrDeleteMarked(idx) {
+            let url = backend + `/marked/${idx}`;
+            await axios.put(url, {
+                withCredentials: true,
+            });
         }
+
     }
 })

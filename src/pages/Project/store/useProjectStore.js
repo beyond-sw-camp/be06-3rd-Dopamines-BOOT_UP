@@ -4,28 +4,34 @@ import axios from "axios";
 export const useProjectStore = defineStore("project", {
     state: () => (
         {
-            projectList: { idx: 0, title: "", contents: "", courseNum: "", gitUrl: "", sourceUrl: "", teamName: "", students: [] },
+            projectList: { idx: 0, title: "", contents: "", courseNum: "", gitUrl: "", sourceUrl: "", teamName: "", students: [], role: "" },
+            projectDetail: { idx: 0, title: "", contents: "", courseNum: "", gitUrl: "", sourceUrl: "", teamName: "", students: []},
             postReq: { idx:0, title: "", content: ""},
             teamList: { idx: 0, teamName: []},
         }
     ),
     actions: {
         async getProjectList() {
-            const response = await axios.get(
-                `api/project/read-all`
-            )
+            try {
+                const response = await axios.get(
+                    `/api/project/read-all`, {
+                        isCredentials: true
+                    }
+                )
 
-            console.log(response);
-            this.projectList = response.data.result;
+                console.log(response);
+                this.projectList = response.data.result;
 
-            return this.projectList;
+                return this.projectList;
+            } catch (error) {
+                console.log(error);
+            }
         },
         async uploadFile(file) {
             const formData = new FormData();
-            const fileName = file.getName;
             const blob = new Blob([file], { type: "application/octet-stream" });
 
-            formData.append('file', blob, fileName);
+            formData.append('file', blob, file.name);
 
             const response = await axios.post(
                 "/api/project/upload-image",
@@ -69,6 +75,25 @@ export const useProjectStore = defineStore("project", {
             }
 
             return this.teamList;
+        },
+
+        async getProjectDetail(idx) {
+            console.log("===?===");
+            console.log(idx)
+            console.log("=======");
+            try{
+                const response = await axios.get(
+                    `/api/project/read?idx=${idx}`, {
+                    }
+                )
+
+                console.log(response);
+                this.projectDetail = response.data.result;
+            } catch (e) {
+                console.log(e)
+            }
+
+            return this.projectDetail;
         }
     }
 });

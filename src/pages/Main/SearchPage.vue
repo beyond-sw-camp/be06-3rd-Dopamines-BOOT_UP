@@ -1,8 +1,9 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { useFreePostStore } from '@/pages/Community/FreeBoard/stores/useFreePostStore';
 import { useOpenPostStore } from '@/pages/Community/OpenBoard/stores/useOpenPostStore';
-import { useMarketStore } from '@/pages/Market/stores/UseMarketStore';
+import { useMarketStore } from '@/pages/Market/stores/UseMarketStore'; // Corrected import statement
 import { useNoticeStore } from '@/pages/Notice/stores/useNoticeStore';
 import MainHeader from '@/components/layout/MainHeader.vue';
 import SearchBar from '@/components/post/Menu/SearchBar.vue';
@@ -14,6 +15,7 @@ const freePostStore = useFreePostStore();
 const openPostStore = useOpenPostStore();
 const marketPostStore = useMarketStore();
 const noticeStore = useNoticeStore();
+const route = useRoute();
 
 const performSearch = async () => {
   await freePostStore.search(searchQuery.value);
@@ -26,6 +28,18 @@ const handleSearch = (query) => {
   searchQuery.value = query;
   performSearch();
 };
+
+onMounted(() => {
+  const query = route.query.q;
+  if (query) {
+    searchQuery.value = query;
+    performSearch();
+  }
+});
+
+watch(searchQuery, () => {
+  performSearch();
+});
 </script>
 
 <template>
@@ -33,7 +47,11 @@ const handleSearch = (query) => {
     <MainHeader @search="handleSearch"></MainHeader>
     <main>
       <div class="content-area">
-        <SearchBar v-model:searchQuery="searchQuery" @input="performSearch"></SearchBar>
+        <SearchBar
+            :searchInput="searchQuery"
+            @update:searchInput="searchQuery = $event"
+            @performSearch="performSearch"
+        ></SearchBar>
         <SearchList
             :freeResults="freePostStore.searchResults"
             :openResults="openPostStore.searchResults"

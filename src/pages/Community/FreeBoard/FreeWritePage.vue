@@ -13,7 +13,7 @@ const communityStore = useCommunityStore();
 const postCreate = (postReq) => {
   console.log("postCreate in postReq", postReq);
 
-  const response = communityStore.createPost(postReq);
+  const response = communityStore.createPost(postReq, "free");
 
   if (response) {
     if(confirm("게시글이 등록되었습니다.")) {
@@ -23,8 +23,6 @@ const postCreate = (postReq) => {
     alert("게시글 작성에 실패했습니다. 다시 요청해주세요.");
   }
 }
-
-
 </script>
 
 <template>
@@ -35,6 +33,7 @@ const postCreate = (postReq) => {
         <h1>자유게시판 작성</h1>
       </div>
       <PostEditor :post-req= "communityStore.postReq"
+                  board-type="free"
                   @postReq="postCreate" ></PostEditor>
     </main>
     <MainFooter></MainFooter>

@@ -28,8 +28,8 @@ onMounted( async ()=> {
     <MainHeader></MainHeader>
     <main>
       <div class="content-area">
-        <PostList :data-list="freePostStore.posts" title="자유 게시판" board-link="/free"></PostList>
-        <PostList :data-list="openPostStore.posts" title="공개 게시판" board-link="/open"></PostList>
+        <PostList :data-list="freePostStore.posts" title="자유 게시판" board="free"></PostList>
+        <PostList :data-list="openPostStore.posts" title="공개 게시판" board="open"></PostList>
       </div>
     </main>
     <MainFooter></MainFooter>

@@ -1,28 +1,28 @@
 <script setup>
-import {defineProps} from 'vue';
+import { defineProps } from 'vue';
 
 const props = defineProps({
-  postIdx:{
+  postIdx: {
     type: Number,
     required: true
   },
-  boardLink:{
+  board: {
     type: String,
     required: true
   },
-  categoryTitle:{
+  boardTitle: {
     type: String,
     required: true
   },
-  boardListLink:{
+  category: {
     type: String,
     required: true
   },
-  boardTitle:{
+  categoryTitle: {
     type: String,
     required: true
   },
-  postAuthor:{
+  postAuthor: {
     type: String,
     required: true
   },
@@ -37,29 +37,26 @@ const props = defineProps({
   postContents: {
     type: String,
     required: true,
-  },
-  commentCount:{
-    type: Number,
-    required: true
   }
 });
 </script>
 
 <template>
-  <div :id="'post-' + props.postIdx">
-    <div class="post-container">
+  <div class="post-container">
     <div class="post-wrapper-top">
       <div class="post-wrapper-top-line">
         <div class="post-category-container"></div>
       </div>
       <div class="post-category-wrapper">
         <div class="post-category-content">
-          <a class="post-category-title" href="{{ props.boardLink }}">{{ categoryTitle }}</a>
+          <!-- category-title은 url이 free나 open으로 시작할 때만 보여야해 -->
+          <router-link class="post-category-title" :to="props.category">{{ props.categoryTitle }}</router-link>
           /
-          <a class="post-board-title" href="{{ props.boardListLink }}">{{ props.boardTitle }}</a></div>
+          <router-link class="post-board-title" :to="props.board">{{ props.boardTitle }}</router-link>
+        </div>
       </div>
     </div>
-      <hr>
+    <hr>
     <div class=".post-info-container">
       <div class="">
         <div class="">
@@ -76,55 +73,50 @@ const props = defineProps({
             <hr style="border:.5px solid #bfb8a6">
             <div class="post-content-container">
               <div contenteditable="false" role="textbox" aria-multiline="true"
-                       aria-readonly="true" aria-label=""
-                       aria-placeholder="내용을 입력해주세요." translate="no"
-                       class="ProseMirror remirror-editor remirror-a11y-dark">
-<!--                글자 넘침 시 해결 필요-->
+                   aria-readonly="true" aria-label=""
+                   aria-placeholder="내용을 입력해주세요." translate="no"
+                   class="ProseMirror remirror-editor remirror-a11y-dark">
+                <!-- 글자 넘침 시 해결 필요 -->
                 <div class="post-content">{{ props.postContents }}</div>
+              </div>
+              <div class="post-edit-wrap">
+                <!-- TODO v-show="userIdx" 확인 로직 추가 -->
+                <router-link :to="`/community/free/edit/${props.postIdx}`" class="post-edit">수정하기</router-link>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="">
-      <div>
-        <div class="post-wrapper-bottom"></div>
-        <h2 id="notes-title" class="post-comment-count">{{ props.commentCount }}개의 답변</h2>
-      </div>
-    </div>
-  </div>
   </div>
 </template>
 
-
-
 <style scoped>
-.post-container{
+.post-container {
   max-width: 80rem;
   margin-left: auto;
   margin-right: auto;
-  hr{
+  hr {
     border: .5px solid #e06139a3;
     width: calc(100% - 10px);
   }
 }
-.post-wrapper-top{
+.post-wrapper-top {
   margin: 10px 0;
   position: relative;
 }
-.post-wrapper-top-line{
+.post-wrapper-top-line {
   align-items: center;
   display: flex;
   inset: 0;
   position: absolute;
 }
-.post-category-container{
+.post-category-container {
   border-top-width: 1px;
   width: 100%;
   border-color: hsla(220, 9%, 46%, .3);
 }
-.post-category-wrapper{
+.post-category-wrapper {
   display: flex;
   position: relative;
   font-size: .875rem;
@@ -133,56 +125,58 @@ const props = defineProps({
   padding: 10px;
   border-radius: 10px;
 }
-.post-category-content{
-  .post-category-title{
+.post-category-content {
+  .post-category-title {
     font-weight: 600;
   }
-  .post-board-title{
+  .post-board-title {
     font-weight: 600;
     color: #E06139;
   }
 }
-
-.post-writer-container{
+.post-writer-container {
   display: flex;
   justify-content: space-between;
 }
-.post-writer-wrapper{
+.post-writer-wrapper {
   padding: 10px 5px;
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
-.post-writer-name{
+.post-writer-name {
   margin: 0;
 }
-.post-time-ago{
+.post-time-ago {
   font-size: .875rem;
 }
-.post-title{
+.post-title {
   margin: 10px;
 }
-.post-content-container{
+.post-content-container {
   font-size: 1rem;
   line-height: 1.5rem;
 }
-.post-content-wrapper{
+.post-content-wrapper {
   background-color: #bfb8a629;
-  /* border: 1px solid #bfb8a6; */
   padding: 10px;
   border-radius: 10px;
 }
-.post-content{
+.post-content {
   padding: 10px;
   background-color: #fff;
   border-radius: 5px;
 }
-.post-wrapper-bottom{
-  border-top-width: 1px;
-  border-color: hsla(220, 9%, 46%, .3);
-  margin-bottom: 40px;
+.post-edit-wrap {
+  display: flex;
+  justify-content: flex-end;
 }
-.post-comment-count{
-  font-size: .875rem;
+.post-edit {
+  margin-top: 10px;
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: rgba(191, 184, 166, 0.7);
+  color: #212529;
+  border-radius: 5px;
 }
 </style>

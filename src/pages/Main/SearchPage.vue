@@ -11,7 +11,7 @@ import MainFooter from "@/components/layout/MainFooter.vue";
     <main>
       <div class="content-area">
         <SearchBar ></SearchBar>
-        <PostList title="검색 결과"></PostList>
+        <PostList title="검색 결과" board="통합검색" data-list=""></PostList>
       </div>
     </main>
     <MainFooter></MainFooter>

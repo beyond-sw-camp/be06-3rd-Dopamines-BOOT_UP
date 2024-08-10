@@ -23,7 +23,7 @@ const router = createRouter({
         // Community
         { path: '/community', component: () => import('../pages/Community/CommunityBoardListPage.vue') },
         { path: '/free', component: () => import('../pages/Community/FreeBoard/FreeListPage.vue') },
-        { path: '/free/detail', component: () => import('../pages/Community/FreeBoard/FreeDetailPage.vue') },
+        { path: '/free/detail/:id', component: () => import('../pages/Community/FreeBoard/FreeDetailPage.vue') },
         { path: '/free/write', component: () => import('../pages/Community/FreeBoard/FreeWritePage.vue') },
         { path: '/free/edit/:id', component: () => import('../pages/Community/FreeBoard/FreeEditPage.vue') },
         { path: '/open', component: () => import('../pages/Community/OpenBoard/OpenListPage.vue') },

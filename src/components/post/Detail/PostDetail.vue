@@ -2,11 +2,7 @@
 import PostDetailComponent from '@/components/post/Detail/PostDetailComponent.vue';
 import { defineProps } from 'vue';
 
-const props = defineProps({
-  boardIdx: {
-    type: Number,
-    required: true,
-  },
+defineProps({
   postIdx: {
     type: Number,
     required: true,
@@ -51,22 +47,17 @@ const props = defineProps({
 </script>
 
 <template>
-  <div :id="'post-' + props.boardIdx">
+  <div>
     <PostDetailComponent
-        :post-idx="props.postIdx"
-        :board-link="props.boardLink"
-        :board-list-link="props.boardListLink"
-        :board-title="props.boardTitle"
-        :category-title="props.categoryTitle"
-        :comment-count="props.commentCount"
-        :post-author="props.postAuthor"
-        :post-contents="props.postContents"
-        :post-created-at="props.postCreatedAt"
-        :post-title="props.postTitle"
+        :post-contents="postContents"
+        :post-title="postTitle"
+        :post-created-at="postCreatedAt"
+        :post-author="postAuthor"
+        :category-title="categoryTitle"
+        :category="categoryTitle"
+        :board-title="boardTitle"
+        :board="boardListLink"
+        :post-idx="postIdx"
     ></PostDetailComponent>
   </div>
 </template>
-
-<style scoped>
-
-</style>

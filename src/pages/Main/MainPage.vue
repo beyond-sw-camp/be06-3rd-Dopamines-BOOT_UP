@@ -6,17 +6,20 @@ import { useFreePostStore } from "@/pages/Community/FreeBoard/stores/useFreePost
 import { useOpenPostStore } from "@/pages/Community/OpenBoard/stores/useOpenPostStore";
 import { onMounted, ref } from "vue";
 
-const freeStore = useFreePostStore();
-const openStore = useOpenPostStore();
-const isDataLoaded = ref(false);
+const freePostStore = useFreePostStore();
+const openPostStore = useOpenPostStore();
+
+const freePosts = ref([]);
+const openPosts = ref([]);
 
 onMounted(async () => {
   try {
-    await freeStore.readAllPosts(1, 10);
-    await openStore.readAllPosts(1, 10);
-    isDataLoaded.value = true;
+    await freePostStore.readAllPosts(1, 10);
+    await openPostStore.readAllPosts(1, 10);
+    freePosts.value = freePostStore.posts;
+    openPosts.value = openPostStore.posts;
   } catch (error) {
-    console.error("Error loading posts:", error);
+    console.error('Failed to fetch posts:', error);
   }
 });
 </script>
@@ -32,8 +35,16 @@ onMounted(async () => {
           </div>
         </div>
         <div class="content-area">
-          <PostList :dataList="freeStore.posts" title="자유 게시판"></PostList>
-          <PostList :dataList="openStore.posts" title="공개 게시판"></PostList>
+          <PostList
+              :dataList="freePosts"
+              title="자유 게시판"
+              board="free"
+          ></PostList>
+          <PostList
+              :dataList="openPosts"
+              title="공개 게시판"
+              board="open"
+          ></PostList>
         </div>
       </div>
     </main>
@@ -47,7 +58,6 @@ onMounted(async () => {
   width: 100%;
   margin: 0px auto;
   box-shadow: 3px 3px 10px 0px rgb(0 0 0 / 30%);
-  //margin-top: -150px;
 
   .banner {
     width: 100%;
@@ -55,7 +65,8 @@ onMounted(async () => {
     border-radius: 10px;
     display: flex;
     justify-content: center;
-    img{
+
+    img {
       width: 1000px;
       height: 100%;
     }

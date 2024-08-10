@@ -3,8 +3,14 @@ import axios from '@/config/axiosConfig';
 
 export const useFreePostStore = defineStore('post', {
     state: () => ({
+        idx: 0,
+        title: '',
+        content: '',
+        author: '',
+        imageUrlList: [],
+        created_at: new Date,
+        likeCount: 0,
         posts: [],
-        post: null,
     }),
     actions: {
         async createPost(postData) {
@@ -40,9 +46,8 @@ export const useFreePostStore = defineStore('post', {
                     content: response.data.content,
                     author: response.data.author,
                     imageUrlList: response.data.imageUrlList,
-                    created_at: response.data.created_at,
-                    likeCount: response.data.likeCount,
-                    freeCommentList: response.data.freeCommentList
+                    createdAt: response.data.created_at,
+                    likeCount: response.data.likeCount
                 };
                 return this.post;
             } catch (error) {

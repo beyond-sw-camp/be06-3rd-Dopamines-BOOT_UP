@@ -15,6 +15,11 @@ defineProps({
     type: String,
     default: '/',
     required: true
+  },
+  reservation: {
+    type: String,
+    default: '/reservation',
+    required: false,
   }
 });
 </script>

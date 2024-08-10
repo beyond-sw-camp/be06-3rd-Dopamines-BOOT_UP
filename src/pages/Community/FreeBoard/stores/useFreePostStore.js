@@ -39,7 +39,7 @@ export const useFreePostStore = defineStore('post', {
         },
         async readPost(idx) {
             try {
-                const response = await axios.get(`/free/post/read?idx=${idx}`);
+                const response = await axios.get(`/free/post/read?idx=${idx}`, {withCredentials: true});
                 this.post = {
                     idx: response.data.idx,
                     title: response.data.title,
@@ -57,7 +57,7 @@ export const useFreePostStore = defineStore('post', {
         },
         async readAllPosts(page, size) {
             try {
-                const response = await axios.get(`/free/post/read-all?page=${page}&size=${size}`);
+                const response = await axios.get(`/free/post/read-all?page=${page}&size=${size}`, {withCredentials: true});
                 if (response.data && Array.isArray(response.data.result)) {
                     this.posts = response.data.result.map(post => ({
                         idx: post.idx,

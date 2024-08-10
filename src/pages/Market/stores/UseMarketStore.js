@@ -13,7 +13,8 @@ export const useMarketStore = defineStore("market", {
         searchPage: 0,
         isEnd: false,
         isSearchResultEnd: false,
-        lastSearchQuery: ""
+        lastSearchQuery: "",
+        postReq: { idx: 0, title: "", content: "", images: [] },
     }),
     actions: {
         async getProducts() {

@@ -1,22 +1,69 @@
 <script setup>
-import PostList from "@/pages/component/List/PostList.vue";
+import PostList from "@/components/post/List/PostList.vue";
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
+import { useFreePostStore } from "@/pages/Community/FreeBoard/stores/useFreePostStore";
+import { useOpenPostStore } from "@/pages/Community/OpenBoard/stores/useOpenPostStore";
+import { useNoticeStore} from "@/pages/Notice/stores/useNoticeStore";
+import { onMounted, ref } from "vue";
+
+const freePostStore = useFreePostStore();
+const openPostStore = useOpenPostStore();
+const noticePostStore = useNoticeStore();
+
+const freePosts = ref([]);
+const openPosts = ref([]);
+const noticePosts = ref([]);
+
+onMounted(async () => {
+  try {
+    await freePostStore.readAllPosts(1, 5);
+    await openPostStore.readAllPosts(1, 5);
+    await noticePostStore.fetchAllPublicNotices(1, 5);
+    freePosts.value = freePostStore.posts;
+    openPosts.value = openPostStore.posts;
+    noticePosts.value = noticePostStore.posts;
+  } catch (error) {
+    console.error('Failed to fetch posts:', error);
+  }
+});
 </script>
 
 <template>
   <div class="body-container">
     <MainHeader></MainHeader>
-    <main>
+    <main style="margin-top: 115px !important;">
       <div class="main-container">
         <div class="banner-area">
           <div class="banner">
-            <img src="../../assets/img/pepecolor.jpeg" height="100%">
+            <img src="@/assets/img/main-banner.png" alt="">
           </div>
         </div>
         <div class="content-area">
-          <PostList title="자유 게시판"></PostList>
-          <PostList title="공개 게시판"></PostList>
+          <div class="content-content">
+            <div>
+              <PostList
+                  :dataList="freePosts"
+                  title="자유 게시판"
+                  board="free"
+                  listlength="5"
+              ></PostList>
+              <PostList
+                  :dataList="openPosts"
+                  title="공개 게시판"
+                  board="open"
+                  listlength="5"
+              ></PostList>
+            </div>
+          </div>
+          <div class="content-content">
+            <PostList
+                :dataList="noticePosts"
+                title="공지사항"
+                board="notice"
+                listlength="10"
+            ></PostList>
+          </div>
         </div>
       </div>
     </main>
@@ -25,27 +72,39 @@ import MainFooter from "@/components/layout/MainFooter.vue";
 </template>
 
 <style scoped>
-.banner-area{
+.banner-area {
   position: relative;
-  /* max-width: 1200px; */
   width: 100%;
   margin: 0px auto;
-  height: 300px;
-  box-shadow: 2px 2px 10px 0px rgb(0 0 0 / 10%);
-  background-color: #e06039e0;
-  .banner{
+  box-shadow: 3px 3px 10px 0px rgb(0 0 0 / 30%);
+
+  .banner {
     width: 100%;
     height: 100%;
     border-radius: 10px;
     display: flex;
     justify-content: center;
+
+    img {
+      width: 1000px;
+      height: 100%;
+    }
   }
 }
 
-.content-area{
+.content-area {
   display: flex;
   column-gap: 2.5rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
+  border-radius: 10px;
+  background-color: rgba(191, 184, 166, 0.1);
+}
+
+.content-content {
+  width: 100%;
+  background-color: rgba(191, 184, 166, 0.15);
+  padding: 10px;
+  border-radius: 10px;
 }
 </style>

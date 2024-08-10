@@ -1,8 +1,20 @@
 <script setup>
+import { onMounted } from 'vue';
 import MainHeader from "@/components/layout/MainHeader.vue";
-import PostList from "@/pages/component/List/PostList.vue";
+import PostList from "@/components/post/List/PostList.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
-import SearchBar from "@/pages/component/Menu/SearchBar.vue";
+import SearchBar from "@/components/post/Menu/SearchBar.vue";
+import { useNoticeStore } from '@/pages/Notice/stores/useNoticeStore';
+
+const noticeStore = useNoticeStore();
+const dataList = noticeStore.dataList;
+const fetchAllPublicNotices = noticeStore.fetchAllPublicNotices;
+
+onMounted(() => {
+  fetchAllPublicNotices(1, 10);
+});
+
+const isStatusShow = false;
 </script>
 
 <template>
@@ -10,8 +22,8 @@ import SearchBar from "@/pages/component/Menu/SearchBar.vue";
     <MainHeader></MainHeader>
     <main>
       <div class="content-area">
-        <PostList title="공지사항 게시판"></PostList>
-        <SearchBar ></SearchBar>
+        <PostList title="공지사항 게시판" :data-list="dataList" :show-status="isStatusShow"></PostList>
+        <SearchBar></SearchBar>
       </div>
     </main>
     <MainFooter></MainFooter>

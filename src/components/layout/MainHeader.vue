@@ -1,30 +1,60 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, watch, defineEmits } from 'vue';
 import { useRouter } from 'vue-router';
+import Cookies from 'js-cookie';
 
 const searchInput = ref('');
 const router = useRouter();
+const isLoggedIn = ref(false);
 
+const checkLoginStatus = () => {
+  const token = Cookies.get('token');
+  isLoggedIn.value = !!token;
+};
+
+onMounted(() => {
+  checkLoginStatus();
+});
+
+watch(
+    () => Cookies.get('token'),
+    () => {
+      checkLoginStatus();
+    }
+);
+
+const emit = defineEmits(['search']);
 const handleSearch = () => {
-  router.push({path: '/search', query: { q : searchInput.value}});
+  emit('search', searchInput.value);
+  router.push({ path: '/search', query: { q: searchInput.value } });
+};
+
+const toggleLogin = () => {
+  if (isLoggedIn.value) {
+    Cookies.remove('token');
+  } else {
+    Cookies.set('token', 'your-token-value');
+  }
+  checkLoginStatus();
 };
 </script>
 
 <template>
   <header>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <div class="header-wrap">
       <div class="header-area">
         <div class="logo-area">
           <div class="logo">
-            <a href="main.html">
-              <img src="../../assets/img/pepecolor.jpeg" height="28px">
+            <a href="/">
+              <img src="@/assets/img/main-logo.png" height="28px">
             </a>
           </div>
         </div>
         <div class="search-area">
           <div class="search-wrap">
             <div class="search-box">
-              <input v-model="searchInput" @keyup.enter="handleSearch" autocomplete="off" type="text" placeholder="검색어를 입력하세요">
+              <input v-model="searchInput" @keyup.enter="handleSearch" type="text" placeholder="검색어를 입력하세요">
               <button aria-label="search" type="button" @click="handleSearch">
                 <img src="../../assets/icon/searchIcon.svg" alt="">
               </button>
@@ -33,7 +63,7 @@ const handleSearch = () => {
         </div>
       </div>
       <nav>
-        <ul class="category">
+        <ul class="category menu">
           <li>
             <router-link to="/community">커뮤니티 게시판</router-link>
           </li>
@@ -50,12 +80,14 @@ const handleSearch = () => {
             <router-link to="/reservation">스터디 테이블 예약</router-link>
           </li>
         </ul>
-        <ul class="login">
+        <ul class="login menu">
           <li>
-            <router-link to="/user/login">로그인</router-link>
+            <button v-if="Cookies.get('Atoken')" @click="toggleLogin">로그아웃</button>
+            <router-link v-else to="/user/login">로그인</router-link>
+
           </li>
           <li>
-            <router-link to="/user/signup">회원가입</router-link>
+            <router-link to="/user/signup/agree">회원가입</router-link>
           </li>
         </ul>
       </nav>
@@ -64,13 +96,13 @@ const handleSearch = () => {
 </template>
 
 <style scoped>
-.header-wrap{
+.header-wrap {
   position: relative;
   max-width: 1000px;
   margin: 0 auto;
 }
 
-.header-area{
+.header-area {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -78,15 +110,15 @@ const handleSearch = () => {
   transition: all ease 0.3s;
 }
 
-.logo-area{
+.logo-area {
   padding-top: 5px;
 }
 
-.search-area{
+.search-area {
   position: relative;
 }
 
-.search-wrap{
+.search-wrap {
   position: relative;
   z-index: 2;
   width: 100%;
@@ -97,7 +129,7 @@ const handleSearch = () => {
   align-items: center;
 }
 
-.search-box{
+.search-box {
   width: 17px;
   height: 40px;
   padding: 0px 20px;
@@ -106,13 +138,16 @@ const handleSearch = () => {
   border-radius: 100px;
   border: 1px solid #E06139;
   transition: 0.5s;
+
   &:hover {
     width: 480px;
   }
-  &:focus-within{
+
+  &:focus-within {
     width: 480px;
   }
-  input{
+
+  input {
     width: 100%;
     box-sizing: border-box;
     padding: 0px 40px 0px 44px;
@@ -125,43 +160,58 @@ const handleSearch = () => {
     font-size: 16px;
     line-height: 24px;
   }
-  button{
+
+  button {
     position: absolute;
     left: 10px;
     top: 8px;
   }
 }
 
-nav{
+nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 56px;
   /* box-shadow: 2px 2px 10px 0px rgb(0 0 0 / 10%); */
-  .category{
+
+  .category {
     display: flex;
     margin-left: -20px;
-    li{
+  }
+
+  .menu {
+    li {
       height: 30px;
       align-items: center;
       display: flex;
       position: relative;
-      padding: 0 20px;
-      &:hover{
-        background-color: rgba(224, 97, 57, 0.8);
-        border-radius: 5px;
-        router-link{
+      transition: all 0.5s;
+
+      a {
+        padding: 0 10px;
+        transition: all 0.5s;
+
+        &:hover {
           color: #fff;
         }
       }
+
+      &:hover, .nav-on {
+        background-color: rgba(224, 97, 57, 0.8);
+        border-radius: 5px;
+        margin: 0 10px;
+      }
     }
   }
-  .login{
+
+  .login {
     display: flex;
     margin-right: -12px;
     font-size: 14px;
     line-height: 20px;
-    li{
+
+    li {
       position: relative;
       padding: 0 12px;
     }

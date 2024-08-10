@@ -1,24 +1,80 @@
 <script setup>
 
+import MainHeader from "@/components/layout/MainHeader.vue";
+import PostEditor from "@/components/post/Detail/PostEditor.vue";
+import MainFooter from "@/components/layout/MainFooter.vue";
+import { useProjectStore } from "@/pages/Project/store/useProjectStore";
+import ProjectWriteItem from "@/pages/Project/component/ProjectWriteItem.vue";
+import {ref} from "vue";
+import router from "@/router";
+
+const projectStore = useProjectStore();
+const updateValues = ref({});
+let images = null;
+
+const addValue = (newValues) => {
+  updateValues.value = newValues;
+};
+
+const postCreate = async (postReq) => {
+
+  if (updateValues.value.file != null) {
+    images = await projectStore.uploadFile(updateValues.value.file);
+    postReq.image = images;
+  }
+
+  postReq.courseNum = updateValues.value.selectedCourseNum;
+  postReq.teamIdx = updateValues.value.selectedTeam;
+  postReq.gitUrl = updateValues.value.githubUrl;
+  try{
+    const response = projectStore.createPost(postReq);
+
+    if (response) {
+      if (confirm("프로젝트 등록에 성공하였습니다.")) {
+        router.push('/project');
+      }
+    } else {
+      if (confirm("프로젝트 등록에 실패하였습니다. 다시 시도하여 주십시오.")) {
+        router.push('/project/write');
+      }
+    }
+  } catch (e) {
+    console.error(e);
+  }
+
+};
+
+
 </script>
 
 <template>
-<div>
-    <h1>프로젝트 작성 페이지</h1>
-    <form>
-        <div>
-            <label for="title">제목</label>
-            <input type="text" id="title" />
-        </div>
-        <div>
-            <label for="content">내용</label>
-            <textarea id="content"></textarea>
-        </div>
-        <button type="submit">작성</button>
-    </form>
-</div>
+  <div class="body-container">
+    <MainHeader></MainHeader>
+    <main>
+      <div class="board-create-title">
+        <h1>프로젝트 게시판 작성</h1>
+      </div>
+      <ProjectWriteItem @updateValues="addValue"></ProjectWriteItem>
+      <PostEditor :post-req="projectStore.postReq"
+                  @postReq="postCreate"></PostEditor>
+    </main>
+    <MainFooter></MainFooter>
+  </div>
 </template>
 
 <style scoped>
+main {
+  flex-direction: column;
+}
 
+.board-create-title {
+  max-width: 1000px;
+  width: 100%;
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 30px;
+  text-align: center;
+}
 </style>

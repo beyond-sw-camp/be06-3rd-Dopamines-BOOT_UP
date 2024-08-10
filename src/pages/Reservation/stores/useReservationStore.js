@@ -4,13 +4,13 @@ import axios from "axios";
 // 전역 저장소 생성
 export const useReservationStore = defineStore('reservation', {
     state: () => (
-        {reservationList: [{ createdAt: "", time: "", section: "", floor: 0}]},
+        {reservationList: [{ idx: 0, createdAt: "", time: "", section: "", floor: 0}]},
             {reservationTimeList: [[{ idx: 0 }], [{idx: 0,}]]}
     ),
     actions: {
         async getReservationDetail() {
             const response = await axios.get(
-                `api/reservation/reservation-list`,{ // 쿠키 포함
+                `api/reservation/reservation-list?`,{ // 쿠키 포함
                     withCredentials: true
                 }
             );
@@ -42,11 +42,24 @@ export const useReservationStore = defineStore('reservation', {
 
                 console.log(response);
 
-                alert("예약이 성공적으로 완료되었습니다.");
+                return true;
             } catch (error) {
                 console.error("Error: ", error);
-                alert("예약에 실패했습니다. 다시 시도해주세요.");
+
+                return false;
             }
+        },
+
+        async deleteReservation(idx) {
+          try{
+              const response = await axios.delete(`/api/reservation/cancel/${idx}`);
+
+              console.log(response);
+              return true;
+          } catch (error) {
+              console.error('Failed to delete post:', error);
+              return false;
+          }
         }
     }
 });

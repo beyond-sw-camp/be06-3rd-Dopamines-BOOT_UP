@@ -1,48 +1,38 @@
 <script setup>
-  import { defineProps } from 'vue';
+import PostListItem from "@/pages/component/List/PostListItem.vue";
+import { defineProps } from 'vue';
 
-  const props = defineProps({
-    title: {
-      type: String,
-      required: true
-    }
-  });
+defineProps({
+  boardTitle: {
+    type: String,
+    required: true
+  },
+  posts: {
+    type: Array,
+    required: true
+  }
+})
 </script>
 
 <template>
   <div class="content-wrap">
     <div class="content-title">
       <a>
-        <span>{{ props.title }}</span>
+        <span>{{ boardTitle }}</span>
       </a>
     </div>
     <div>
       <div class="content">
         <ul class="board-list">
-          <li class="board-list-wrap" v-for="i in 20" v-bind:key="i">
-            <div class="board-post-status-header">
-              <div class="board-post-status-left">
-                <div class="board-post-author">
-                  <span>작성자1</span>
-                </div>
-                <div class="board-post-time">
-                  <span>18분 전</span>
-                </div>
-              </div>
-              <div class="board-post-status-right">
-                <div class="board-post-right-detail">
-                  <img src="../../../assets/icon/thumbIcon.svg" alt="Icon" width="20px">
-                  <span class="board-post-right-detail-text">0</span>
-                </div>
-                <div class="board-post-right-detail">
-                  <img src="../../../assets/icon/commentIcon.svg" alt="Icon" width="20px">
-                  <span class="board-post-right-detail-text">0</span>
-                </div>
-              </div>
-            </div>
-            <div>
-              <a class="board-post-title" href="https://okky.kr/questions/1508768">안드로이드 앱 구현시 라이브러리 업데이트 관련</a>
-            </div>
+          <li class="board-list-wrap" v-for="post in posts" :key="post.idx">
+            <PostListItem
+                :author="post.author"
+                :comment-count="post.commentCount"
+                :created-at="post.created_at"
+                :idx="post.idx"
+                :like-count="post.likeCount"
+                :post-title="post.title"
+            />
             <hr>
           </li>
         </ul>

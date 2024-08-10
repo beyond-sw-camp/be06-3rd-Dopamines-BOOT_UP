@@ -1,15 +1,13 @@
-<script setup>
+<script>
 import MainHeader from "@/components/layout/MainHeader.vue";
-import UserInfoComponent from '../components/signup/UserInfoComponent.vue'
-import HeaderComponent from '../components/common/HeaderComponent.vue'
 import { mapStores } from "pinia";
-import { useUserStore } from '@/stores/useUserStore';
-
+import { useUserStore } from './stores/useUserStore';
+import UserInfoComponent from "@/pages/User/component/UserInfoComponent.vue";
 export default {
   name: "SignupPage",
   components:{
     UserInfoComponent,
-    HeaderComponent
+    MainHeader
   },
   computed: {
     ...mapStores(useUserStore)
@@ -21,10 +19,10 @@ export default {
 </script>
 
 <template>
-  <div class="content-container">
+  <div class="body-container">
     <MainHeader></MainHeader>
     <main>
-      <div class="content-area">
+      <div class="main-container">
         <UserInfoComponent></UserInfoComponent>
       </div>
     </main>
@@ -32,5 +30,7 @@ export default {
 </template>
 
 <style scoped>
-
+.main-container{
+  max-width: 800px;
+}
 </style>

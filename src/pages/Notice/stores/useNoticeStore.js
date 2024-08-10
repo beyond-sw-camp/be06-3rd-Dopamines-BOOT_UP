@@ -9,6 +9,7 @@ export const useNoticeStore = defineStore('notice', {
 
     actions: {
         // 공지사항 작성 엑시오스
+        // 작성 엑시오스 부분만 수정했음 (수빈)
         async createNotice(formData) {
             try{
                 const response = await axios.post(

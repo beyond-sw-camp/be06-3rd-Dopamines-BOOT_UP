@@ -1,24 +1,24 @@
 <script setup>
-import { reactive, onMounted, watch } from "vue";
-import { defineEmits } from "vue";
+import { defineProps, onMounted, reactive, defineEmits } from 'vue';
 import axios from "axios";
-import { loadScript } from "vue-plugin-load-script";
+import {loadScript} from "vue-plugin-load-script";
 
-const emit = defineEmits(['edit']);
+const props = defineProps({
+  postIndex: {
+    type: Number,
+    required: true
+  },
+  postReq: {
+    type: Object,
+    required: true
+  }
+})
 
+const emit = defineEmits(['formData']);
 
 const postReq = reactive(Object.assign({}, props.postReq, {
   images: props.postReq.images || []
 }));
-
-
-watch(postReq, () => {
-  emit('edit', { ...postReq });
-}, { deep: true });
-
-const submitPostEdit = () => {
-  emit('edit', { ...postReq });
-};
 
 onMounted(async () => {
   await loadScript("https://code.jquery.com/jquery-3.6.0.min.js");
@@ -42,6 +42,7 @@ onMounted(async () => {
     callbacks: {
       onImageUpload: async function (files) {
         const formData = new FormData();
+
         for (let i = 0; i < files.length; i++) {
           formData.append('files', files[i]);
         }
@@ -52,19 +53,20 @@ onMounted(async () => {
           }
         });
 
+        console.log(response);
+
         for (let i = 0; i < response.data.result.length; i++) {
           let imageUrl = response.data.result[i];
-          postReq.imageUrlList.push(imageUrl);
+          (postReq.images).push(imageUrl);
 
+          // 이미지 태그 생성 및 삽입
           let imgTag = window.$("<img>").attr('src', imageUrl);
           window.$("#summernote").summernote("insertNode", imgTag[0]);
         }
-        submitPostEdit();
       }
     }
   });
 });
-
 // freePostReq.value.idx = 14;
 
 // // 게시물 세부 정보 가져오기
@@ -109,13 +111,21 @@ const handleAction = () => {
     <form @submit.prevent="handleAction">
       <label for="title">제목:</label>
       <input type="text" id="title" name="title" v-model="postReq.title" required>
->>>>>>> 45e225e0f32611fca3c7548b53815b629fccb0df
 
-    <label for="content">내용:</label>
-    <textarea id="summernote" v-model="postReq.content" rows="10" required></textarea>
+      <label for="content">내용:</label>
+      <textarea id="summernote" name="content" rows="10" required></textarea>
+
+      <button type="submit">제출</button>
+    </form>
   </div>
 </template>
 
+<script>
+export default {
+  name: 'PostEditor',
+
+}
+</script>
 <style scoped>
 .board-create-container {
   max-width: 1000px;
@@ -157,5 +167,17 @@ textarea {
   margin-right: 10px;
 }
 
+button {
+  padding: 10px;
+  background-color: #E06139;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
 
+button:hover {
+  background-color: #cd3d11;
+}
 </style>

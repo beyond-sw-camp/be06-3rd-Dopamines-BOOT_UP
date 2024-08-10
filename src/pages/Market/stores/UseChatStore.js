@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-// import { useMemberStore } from "@/stores/UseMemberStore";
 import axios from "axios";
 const backend = "/api";
 import Stomp from 'webstomp-client'
@@ -84,7 +83,6 @@ export const useChatStore = defineStore("chat", {
             this.messages.push(message)
 
         },
-
 
         async sendMessage(roomIdx, message) {
             console.log("[UseChatStore] sendMessage() ==========>")

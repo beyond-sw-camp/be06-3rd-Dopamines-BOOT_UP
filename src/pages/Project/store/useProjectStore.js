@@ -15,7 +15,7 @@ export const useProjectStore = defineStore("project", {
             try {
                 const response = await axios.get(
                     `/api/project/read-all`, {
-                        isCredentials: true
+                        withCredentials: true
                     }
                 )
 
@@ -36,7 +36,7 @@ export const useProjectStore = defineStore("project", {
             const response = await axios.post(
                 "/api/project/upload-image",
                 formData, {
-                    isCredentials: true,
+                    withCredentials: true,
                     headers: {
                         "Content-Type": "multipart/form-data",
                     }
@@ -49,7 +49,7 @@ export const useProjectStore = defineStore("project", {
             try{
                 const response = await axios.post(
                     `/api/project/create`, postReq, {
-                        isCredential: true
+                        withCredentials: true
                     }
                 )
                 console.log(response);

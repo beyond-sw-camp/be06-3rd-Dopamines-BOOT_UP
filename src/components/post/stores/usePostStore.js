@@ -1,7 +1,7 @@
 import { defineStore } from "pinia"
 import axios from "axios";
 
-const backend = "http://localhost:8080";
+// const backend = "http://localhost:8080";
 
 export const usePostStore = defineStore("post", {
     state: () =>({
@@ -32,7 +32,7 @@ export const usePostStore = defineStore("post", {
             };
             
             try{
-                let response = await axios.get(backend + "/free/post/read?idx=" + postIdx, config);
+                let response = await axios.get( "/api/free/post/read?idx=" + postIdx, config);
                 if(response.status === 200){
                     console.log("포스트 조회 성공");
                     getPostResposneDto = response.data.result;

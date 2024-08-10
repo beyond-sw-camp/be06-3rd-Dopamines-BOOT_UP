@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
-import axios from '@/config/axiosConfig';
+import axios from "axios";
+// import axios from '@/config/axiosConfig';
 
 export const useFreePostStore = defineStore('post', {
     state: () => ({
@@ -15,7 +16,7 @@ export const useFreePostStore = defineStore('post', {
     actions: {
         async createPost(postData) {
             try {
-                const response = await axios.post('/free/post/create', postData);
+                const response = await axios.post('/api/free/post/create', postData);
                 return response.data;
             } catch (error) {
                 console.error('Failed to create post:', error);
@@ -26,7 +27,7 @@ export const useFreePostStore = defineStore('post', {
             try {
                 const formData = new FormData();
                 files.forEach(file => formData.append('files', file));
-                const response = await axios.post('/free/post/upload-image', formData, {
+                const response = await axios.post('/api/free/post/upload-image', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -39,7 +40,7 @@ export const useFreePostStore = defineStore('post', {
         },
         async readPost(idx) {
             try {
-                const response = await axios.get(`/free/post/read?idx=${idx}`, {withCredentials: true});
+                const response = await axios.get(`/api/free/post/read?idx=${idx}`, {withCredentials: true});
                 this.post = {
                     idx: response.data.idx,
                     title: response.data.title,
@@ -57,7 +58,7 @@ export const useFreePostStore = defineStore('post', {
         },
         async readAllPosts(page, size) {
             try {
-                const response = await axios.get(`/free/post/read-all?page=${page}&size=${size}`, {withCredentials: true});
+                const response = await axios.get(`/api/free/post/read-all?page=${page}&size=${size}`, {withCredentials: true});
                 if (response.data && Array.isArray(response.data.result)) {
                     this.posts = response.data.result.map(post => ({
                         idx: post.idx,
@@ -81,7 +82,7 @@ export const useFreePostStore = defineStore('post', {
         },
         async updatePost(postData) {
             try {
-                const response = await axios.put('/free/post/update', postData);
+                const response = await axios.put('/api/free/post/update', postData);
                 return response.data;
             } catch (error) {
                 console.error('Failed to update post:', error);
@@ -90,7 +91,7 @@ export const useFreePostStore = defineStore('post', {
         },
         async deletePost(idx) {
             try {
-                const response = await axios.delete(`/free/post/delete?idx=${idx}`);
+                const response = await axios.delete(`/api/free/post/delete?idx=${idx}`);
                 return response.data;
             } catch (error) {
                 console.error('Failed to delete post:', error);

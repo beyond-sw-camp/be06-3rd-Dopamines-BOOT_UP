@@ -2,8 +2,8 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
-
-const backend = "http://localhost:8080";
+//
+// const backend = "http://localhost:8080";
 
 export const useLoginStore = defineStore('user', {
   state: () => ({
@@ -17,7 +17,7 @@ export const useLoginStore = defineStore('user', {
     async login(user) {
       try {
         let response = await axios.post(
-          backend + '/login',
+           '/api/login',
           user,
           { withCredentials: true } // 쿠키 전달
         );

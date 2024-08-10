@@ -1,8 +1,8 @@
 import { defineStore } from "pinia"
 import axios from "axios";
 import Cookies from 'js-cookie';
-
-const backend = "http://localhost:8080";
+//
+// const backend = "http://localhost:8080";
 
 export const useUserStore = defineStore("user", {
     state: () => ({
@@ -22,7 +22,7 @@ export const useUserStore = defineStore("user", {
             };
 
             try{
-                let response = await axios.post(backend + "/user/email-send",EmailRequestDto);
+                let response = await axios.post("/api/user/email-send", EmailRequestDto);
                 if(response.status === 200){
                     alert("이메일 요청 성공");
                 }
@@ -41,7 +41,7 @@ export const useUserStore = defineStore("user", {
             };
             
             try{
-                let response = await axios.post(backend + "/user/email-verify",EmailRequestDto);
+                let response = await axios.post("/api/user/email-verify",EmailRequestDto);
                 console.log(response);
                 const result = response.data.result;
                 console.log(result);
@@ -81,7 +81,7 @@ export const useUserStore = defineStore("user", {
                 }
             };
 
-            let response = await axios.post(backend + "/user/signup",signupDto,config);
+            let response = await axios.post("/api/user/signup", signupDto,config);
 
             signupResponse = response.data.result;
 
@@ -92,7 +92,7 @@ export const useUserStore = defineStore("user", {
         },
         async login(user) {
             try {
-                let response = await axios.post(backend + "/login", user);
+                let response = await axios.post("/api/login", user);
                 if (response.status === 200) {
                     this.isLoggedIn = true;
                     const token = response.headers['authorization'];

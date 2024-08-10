@@ -1,7 +1,8 @@
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
+import { ref } from 'vue';
 
-defineProps({
+const props = defineProps({
   commentContent: {
     type: String,
     required: false
@@ -11,6 +12,14 @@ defineProps({
     required: true
   }
 });
+
+const emit = defineEmits(['update:commentContent']);
+const textareaValue = ref(props.commentContent || '');
+
+const handleSubmit = () => {
+  emit('update:commentContent', textareaValue.value);
+  props.commentSubmit();
+};
 </script>
 
 <template>
@@ -18,26 +27,15 @@ defineProps({
     <div class="comment-input-wrapper">
       <div class="comment-input-wrapper2">
         <div class="comment-input-box">
-          <textarea id="answer" name="answer" rows="2" readonly=""
-                    class="comment-input-textarea"></textarea>
+          <textarea id="answer" name="answer" placeholder="댓글을 입력해주세요"
+                    class="comment-input-textarea" v-model="textareaValue"></textarea>
           <p style="display: flex; margin-left: 10px;" class="comment-authentication">
             {{ commentContent }}
-            <span class="">
-              작성하려면
-              <a class="font-bold underline" href="/settings/account?returnUrl=%2Fquestions%2F1509410">
-                이메일 인증
-              </a>
-              이 필요합니다.
-            </span>
           </p>
+          <div class="comment-btn-shape">
+            <button type="submit" class="comment-btn-primary" @click="handleSubmit">작성</button>
+          </div>
         </div>
-        <!-- Todo : V-if 문으로 활성화 여부에 따른 class CSS 조절 (일단 버튼 색깔 검증을 위해 둘 다 띄워놓음)-->
-        <div class="comment-btn-shape">
-          <button type="submit" class="comment-btn-primary" @click="commentSubmit">작성</button>
-        </div>
-        <!-- <div class="comment-btn-shape"> -->
-        <!--   <button type="button" disabled="" class="comment-btn-disabled">작성</button> -->
-        <!-- </div> -->
       </div>
     </div>
   </div>
@@ -70,7 +68,6 @@ select, textarea {
 .comment-input-wrapper2 {
   width: 100%;
   padding: 1.5rem;
-  margin-top: 1rem;
   position: relative;
   border: 1px solid #bfb8a6;
   border-radius: 10px;

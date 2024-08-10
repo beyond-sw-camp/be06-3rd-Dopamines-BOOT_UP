@@ -2,11 +2,11 @@
 import { onMounted } from 'vue';
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
-import PostDetail from "@/components/post/Detail/PostDetail.vue";
 import CommentComponent from "@/components/post/Detail/Comment/CommentComponent.vue";
 import { useFreePostStore } from "@/pages/Community/FreeBoard/stores/useFreePostStore";
 import { useFreeCommentStore } from "@/pages/Community/FreeBoard/stores/useFreeCommentStore";
 import { useRoute } from 'vue-router';
+import PostDetailComponent from "@/components/post/Detail/PostDetailComponent.vue";
 
 const freePostStore = useFreePostStore();
 const freeCommentStore = useFreeCommentStore();
@@ -29,18 +29,18 @@ onMounted(async () => {
     <main>
       <div class="main-container">
         <div v-if="freePostStore.post">
-          <PostDetail
-              :post-title="freePostStore.post.title"
-              :post-created-at="freePostStore.post.createdAt"
-              :post-contents="freePostStore.post.contents"
-              :post-author="freePostStore.post.author"
-              :comment-count="freePostStore.post.commentCount"
-              :category-title="freePostStore.post.categoryTitle"
-              :board-title="freePostStore.post.boardTitle"
-              :board-list-link="freePostStore.post.boardListLink"
-              :board-link="freePostStore.post.boardLink"
-              :post-idx="freePostStore.post.idx"
-              :board-idx="freePostStore.post.boardIdx"></PostDetail>
+          <PostDetailComponent
+            :post-idx="freePostStore.post.idx"
+            :board-link="'/community/free'"
+            :board-list-link="'/community/free/list'"
+            :board-title="'자유게시판'"
+            :category-title="'커뮤니티게시판'"
+            :comment-count="freePostStore.comments.length"
+            :post-author="freePostStore.post.author"
+            :post-contents="freePostStore.post.contents"
+            :post-created-at="freePostStore.post.createdAt"
+            :post-title="freePostStore.post.title"
+          ></PostDetailComponent>
           <CommentComponent :comments="freePostStore.comments"></CommentComponent>
         </div>
         <p v-else>포스트 로딩중...</p>

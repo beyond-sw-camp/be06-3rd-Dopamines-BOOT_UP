@@ -1,9 +1,10 @@
 <script setup>
-import { ref, defineProps } from "vue";
-import { useRouter } from "vue-router";
+import { ref, defineProps, computed } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
 const searchInput = ref("");
 const router = useRouter();
+const route = useRoute();
 
 const handleSearch = () => {
   router.push({ path: "/search", query: { q: searchInput.value } });
@@ -12,6 +13,10 @@ const handleSearch = () => {
 const props = defineProps({
   writelink: String,
 });
+
+const showWriteLink = computed(() => {
+  return route.path.startsWith('/market');
+});
 </script>
 
 <template>
@@ -19,17 +24,17 @@ const props = defineProps({
     <div class="search-wrap">
       <div class="search-box">
         <input
-          v-model="searchInput"
-          @keyup.enter="handleSearch"
-          autocomplete="off"
-          type="text"
-          placeholder="검색어를 입력하세요"
+            v-model="searchInput"
+            @keyup.enter="handleSearch"
+            autocomplete="off"
+            type="text"
+            placeholder="검색어를 입력하세요"
         />
         <button aria-label="search" type="button" @click="handleSearch">
           <img src="../../../assets/icon/searchIcon.svg" alt="" />
         </button>
       </div>
-      <div class="post-write">
+      <div class="post-write" v-if="showWriteLink">
         <router-link :to="`${props.writelink}`">글 작성</router-link>
       </div>
     </div>

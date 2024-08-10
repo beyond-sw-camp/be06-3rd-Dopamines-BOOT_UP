@@ -6,11 +6,11 @@ import { loadScript } from "vue-plugin-load-script";
 
 const emit = defineEmits(['edit']);
 
-const postReq = reactive({
-  title: '',
-  content: '',
-  imageUrlList: []
-});
+
+const postReq = reactive(Object.assign({}, props.postReq, {
+  images: props.postReq.images || []
+}));
+
 
 watch(postReq, () => {
   emit('edit', { ...postReq });
@@ -24,6 +24,8 @@ onMounted(async () => {
   await loadScript("https://code.jquery.com/jquery-3.6.0.min.js");
   await loadScript("https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js");
 
+  console.log("넌뭔데");
+  console.log(postReq);
   window.$('#summernote').summernote({
     placeholder: '메시지를 입력해주세요',
     tabsize: 2,
@@ -43,7 +45,8 @@ onMounted(async () => {
         for (let i = 0; i < files.length; i++) {
           formData.append('files', files[i]);
         }
-        let response = await axios.post("http://localhost:8080/free/post/upload-image", formData, {
+
+        let response = await axios.post("/api/free/post/upload-image", formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -61,12 +64,52 @@ onMounted(async () => {
     }
   });
 });
+
+// freePostReq.value.idx = 14;
+
+// // 게시물 세부 정보 가져오기
+// if (props.postIndex !== null && props.postIndex !== undefined) {
+//
+//     await communityStore.getPostDetail(props.postIdx); // props.postIdx로 바꿔야함
+//     if (communityStore.postDetail) {
+//       postReq.title = communityStore.postDetail.title;
+//       postReq.content = communityStore.postDetail.content;
+//       window.$("#summernote").summernote("code", postReq.content);
+//     }
+// }
+
+// send 함수
+const create = async () => {
+  postReq.content = window.$('#summernote').summernote('code');
+
+  console.log(postReq);
+  emit('postReq', postReq);
+};
+
+// update 함수
+const update = async () => {
+  postReq.content = window.$('#summernote').summernote('code');
+  postReq.idx = props.postIndex;
+  console.log(postReq);
+
+  emit('postReq', postReq);
+}
+
+const handleAction = () => {
+  if (props.postIndex != null) {
+    update()
+  } else {
+    create()
+  }
+}
 </script>
 
 <template>
-  <div>
-    <label for="title">제목:</label>
-    <input type="text" id="title" v-model="postReq.title" required />
+  <div class="board-create-container">
+    <form @submit.prevent="handleAction">
+      <label for="title">제목:</label>
+      <input type="text" id="title" name="title" v-model="postReq.title" required>
+>>>>>>> 45e225e0f32611fca3c7548b53815b629fccb0df
 
     <label for="content">내용:</label>
     <textarea id="summernote" v-model="postReq.content" rows="10" required></textarea>

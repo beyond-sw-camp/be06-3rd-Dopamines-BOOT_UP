@@ -10,7 +10,6 @@ const projectStore = useProjectStore();
 const dataList = ref([]);
 const courseNum = ref(Array.from({ length: 10 }, (_, i) => i + 1));
 
-
 onMounted(async () => {
   dataList.value = await projectStore.getProjectList();
 });
@@ -47,21 +46,23 @@ onMounted(async () => {
 </template>
 
 <script>
-  export default {
-    name: "ProjectPage",
-  }
+export default {
+  name: "ProjectPage",
+}
 </script>
 
 <style scoped>
 .project-container {
   max-width: 1000px;
 }
+
 .project-title-wrap {
   margin-bottom: 40px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
 }
+
 .coursenum-selection {
   width: 200px;
   background-color: #f4f4f4;
@@ -70,6 +71,7 @@ onMounted(async () => {
   height: 45px;
   border: 0;
 }
+
 select {
   border: 1px solid #ddd;
   border-radius: 0px;
@@ -80,12 +82,15 @@ select {
   padding: 0 25px 0 10px;
   color: inherit;
 }
+
 .project-list > li:hover {
   box-shadow: 1px 1px 10px rgba(0, 0, 0, .15);
 }
+
 .project-list > li, .project-list > li:before {
   transition: all ease-in-out .15s;
 }
+
 .project-list {
   display: flex;
   flex-wrap: wrap;
@@ -94,6 +99,7 @@ select {
   line-height: 1.15;
   word-break: keep-all;
 }
+
 .title-page {
   font-size: 2.250rem;
   font-weight: 700;
@@ -102,6 +108,7 @@ select {
   display: block;
   margin-bottom: 20px;
 }
+
 .title-text {
   font-size: 1.125rem;
   color: #666;

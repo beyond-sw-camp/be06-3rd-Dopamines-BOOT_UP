@@ -14,7 +14,7 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  boardLink: {
+  boardlink: {
     type: String,
     default: '/',
     required: true
@@ -52,7 +52,7 @@ const props = defineProps({
               </div>
             </div>
             <div>
-              <router-link class="board-post-title" :to="`/${props.boardLink}/${post.id}`">{{
+              <router-link class="board-post-title" :to="`/${props.boardlink}/${post.id}`">{{
                   post.postTitle
                 }}
               </router-link>

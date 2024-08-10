@@ -86,7 +86,7 @@ const filterNumericInput = (event) => {
   padding-left: 1.25rem;
   padding-right: 1.25rem;
   padding-bottom: 0.375rem;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 
 .product-image-btn {
@@ -148,13 +148,13 @@ const filterNumericInput = (event) => {
 .price-input-container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   max-width: 200px;
 }
 
 label {
   margin-bottom: 0.5rem;
-  font-size: 1rem;
+  font-weight: bold;
 }
 
 .input-wrapper {

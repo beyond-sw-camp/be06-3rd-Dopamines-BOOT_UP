@@ -4,20 +4,25 @@ import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
 import { useFreePostStore } from "@/pages/Community/FreeBoard/stores/useFreePostStore";
 import { useOpenPostStore } from "@/pages/Community/OpenBoard/stores/useOpenPostStore";
+import { useNoticeStore} from "@/pages/Notice/stores/useNoticeStore";
 import { onMounted, ref } from "vue";
 
 const freePostStore = useFreePostStore();
 const openPostStore = useOpenPostStore();
+const noticePostStore = useNoticeStore();
 
 const freePosts = ref([]);
 const openPosts = ref([]);
+const noticePosts = ref([]);
 
 onMounted(async () => {
   try {
-    await freePostStore.readAllPosts(1, 10);
-    await openPostStore.readAllPosts(1, 10);
+    await freePostStore.readAllPosts(1, 5);
+    await openPostStore.readAllPosts(1, 5);
+    await noticePostStore.fetchAllPublicNotices(1, 5);
     freePosts.value = freePostStore.posts;
     openPosts.value = openPostStore.posts;
+    noticePosts.value = noticePostStore.posts;
   } catch (error) {
     console.error('Failed to fetch posts:', error);
   }
@@ -35,16 +40,30 @@ onMounted(async () => {
           </div>
         </div>
         <div class="content-area">
-          <PostList
-              :dataList="freePosts"
-              title="자유 게시판"
-              board="free"
-          ></PostList>
-          <PostList
-              :dataList="openPosts"
-              title="공개 게시판"
-              board="open"
-          ></PostList>
+          <div class="content-content">
+            <div>
+              <PostList
+                  :dataList="freePosts"
+                  title="자유 게시판"
+                  board="free"
+                  listlength="5"
+              ></PostList>
+              <PostList
+                  :dataList="openPosts"
+                  title="공개 게시판"
+                  board="open"
+                  listlength="5"
+              ></PostList>
+            </div>
+          </div>
+          <div class="content-content">
+            <PostList
+                :dataList="noticePosts"
+                title="공지사항"
+                board="notice"
+                listlength="10"
+            ></PostList>
+          </div>
         </div>
       </div>
     </main>
@@ -78,5 +97,14 @@ onMounted(async () => {
   column-gap: 2.5rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
+  border-radius: 10px;
+  background-color: rgba(191, 184, 166, 0.1);
+}
+
+.content-content {
+  width: 100%;
+  background-color: rgba(191, 184, 166, 0.15);
+  padding: 10px;
+  border-radius: 10px;
 }
 </style>

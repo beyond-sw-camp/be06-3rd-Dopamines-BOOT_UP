@@ -20,6 +20,11 @@ defineProps({
     type: String,
     default: '/reservation',
     required: false,
+  },
+  listlength: {
+    type: Number,
+    default: 5,
+    required: false,
   }
 });
 </script>
@@ -32,7 +37,7 @@ defineProps({
     <div>
       <div class="content">
         <ul class="board-list" v-if="dataList && dataList.length">
-          <li class="board-list-wrap" v-for="post in dataList" :key="post.id">
+          <li class="board-list-wrap" v-for="post in `${listlength}`" :key="post.id">
             <div>
               <router-link class="board-post-title" :to="`${board}/detail/${post.idx}`">
                 <PostListItem

@@ -42,7 +42,6 @@
 
 <style scoped>
 footer{
-  margin-top: 5rem;
   padding: 1.75rem 0;
   border-color: hsla(220, 9%, 46%, .3);
   border-top-width: 1px;

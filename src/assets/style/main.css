@@ -46,6 +46,8 @@ main{
   margin-top: 150px !important;
   max-width: 1000px;
   min-height: 100vh;
+  padding: 20px;
+  box-shadow: 0 4px 2px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
   .main-container{
     height: auto !important;
     flex: 1 1 auto;

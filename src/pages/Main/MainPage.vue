@@ -17,12 +17,9 @@ const noticePosts = ref([]);
 
 onMounted(async () => {
   try {
-    await freePostStore.readAllPosts(1, 5);
-    await openPostStore.readAllPosts(1, 5);
-    await noticePostStore.fetchAllPublicNotices(1, 5);
-    freePosts.value = freePostStore.posts;
-    openPosts.value = openPostStore.posts;
-    noticePosts.value = noticePostStore.posts;
+    freePosts.value = await freePostStore.readAllPosts(1, 3);
+    openPosts.value = await openPostStore.readAllPosts(1, 3);
+    noticePosts.value = await noticePostStore.fetchAllNotices();
   } catch (error) {
     console.error('Failed to fetch posts:', error);
   }
@@ -46,13 +43,11 @@ onMounted(async () => {
                   :dataList="freePosts"
                   title="자유 게시판"
                   board="free"
-                  listlength="5"
               ></PostList>
               <PostList
                   :dataList="openPosts"
                   title="공개 게시판"
                   board="open"
-                  listlength="5"
               ></PostList>
             </div>
           </div>

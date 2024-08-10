@@ -10,8 +10,6 @@ export const useOpenPostStore = defineStore('post', {
         imageUrlList: [],
         created_at: '',
         likeCount: 0,
-        commentCount: 0,
-        boardIdx: 0,
         posts: [],
     }),
     actions: {
@@ -56,33 +54,24 @@ export const useOpenPostStore = defineStore('post', {
                 boardIdx: response.data.result.boardIdx,
                 posts: [],
             };
+            console.log('readResult', readResult);
             return readResult;
 
         },
         async readAllPosts(page, size) {
-            try {
-                const response = await axios.get(`/open/post/read-all?page=${page}&size=${size}`);
-                let values = JSON.parse(localStorage.getItem('user'));
-                if (response.data && Array.isArray(response.data.result)) {
-                    this.posts = response.data.result.map(post => ({
-                        idx: post.idx,
-                        title: post.title,
-                        content: post.content,
-                        author: values.userIdx,
-                        imageUrlList: post.imageUrlList,
-                        created_at: post.created_at,
-                        likeCount: post.likeCount,
-                        commentCount: post.commentCount,
-                        boardIdx: post.boardIdx,
-                    }));
-                } else {
-                    console.error('Unexpected response format:', response.data);
-                    this.posts = [];
-                }
-                return this.posts;
-            } catch (error) {
-                console.error('Failed to read all posts:', error);
-                throw error;
+            const response = await axios.get(`/open/post/read-all?page=${page}&size=${size}`,
+                {withCredentials: true});
+            console.log('response', response);
+            if (response.data && Array.isArray(response.data.result)) {
+                let posts = response.data.result.map(post => ({
+                    idx: post.idx,
+                    title: post.title,
+                    content: post.content,
+                    author: post.author,
+                    created_at: post.created_at,
+                }));
+                console.log('posts', posts);
+                return posts;
             }
         },
         async updatePost(postData) {

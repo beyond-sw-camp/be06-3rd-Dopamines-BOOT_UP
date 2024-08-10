@@ -11,14 +11,13 @@ const openPostStore = useOpenPostStore();
 const openPosts = ref([]);
 
 onMounted(async () => {
-  await openPostStore.readAllPosts(1, 10);
-  openPosts.value = openPostStore.posts;
+  openPosts.value =await openPostStore.readAllPosts(1, 10);
+  console.log('openPosts:', openPosts.value);
 });
 
 const onPageChanged = async (page) => {
   const validPage = Math.max(1, page);
-  await openPostStore.readAllPosts(validPage - 1, 10);
-  openPosts.value = openPostStore.posts;
+  openPosts.value = await openPostStore.readAllPosts(validPage - 1, 10);
 };
 
 </script>
@@ -29,7 +28,6 @@ const onPageChanged = async (page) => {
     <main>
       <div class="main-container">
         <PostList
-            :posts="openPosts"
             title="공개 게시판"
             :data-list="openPosts"
             board="open"

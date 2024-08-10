@@ -37,29 +37,28 @@ export const useFreePostStore = defineStore('post', {
                 throw error;
             }
         },
-        async readPost(idx) {
-            try {
-                const response = await axios.get(`/free/post/read?idx=${idx}`, {withCredentials: true});
-                let readResult = {
-                    idx: response.data.result.idx,
-                    title: response.data.result.title,
-                    content: response.data.result.content,
-                    author: response.data.result.author,
-                    imageUrlList: response.data.result.imageUrlList,
-                    created_at: response.data.result.created_at,
-                    likeCount: response.data.result.likeCount,
-                    commentCount: response.data.result.commentCount,
-                    boardIdx: response.data.result.boardIdx,
-                    posts: [],
-                };
-                return readResult;
-            } catch (error) {
-                console.error('Failed to read post:', error);
-                throw error;
-            }
+        async readPost(postId) {
+            const response = await axios.get(`/open/post/read?idx=${postId}`);
+            console.log('response', response);
+            // let values = JSON.parse(localStorage.getItem('user'));
+
+            let readResult = {
+                idx: response.data.result.idx,
+                title: response.data.result.title,
+                content: response.data.result.content,
+                author: response.data.result.author,
+                imageUrlList: response.data.result.imageUrlList,
+                created_at: response.data.result.created_at,
+                likeCount: response.data.result.likeCount,
+                commentCount: response.data.result.commentCount,
+                boardIdx: response.data.result.boardIdx,
+                posts: [],
+            };
+            return readResult;
         },
         async readAllPosts(page, size) {
             const response = await axios.get(`/free/post/read-all?page=${page}&size=${size}`, {withCredentials: true});
+            console.log('response', response);
             if (response.data && Array.isArray(response.data.result)) {
                 let posts = response.data.result.map(post => ({
                     idx: post.idx,

@@ -3,15 +3,24 @@ import axios from 'axios';
 
 export const useNoticeStore = defineStore('notice', {
     state: () => ({
+        id: 0,
+        title: '',
+        content: '',
+        date: '',
+        category: '',
+        isPrivate: false,
+        imageUrls: [],
         notices: [],
-        notice: null,
         totalNotices: 0,
         isLoading: false,
         error: null,
+        lastSearchQuery: '',
+        searchResults: [],
+        searchPage: 0,
+        isSearchResultEnd: false,
     }),
 
     actions: {
-        // 공지사항 작성 엑시오스
         async createNotice(req) {
             this.isLoading = true;
             try {
@@ -24,20 +33,22 @@ export const useNoticeStore = defineStore('notice', {
             }
         },
 
-        // 공지사항 조회 엑시어스
         async fetchNotice(id) {
-            this.isLoading = true;
-            try {
-                const response = await axios.get(`http://localhost:8080/notices/${id}`);
-                this.notice = response.data.data;
-            } catch (error) {
-                this.error = error.response && error.response.data ? error.response.data.message : error.message;
-            } finally {
-                this.isLoading = false;
-            }
+            const response = await axios.get(`http://localhost:8080/notices?idx=${id}`);
+            let notice = {
+                idx: response.data.data.idx,
+                title: response.data.data.title,
+                content: response.data.data.content,
+                date: response.data.data.date,
+                category: response.data.data.category,
+                isPrivate: response.data.data.isPrivate,
+                imageUrls: response.data.data.imageUrls
+            };
+
+            console.log('notice', notice);
+            return response;
         },
 
-        // 비공개 공지사항 조회 엦시어스
         async fetchAllPrivateNotices(page = 0, size = 10) {
             this.isLoading = true;
             try {
@@ -53,23 +64,24 @@ export const useNoticeStore = defineStore('notice', {
             }
         },
 
-        // 공개 공지사항 조회 axios
-        async fetchAllPublicNotices(page = 0, size = 10) {
-            this.isLoading = true;
-            try {
-                const response = await axios.get('http://localhost:8080/notices/public', {
-                    params: { page, size },
-                });
-                this.notices = response.data.data.content;
-                this.totalNotices = response.data.data.totalElements;
-            } catch (error) {
-                this.error = error.response && error.response.data ? error.response.data.message : error.message;
-            } finally {
-                this.isLoading = false;
+        async fetchAllNotices() {
+            const response = await axios.get(`http://localhost:8080/notices/public`);
+            console.log('notice~~response', response);
+            if (response.data && Array.isArray(response.data.result.content)) {
+                let posts = response.data.result.content.map(post => ({
+                    idx: post.idx,
+                    title: post.title,
+                    content: post.content,
+                    date: post.date,
+                    category: post.category,
+                    isPrivate: post.isPrivate,
+                    imageUrls: post.imageUrls
+                }));
+                console.log('notice~~~~', posts);
+                return posts;
             }
         },
 
-        // 카테고리별 공지사항 조회 axios
         async fetchNoticesByCategory(category, page = 0, size = 10) {
             this.isLoading = true;
             try {
@@ -85,7 +97,6 @@ export const useNoticeStore = defineStore('notice', {
             }
         },
 
-        // 날짜 범위로 공지사항 조회하는 axios
         async fetchNoticesByDateRange(startDate, endDate, page = 0, size = 10) {
             this.isLoading = true;
             try {
@@ -101,7 +112,6 @@ export const useNoticeStore = defineStore('notice', {
             }
         },
 
-        // 기준으로 공지사항 검색 axios
         async findNoticesByCriteria(isPrivate, category) {
             this.isLoading = true;
             try {
@@ -117,8 +127,7 @@ export const useNoticeStore = defineStore('notice', {
             }
         },
 
-        // 제목 및 내용으로 공지사항 검색 axios
-        async search(title, content){
+        async search(title, content) {
             const query = `${title} ${content}`;
             if (this.lastSearchQuery !== query) {
                 this.lastSearchQuery = query;
@@ -145,7 +154,6 @@ export const useNoticeStore = defineStore('notice', {
             this.searchPage++;
         },
 
-        // 공지사항 수정
         async updateNotice(id, req) {
             this.isLoading = true;
             try {
@@ -161,7 +169,6 @@ export const useNoticeStore = defineStore('notice', {
             }
         },
 
-        // 공지사항 삭제
         async deleteNotice(id) {
             this.isLoading = true;
             try {

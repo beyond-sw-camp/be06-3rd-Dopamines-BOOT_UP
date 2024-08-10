@@ -87,9 +87,7 @@ onMounted(async () => {
           </p>
           <p id="description-price">{{ marketStore.product.price }}원</p>
           <div id="description-detail">
-            <p>
-              {{ marketStore.product.content }}
-            </p>
+            <p v-html="marketStore.product.content"></p>
           </div>
         </section>
       </div>

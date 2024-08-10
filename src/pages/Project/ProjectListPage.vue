@@ -5,6 +5,9 @@ import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
 import { ref, onMounted } from 'vue';
 import { useProjectStore } from "@/pages/Project/store/useProjectStore";
+import router from "@/router";
+import ProjectDetailPage from "@/pages/Project/ProjectDetailPage.vue";
+
 
 const projectStore = useProjectStore();
 const dataList = ref([]);
@@ -13,6 +16,23 @@ const courseNum = ref(Array.from({ length: 10 }, (_, i) => i + 1));
 onMounted(async () => {
   dataList.value = await projectStore.getProjectList();
 });
+
+const routes = [
+  {
+    path: '/project/write',
+    name: 'ProjectWritePage',
+  },
+  {
+    path: '/project/detail/:id',
+    component: ProjectDetailPage, // 상세 페이지 컴포넌트
+    name: 'ProjectDetail',
+  },
+];
+
+const navigateToDetail = (idx) => {
+  router.push(`/project/detail/${idx}`);
+};
+
 </script>
 
 <template>
@@ -36,8 +56,13 @@ onMounted(async () => {
                 v-for="data in dataList"
                 v-bind:key="data.idx"
                 :data="data"
+                @click="navigateToDetail(data.idx)"
+                class="click"
             ></ProjectCardItem>
           </ul>
+          <div class="post-write" v-if="dataList.some(data => data.role === 'ROLE_ADMIN')">
+            <router-link :to="routes[0].path">글 작성</router-link>
+          </div>
         </div>
       </div>
     </main>
@@ -114,5 +139,25 @@ select {
   color: #666;
   margin-bottom: 40px;
   line-height: 1.15;
+}
+
+.post-write {
+  background-color: #e06139;
+  border-radius: 5px;
+  width: 130px;
+  height: 100%;
+  padding: 10px;
+  margin: 20px 0 20px 0;
+  text-align: center;
+  a {
+    color: #fff;
+  }
+  &:hover {
+    background-color: #e0613976;
+  }
+}
+
+.click {
+  cursor: pointer;
 }
 </style>

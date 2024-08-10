@@ -13,8 +13,6 @@ const updateValues = ref({});
 
 const addValue = (newValues) => {
   updateValues.value = newValues;
-  console.log("==newValues==")
-  console.log(newValues);
 };
 
 const postCreate = async (postReq) => {

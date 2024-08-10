@@ -97,29 +97,30 @@ export const useFreePostStore = defineStore('post', {
                 throw error;
             }
         },
-        async searchPosts(page, size, keyword) {
-            try {
-                const response = await axios.get(`/free/post/search?page=${page}&size=${size}&keyword=${keyword}`);
-                if (response.data && Array.isArray(response.data.result)) {
-                    this.posts = response.data.result.map(post => ({
-                        idx: post.idx,
-                        title: post.title,
-                        content: post.content,
-                        author: post.author,
-                        imageUrlList: post.imageUrlList,
-                        created_at: post.created_at,
-                        likeCount: post.likeCount,
-                        freeCommentList: post.freeCommentList
-                    }));
-                } else {
-                    console.error('Unexpected response format:', response.data);
-                    this.posts = [];
-                }
-                return this.posts;
-            } catch (error) {
-                console.error('Failed to search posts:', error);
-                throw error;
+        async search(query) {
+            if (this.lastSearchQuery !== query) {
+                this.lastSearchQuery = query;
+                this.searchResults = [];
+                this.searchPage = 0;
+                this.isSearchResultEnd = false;
             }
+
+            let url = `/api/free/search?page=${this.searchPage}&size=10&keyword=${query}`;
+            const response = await axios.get(url);
+
+            let data = response.data.result;
+
+            if (data.length === 0) {
+                this.isSearchResultEnd = true;
+                return;
+            }
+
+            if (data.length > 10) {
+                data.pop();
+            }
+
+            this.searchResults.push(...data);
+            this.searchPage++;
         },
     },
 });

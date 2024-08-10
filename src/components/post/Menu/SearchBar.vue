@@ -1,37 +1,41 @@
 <script setup>
-import { ref, defineProps } from "vue";
-import { useRouter } from "vue-router";
-
-const searchInput = ref("");
-const router = useRouter();
-
-const handleSearch = () => {
-  router.push({ path: "/search", query: { q: searchInput.value } });
-};
+import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
-  writelink: String,
+  searchInput: {
+    type: String,
+    default: ''
+  }
 });
+
+const emit = defineEmits(['update:searchInput', 'performSearch']);
+
+const handleInput = (event) => {
+  emit('update:searchInput', event.target.value);
+};
+
+const handleSearch = () => {
+  emit('performSearch');
+};
 </script>
 
 <template>
-  <div class="search-area">
-    <div class="search-wrap">
-      <div class="search-box">
-        <input
-          v-model="searchInput"
+  <div class="search-wrap">
+    <div class="search-box">
+      <input
+          :value="searchInput"
+          @input="handleInput"
           @keyup.enter="handleSearch"
           autocomplete="off"
           type="text"
           placeholder="검색어를 입력하세요"
-        />
-        <button aria-label="search" type="button" @click="handleSearch">
-          <img src="../../../assets/icon/searchIcon.svg" alt="" />
-        </button>
-      </div>
-      <div class="post-write">
-        <router-link :to="`${props.writelink}`">글 작성</router-link>
-      </div>
+      />
+      <button aria-label="search" type="button" @click="handleSearch">
+        <img src="../../../assets/icon/searchIcon.svg" alt="" />
+      </button>
+    </div>
+    <div class="post-write" v-if="showWriteLink">
+      <router-link :to="`${props.writelink}`">글 작성</router-link>
     </div>
   </div>
 </template>

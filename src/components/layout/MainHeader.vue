@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, defineEmits } from 'vue';
 import { useRouter } from 'vue-router';
 import Cookies from 'js-cookie';
 
@@ -23,7 +23,9 @@ watch(
     }
 );
 
+const emit = defineEmits(['search']);
 const handleSearch = () => {
+  emit('search', searchInput.value);
   router.push({ path: '/search', query: { q: searchInput.value } });
 };
 
@@ -52,7 +54,7 @@ const toggleLogin = () => {
         <div class="search-area">
           <div class="search-wrap">
             <div class="search-box">
-              <input v-model="searchInput" @keyup.enter="handleSearch" autocomplete="off" type="text" placeholder="검색어를 입력하세요">
+              <input v-model="searchInput" @keyup.enter="handleSearch" type="text" placeholder="검색어를 입력하세요">
               <button aria-label="search" type="button" @click="handleSearch">
                 <img src="../../assets/icon/searchIcon.svg" alt="">
               </button>

@@ -21,10 +21,7 @@ const props = defineProps({
 const emit = defineEmits(['update:comments', 'update:likeCount']);
 const localComments = ref([...props.comments]);
 const localLikeCount = ref(props.likeCount);
-<<<<<<< HEAD
 const replyIndex = ref(null);
-=======
->>>>>>> 8da7987060efa944693ae6d55def45d19e086783
 
 watch(() => props.comments, (newComments) => {
   localComments.value = [...newComments];
@@ -47,7 +44,6 @@ function postLike() {
   }
   emit('update:likeCount', localLikeCount.value);
 }
-<<<<<<< HEAD
 
 function deleteComment(index) {
   localComments.value.splice(index, 1);
@@ -62,8 +58,6 @@ function editComment(index, newComment) {
 function replyToComment(index) {
   replyIndex.value = index;
 }
-=======
->>>>>>> 8da7987060efa944693ae6d55def45d19e086783
 </script>
 
 <template>
@@ -86,12 +80,8 @@ function replyToComment(index) {
         <div class="comment-view-wrapper">
           <ul class="comment-view-detail-container">
             <li v-for="(comment, index) in localComments" :key="index" :id="'answer-' + index">
-<<<<<<< HEAD
               <CommentView v-bind="comment" @delete="deleteComment(index)" @edit="editComment(index, $event)" @reply="replyToComment(index)"></CommentView>
               <CommentInput v-if="replyIndex === index" @comment-submit="commentSubmit" comment-submit=""></CommentInput>
-=======
-              <CommentView v-bind="comment" author="" comment="" create-at=""></CommentView>
->>>>>>> 8da7987060efa944693ae6d55def45d19e086783
             </li>
           </ul>
         </div>

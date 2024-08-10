@@ -1,54 +1,33 @@
 <script setup>
-<<<<<<< HEAD
-import { ref, onMounted } from 'vue';
-import MainHeader from '@/components/layout/MainHeader.vue';
-import MainFooter from '@/components/layout/MainFooter.vue';
-import PostDetailComponent from '@/components/post/Detail/PostDetailComponent.vue';
-import CommentComponent from '@/components/post/Detail/Comment/CommentComponent.vue';
-import { useOpenPostStore } from '@/pages/Community/OpenBoard/stores/useOpenPostStore';
-import { useOpenCommentStore } from '@/pages/Community/OpenBoard/stores/useOpenCommentStore';
-=======
-import { onMounted, ref } from 'vue';
+import {onMounted, ref} from 'vue';
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
 import PostDetailComponent from "@/components/post/Detail/PostDetailComponent.vue";
 import CommentComponent from "@/components/post/Detail/Comment/CommentComponent.vue";
-import { useOpenPostStore } from "@/pages/Community/OpenBoard/stores/useOpenPostStore";
-import { useOpenCommentStore } from "@/pages/Community/OpenBoard/stores/useOpenCommentStore";
->>>>>>> 8da7987060efa944693ae6d55def45d19e086783
-import { useRoute } from 'vue-router';
+import {useOpenPostStore} from "@/pages/Community/OpenBoard/stores/useOpenPostStore";
+import {useOpenCommentStore} from "@/pages/Community/OpenBoard/stores/useOpenCommentStore";
+import {useRoute} from 'vue-router';
 
 const openPostStore = useOpenPostStore();
 const openCommentStore = useOpenCommentStore();
 const route = useRoute();
 
 const post = ref(null);
-<<<<<<< HEAD
 const comments = ref([]);
 const errorMessage = ref('');
-=======
->>>>>>> 8da7987060efa944693ae6d55def45d19e086783
 
 onMounted(async () => {
   const postId = route.params.id;
   try {
-<<<<<<< HEAD
-    await openPostStore.readPost(postId);
-    post.value = { ...openPostStore.$state, idx: postId };
-    if (!post.value.title) {
-      throw new Error('Post data is incomplete');
-    }
-=======
     const fetchedPost = await openPostStore.readPost(postId);
     post.value = fetchedPost;
->>>>>>> 8da7987060efa944693ae6d55def45d19e086783
     await openCommentStore.fetchComments(postId);
     comments.value = [...openCommentStore.comments];
   } catch (error) {
     if (error.response && error.response.status === 404) {
-      errorMessage.value = 'Post not found.';
+      errorMessage.value = '게시글을 찾을 수 없습니다.';
     } else {
-      errorMessage.value = 'Failed to fetch post or comments.';
+      errorMessage.value = 'post 혹은 comments 가져오기 실패';
     }
     console.error(errorMessage.value, error);
   }
@@ -60,24 +39,6 @@ onMounted(async () => {
     <MainHeader></MainHeader>
     <main>
       <div class="main-container">
-<<<<<<< HEAD
-        <div v-if="post && post.title" class="post-detail-container">
-          <PostDetailComponent
-              :post-title="post.title"
-              :post-created-at="post.created_at"
-              :post-contents="post.content"
-              :post-author="post.author"
-              :comment-count="post.commentCount"
-              category-title="커뮤니티게시판"
-              board-title="공개게시판"
-              :post-idx="post.idx"
-              :board-idx="post.boardIdx"
-              board="open"
-              category="community"
-              :editlnk="`/open/edit/${post.idx}`"
-          ></PostDetailComponent>
-          <CommentComponent :comments="comments"></CommentComponent>
-=======
         <div v-if="post" class="post-detail-container">
           <PostDetailComponent
               :post-idx="post.idx"
@@ -91,7 +52,6 @@ onMounted(async () => {
               :post-contents="post.content"
           ></PostDetailComponent>
           <CommentComponent :comments="openCommentStore.comments"></CommentComponent>
->>>>>>> 8da7987060efa944693ae6d55def45d19e086783
         </div>
         <p v-else>{{ errorMessage || '포스트 로딩중...' }}</p>
       </div>
@@ -101,24 +61,14 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-<<<<<<< HEAD
-.body-container {
-  display: flex;
-  flex-direction: column;
-}
-
 .main-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 2rem;
-=======
-.post-detail-container{
-  width: 100%;
->>>>>>> 8da7987060efa944693ae6d55def45d19e086783
-}
 
-.post-detail-container {
-  width: 100%;
+  .post-detail-container {
+    width: 100%;
+  }
 }
 </style>

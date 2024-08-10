@@ -1,13 +1,13 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import {onMounted, ref} from 'vue';
 import MainHeader from '@/components/layout/MainHeader.vue';
 import PostDetailComponent from '@/components/post/Detail/PostDetailComponent.vue';
 import CommentComponent from '@/components/post/Detail/Comment/CommentComponent.vue';
 import MainFooter from "@/components/layout/MainFooter.vue";
-import { useFreePostStore } from "@/pages/Community/FreeBoard/stores/useFreePostStore";
-import { useFreeCommentStore } from "@/pages/Community/FreeBoard/stores/useFreeCommentStore";
-import { useFreeLikeStore } from "@/pages/Community/FreeBoard/stores/useFreeLikeStore";
-import { useRoute } from 'vue-router';
+import {useFreePostStore} from "@/pages/Community/FreeBoard/stores/useFreePostStore";
+import {useFreeCommentStore} from "@/pages/Community/FreeBoard/stores/useFreeCommentStore";
+import {useFreeLikeStore} from "@/pages/Community/FreeBoard/stores/useFreeLikeStore";
+import {useRoute} from 'vue-router';
 
 const freePostStore = useFreePostStore();
 const freeCommentStore = useFreeCommentStore();
@@ -28,13 +28,13 @@ onMounted(async () => {
     if (Array.isArray(freeCommentStore.comments)) {
       comments.value = freeCommentStore.comments;
     } else {
-      console.error('comments is not iterable:', freeCommentStore.comments);
+      console.error('댓글 조회 실패 :', freeCommentStore.comments);
     }
 
     await freeLikeStore.fetchLikeCount(postId);
     likeCount.value = freeLikeStore.likeCount;
   } catch (error) {
-    console.error('Failed to fetch post, comments, or like count:', error);
+    console.error('조회 실패:', error);
   }
 });
 </script>
@@ -44,7 +44,7 @@ onMounted(async () => {
     <MainHeader></MainHeader>
     <main>
       <div class="main-container">
-        <div v-if="post">
+        <div v-if="post" class="post-container">
           <PostDetailComponent
               :post-idx="post.idx"
               :board="free"
@@ -55,8 +55,10 @@ onMounted(async () => {
               :post-created-at="post.created_at"
               :post-title="post.title"
               :post-contents="post.content"
+              :editlnk="`/free/edit/${route.params.id}`"
           ></PostDetailComponent>
-          <CommentComponent :comments="comments" :like-count="likeCount" :comment-count="comments.length"></CommentComponent>
+          <CommentComponent :comments="comments" :like-count="likeCount"
+                            :comment-count="comments.length"></CommentComponent>
         </div>
         <p v-else>포스트 로딩중...</p>
       </div>
@@ -77,5 +79,9 @@ onMounted(async () => {
   flex-direction: column;
   align-items: center;
   padding: 2rem;
+}
+
+.post-container {
+  width: 100%;
 }
 </style>

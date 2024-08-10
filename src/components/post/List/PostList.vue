@@ -36,12 +36,13 @@ defineProps({
             <div>
               <router-link class="board-post-title" :to="`${board}/detail/${post.idx}`">
                 <PostListItem
-                    :comment-count="post.commentCount"
-                    :like-count="post.likeCount"
-                    :created-at="post.createdAt"
-                    :author="post.author"
                     :post-title="post.title"
+                    :content="post.content"
                     :idx="post.idx"/>
+                <!--                    :comment-count="post.commentCount"-->
+                <!--                    :like-count="post.likeCount"-->
+                <!--                    :created-at="post.createdAt"-->
+                <!--                    :author="post.author"-->
               </router-link>
             </div>
             <hr>

@@ -10,6 +10,10 @@ const props = defineProps({
     type: String,
     required: true
   },
+  content: {
+    type: String,
+    required: true
+  },
   author: {
     type: String,
     required: true
@@ -33,25 +37,25 @@ const props = defineProps({
   <div class="board-post-status-header">
     <div class="board-post-status-left">
       <div class="board-post-author">
-        <span>{{ props.author }}</span>
+        <span>{{ props.postTitle }}</span>
       </div>
-      <div class="board-post-time">
-        <span>{{ props.createdAt }}</span>
-      </div>
+<!--      <div class="board-post-time">-->
+<!--        <span>{{ props.createdAt }}</span>-->
+<!--      </div>-->
     </div>
-    <div class="board-post-status-right">
-      <div class="board-post-right-detail">
-        <img src="@/assets/icon/thumbIcon.svg" alt="Icon" width="20px">
-        <span class="board-post-right-detail-text">{{ props.likeCount }}</span>
-      </div>
-      <div class="board-post-right-detail">
-        <img src="@/assets/icon/commentIcon.svg" alt="Icon" width="20px">
-        <span class="board-post-right-detail-text">{{ props.commentCount }}</span>
-      </div>
-    </div>
+<!--    <div class="board-post-status-right">-->
+<!--      <div class="board-post-right-detail">-->
+<!--        <img src="@/assets/icon/thumbIcon.svg" alt="Icon" width="20px">-->
+<!--        <span class="board-post-right-detail-text">{{ props.likeCount }}</span>-->
+<!--      </div>-->
+<!--      <div class="board-post-right-detail">-->
+<!--        <img src="@/assets/icon/commentIcon.svg" alt="Icon" width="20px">-->
+<!--        <span class="board-post-right-detail-text">{{ props.commentCount }}</span>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
   <div>
-    <a class="board-post-title" :href="`${props.idx}`">{{ props.postTitle }}</a>
+    <a class="board-post-title" :href="`${props.idx}`">{{ props.content }}</a>
   </div>
 </template>
 

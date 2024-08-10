@@ -1,15 +1,28 @@
 <script setup>
-import { ref } from "vue";
+import { ref, defineEmits } from "vue";
 
 const uploadedImages = ref([]); // 이미지 배열
-const price = ref(""); // 가격
+const price = ref(0); // 가격
+
+const emit = defineEmits(["updateContent"]);
 
 const handleImageUpload = (event) => {
   const files = event.target.files;
+  let filesProcessed = 0;
+  const totalFiles = files.length;
+
   for (let i = 0; i < files.length; i++) {
     const reader = new FileReader();
     reader.onload = (e) => {
       uploadedImages.value.push({ id: Date.now() + i, src: e.target.result });
+      filesProcessed++;
+
+      if (filesProcessed == totalFiles) {
+        emit("updateContent", {
+          price: price.value,
+          uploadedImages: uploadedImages.value,
+        });
+      }
     };
     reader.readAsDataURL(files[i]);
   }
@@ -19,6 +32,11 @@ const removeImage = (id) => {
   uploadedImages.value = uploadedImages.value.filter(
     (image) => image.id !== id
   );
+
+  emit("updateContent", {
+    price: price.value,
+    uploadedImages: uploadedImages.value,
+  });
 };
 
 const filterNumericInput = (event) => {
@@ -31,6 +49,11 @@ const filterNumericInput = (event) => {
 
   price.value = value;
   event.target.value = value;
+
+  emit("updateContent", {
+    price: price.value,
+    uploadedImages: uploadedImages.value,
+  });
 };
 </script>
 

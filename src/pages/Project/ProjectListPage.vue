@@ -23,7 +23,7 @@
                 class="click"
             ></ProjectCardItem>
           </ul>
-          <div class="post-write" v-if="auth && auth.value === 'ROLE_ADMIN'">
+          <div class="post-write" v-if="auth != null && auth.value === 'ROLE_ADMIN'">
             <router-link :to="routes[0].path">글 작성</router-link>
           </div>
         </div>

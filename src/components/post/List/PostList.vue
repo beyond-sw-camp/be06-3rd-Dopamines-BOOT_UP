@@ -1,9 +1,10 @@
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, ref } from 'vue';
+// import { useRoute } from 'vue-router';
 import PostListItem from '@/pages/component/List/PostListItem.vue';
 import SearchBar from "@/components/post/Menu/SearchBar.vue";
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true
@@ -26,6 +27,9 @@ defineProps({
     required: true
   }
 });
+
+const searchQuery = ref(props.searchQuery);
+// const route = useRoute();
 </script>
 
 <template>
@@ -33,11 +37,10 @@ defineProps({
     <router-link :to="board" class="title">
       <h3>{{ title }}</h3>
     </router-link>
-    <SearchBar
-        :searchInput="searchQuery"
-        @update:searchInput="$emit('update:searchQuery', $event)"
-        @performSearch="performSearch"
-    ></SearchBar>
+    <div>
+      <SearchBar v-model:searchInput="searchQuery" @performSearch="performSearch"></SearchBar>
+    </div>
+
     <div class="content">
       <ul class="board-list" v-if="dataList && dataList.length">
         <li class="board-list-wrap" v-for="post in dataList" :key="post.id">
@@ -55,7 +58,7 @@ defineProps({
           <hr>
         </li>
       </ul>
-      <p v-else>등록된 게시글이 없습니다.</p>
+<!--      <p v-else-if="!route.path.includes('market')">등록된 게시글이 없습니다.</p>-->
     </div>
   </div>
 </template>

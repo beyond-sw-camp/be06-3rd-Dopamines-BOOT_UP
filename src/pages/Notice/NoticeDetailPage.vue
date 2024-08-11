@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import { useNoticeStore } from '@/pages/Notice/stores/useNoticeStore';
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
+import PostDetailComponent from '@/components/post/Detail/PostDetailComponent.vue';
 
 const noticeStore = useNoticeStore();
 const notice = ref(null);
@@ -12,7 +13,7 @@ const error = ref(null);
 const fetchAllNotices = async (id) => {
   try {
     const notices = await noticeStore.fetchAllNotices();
-    const foundNotice = notices.find(notice => notice.idx === parseInt(id));
+    const foundNotice = notices.find(notice => notice.id === parseInt(id));
     if (foundNotice) {
       notice.value = foundNotice;
       console.log('notice:', notice.value);
@@ -44,16 +45,16 @@ onMounted(() => {
     <MainHeader></MainHeader>
     <main>
       <div class="main-container">
-        <PostDetailComponent v-if="notice"
-                             :post-idx="notice.idx"
-                             :board="notice.boardTitle"
-                             :board-title="notice.boardTitle"
+        <PostDetailComponent v-if="notice !== null"
+                             :post-idx="notice?.id"
+                             :board="notice?.category"
+                             :board-title="notice?.category"
                              :category="notice"
-                             :category-title="공지사항"
-                             :post-author="관리자"
-                             :post-created-at="notice.created_at"
-                             :post-title="notice.title"
-                             :post-contents="notice.content"
+                             :category-title="`공지사항`"
+                             :post-author="`관리자`"
+                             :post-created-at="notice?.date"
+                             :post-title="notice?.title"
+                             :post-contents="notice?.content"
         ></PostDetailComponent>
         <p v-else-if="!error">Loading...</p>
         <p v-else>{{ error }}</p>
@@ -64,4 +65,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.post-container{
+  margin: 0;
+}
 </style>

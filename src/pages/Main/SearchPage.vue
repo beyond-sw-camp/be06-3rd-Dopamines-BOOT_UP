@@ -19,13 +19,14 @@ const freePosts = ref([]);
 const openPosts = ref([]);
 const marketPosts = ref([]);
 const errorMessage = ref('');
+const marketPostSize = 3;
 
 const performSearch = async () => {
   try {
     if (searchQuery.value) {
       freePosts.value = await freePostStore.search(0, 3, searchQuery.value);
       openPosts.value = await openPostStore.search(0, 3, searchQuery.value);
-      marketPosts.value = await marketPostStore.search(0, 3, searchQuery.value);
+      marketPosts.value = await marketPostStore.search(0, marketPostSize + 1, searchQuery.value);
       console.log('Free Posts:', freePosts.value);
       console.log('Open Posts:', openPosts.value);
       console.log('Market Posts:', marketPosts.value);
@@ -37,8 +38,8 @@ const performSearch = async () => {
       }
     }
   } catch (error) {
-    errorMessage.value = 'performsearch에서 에러 발생.';
-    console.error(error);
+    errorMessage.value = 'performSearch에서 에러 발생: ' + error.message;
+    console.error('performSearch에서 에러 발생:', error);
   }
 };
 
@@ -55,8 +56,8 @@ onMounted(async () => {
       performSearch();
     }
   } catch (error) {
-    errorMessage.value = 'mount에서 에러 발생';
-    console.error(error);
+    errorMessage.value = 'mount에서 에러 발생: ' + error.message;
+    console.error('mount에서 에러 발생:', error);
   }
 });
 </script>
@@ -82,6 +83,7 @@ onMounted(async () => {
             :freeResults="freePosts"
             :openResults="openPosts"
             :marketResults="marketPosts"
+            :marketPostSize="marketPostSize"
             :searchQuery="searchQuery"
         />
         <p v-if="errorMessage">{{ errorMessage }}</p>

@@ -3,7 +3,6 @@ import { ref, onMounted, computed } from "vue";
 import { useMarketStore } from "@/pages/Market/stores/UseMarketStore";
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
-import SearchBar from "@/components/post/Menu/SearchBar.vue";
 import PostList from "@/components/post/List/PostList.vue";
 import CardViewComponent from "@/pages/Market/Board/components/CardViewComponent.vue";
 
@@ -12,18 +11,19 @@ const isSearched = ref(false);
 const searchQuery = ref("");
 
 const products = computed(() => marketStore.list);
-const searchResults = computed(() => marketStore.searchResults);
+const searchResults = ref([]);
 const isEnd = computed(() => marketStore.isEnd);
-const isSearchResultEnd = computed(() => marketStore.isSearchResultEnd);
+const isSearchResultEnd = ref(false);
 
 const getData = () => {
   marketStore.getProducts();
 };
 
-const search = (query) => {
+const search = async () => {
   isSearched.value = true;
-  searchQuery.value = query;
-  marketStore.search(query);
+  const allProducts = await marketStore.getProducts(1, 100); // Fetch all products
+  searchResults.value = allProducts.filter(product => product.title.includes(searchQuery.value));
+  isSearchResultEnd.value = searchResults.value.length === 0;
 };
 
 onMounted(() => {
@@ -40,8 +40,7 @@ onMounted(() => {
           <div class="market-area">
             <div class="search-container">
               <div class="search-area">
-                <PostList title="중고마켓 게시판"></PostList>
-                <SearchBar writelink="/market/write"></SearchBar>
+                <PostList title="중고마켓 게시판" :searchQuery="searchQuery" @performSearch="search" board="market"></PostList>
                 <div v-show="isSearched" class="search-title">
                   <h2>
                     <strong>'{{ searchQuery }}'</strong> 검색 결과
@@ -49,23 +48,24 @@ onMounted(() => {
                 </div>
                 <table class="filter-table">
                   <tbody>
-                    <tr>
-                      <td>가격</td>
-                      <td class="price-filter">
-                        <input
+                  <tr>
+                    <td>가격</td>
+                    <td class="price-filter">
+                      <input
                           type="text"
                           placeholder="최소 가격"
                           data-idx="0"
-                        />
-                        <span class="mx-[6px]">~</span>
-                        <input
+                      />
+                      <span class="mx-[6px]">~</span>
+                      <input
                           type="text"
                           placeholder="최대 가격"
                           data-idx="1"
-                        />
-                        <button class="apply-btn">적용</button>
-                      </td>
-                    </tr>
+                      />
+                      <button class="apply-btn">적용</button>
+                      <router-link to="/market/write" class="apply-btn">글 작성</router-link>
+                    </td>
+                  </tr>
                   </tbody>
                 </table>
               </div>
@@ -77,34 +77,34 @@ onMounted(() => {
             </ul>
             <ul class="market-content-container">
               <li
-                v-show="!isSearched"
-                v-for="product in products"
-                :key="product.idx"
+                  v-show="!isSearched"
+                  v-for="product in products"
+                  :key="product.idx"
               >
                 <CardViewComponent :product="product"></CardViewComponent>
               </li>
 
               <li
-                v-show="isSearched"
-                v-for="product in searchResults"
-                :key="product.idx"
+                  v-show="isSearched"
+                  v-for="product in searchResults"
+                  :key="product.idx"
               >
                 <CardViewComponent :product="product"></CardViewComponent>
               </li>
             </ul>
             <button
-              :disabled="isEnd"
-              v-show="!isEnd && !isSearched"
-              @click="getData"
-              class="apply-btn"
+                :disabled="isEnd"
+                v-show="!isEnd && !isSearched"
+                @click="getData"
+                class="apply-btn"
             >
               더보기
             </button>
             <button
-              :disabled="isSearchResultEnd"
-              v-show="!isSearchResultEnd && isSearched"
-              @click="search(searchQuery)"
-              class="apply-btn"
+                :disabled="isSearchResultEnd"
+                v-show="!isSearchResultEnd && isSearched"
+                @click="search"
+                class="apply-btn"
             >
               더보기
             </button>

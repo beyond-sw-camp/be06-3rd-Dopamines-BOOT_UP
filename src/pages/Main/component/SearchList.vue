@@ -14,6 +14,10 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
+  marketPostSize: {
+    type: Number,
+    default: 3
+  },
   searchQuery: {
     type: String,
     default: ''
@@ -30,6 +34,8 @@ watch(() => props.openResults, (newVal) => {
 
 watch(() => props.marketResults, (newVal) => {
   console.log('Market Results:', newVal);
+  console.log('Market Results Length:', newVal.length);
+  console.log('Market Post Size:', props.marketPostSize);
 });
 </script>
 
@@ -41,10 +47,10 @@ watch(() => props.marketResults, (newVal) => {
         <div v-if="freeResults.length === 0">검색 결과가 없습니다</div>
         <div v-else class="search-result-list">
           <div v-for="result in freeResults" :key="result.id" class="search-result-item">
-            <div>
+            <router-link :to="`/free/detail/${result.idx}`">
               <h3>{{ result.title }}</h3>
               <p>{{ result.content || '내용이 없습니다' }}</p>
-            </div>
+            </router-link>
           </div>
           <div class="search-more-btn">
             <router-link :to="{ name: 'FreeListPage', query: { q: searchQuery } }" class="btn">더보기</router-link>
@@ -59,10 +65,10 @@ watch(() => props.marketResults, (newVal) => {
         <div v-if="openResults.length === 0">검색 결과가 없습니다</div>
         <div v-else class="search-result-list">
           <div v-for="result in openResults" :key="result.id" class="search-result-item">
-            <div>
+            <router-link :to="`/open/detail/${result.idx}`">
               <h3>{{ result.title }}</h3>
               <p>{{ result.content || '내용이 없습니다' }}</p>
-            </div>
+            </router-link>
           </div>
           <div class="search-more-btn">
             <router-link :to="{ name: 'OpenListPage', query: { q: searchQuery } }" class="btn">더보기</router-link>
@@ -76,11 +82,10 @@ watch(() => props.marketResults, (newVal) => {
       <div>
         <div v-if="marketResults.length === 0">검색 결과가 없습니다</div>
         <div v-else class="search-result-list">
-          <div v-for="result in marketResults" :key="result.idx" class="search-result-item">
-            <div>
+          <div v-for="result in marketResults.slice(0, marketPostSize)" :key="result.idx" class="search-result-item">
+            <router-link :to="`/market/detail/${result.idx}`">
               <h3>{{ result.title }}</h3>
-              <p>{{ result.content || '내용이 없습니다' }}</p>
-            </div>
+            </router-link>
           </div>
           <div class="search-more-btn">
             <router-link :to="{ name: 'MarketListPage', query: { q: searchQuery } }" class="btn">더보기</router-link>
@@ -88,7 +93,6 @@ watch(() => props.marketResults, (newVal) => {
         </div>
       </div>
     </div>
-    <hr>
   </div>
 </template>
 

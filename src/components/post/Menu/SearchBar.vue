@@ -1,7 +1,7 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue';
 
-const props = defineProps({
+defineProps({
   searchInput: {
     type: String,
     default: ''
@@ -33,9 +33,6 @@ const handleSearch = () => {
       <button aria-label="search" type="button" @click="handleSearch">
         <img src="../../../assets/icon/searchIcon.svg" alt="" />
       </button>
-    </div>
-    <div class="post-write" v-if="board === 'market'">
-      <router-link :to="`${props.writelink}`">글 작성</router-link>
     </div>
   </div>
 </template>

@@ -1,25 +1,46 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import PostList from "@/components/post/List/PostList.vue";
-import MainHeader from "@/components/layout/MainHeader.vue";
-import MainFooter from "@/components/layout/MainFooter.vue";
-import { useOpenPostStore } from "@/pages/Community/OpenBoard/stores/useOpenPostStore";
-import PaginationComponent from "@/components/layout/PaginationComponent.vue";
+import { useRoute } from 'vue-router';
+import { useOpenPostStore } from '@/pages/Community/OpenBoard/stores/useOpenPostStore';
+import SearchBar from '@/components/post/Menu/SearchBar.vue';
 
 const openPostStore = useOpenPostStore();
+const route = useRoute();
 
+const searchQuery = ref('');
 const openPosts = ref([]);
+const errorMessage = ref('');
 
-onMounted(async () => {
-  openPosts.value =await openPostStore.readAllPosts(1, 10);
-  console.log('openPosts:', openPosts.value);
-});
+const performSearch = async () => {
+  try {
+    if (searchQuery.value) {
+      openPosts.value = await openPostStore.search(0, 10, searchQuery.value);
+      console.log('Open Posts:', openPosts.value);
 
-const onPageChanged = async (page) => {
-  const validPage = Math.max(1, page);
-  openPosts.value = await openPostStore.readAllPosts(validPage - 1, 10);
+      if (openPosts.value.length === 0) {
+        errorMessage.value = '검색 결과가 없습니다';
+      } else {
+        errorMessage.value = '';
+      }
+    }
+  } catch (error) {
+    errorMessage.value = 'performSearch에서 에러 발생: ' + error.message;
+    console.error('performSearch에서 에러 발생:', error);
+  }
 };
 
+onMounted(async () => {
+  try {
+    const query = route.query.q;
+    if (query) {
+      searchQuery.value = query;
+      performSearch();
+    }
+  } catch (error) {
+    errorMessage.value = 'mount에서 에러 발생: ' + error.message;
+    console.error('mount에서 에러 발생:', error);
+  }
+});
 </script>
 
 <template>
@@ -27,17 +48,19 @@ const onPageChanged = async (page) => {
     <MainHeader></MainHeader>
     <main>
       <div class="main-container">
-        <PostList
-            title="공개 게시판"
-            :data-list="openPosts"
-            board="open"
-        ></PostList>
-        <PaginationComponent
-            :totalItems="openPosts.length"
-            :itemsPerPage="10"
-            :currentPage="1"
-            @page-changed="onPageChanged"
-        />
+        <SearchBar
+            :searchInput="searchQuery"
+            @update:searchInput="searchQuery = $event"
+            @performSearch="performSearch"
+            @keyup.enter="performSearch"
+        ></SearchBar>
+        <div v-if="errorMessage">{{ errorMessage }}</div>
+        <div v-else>
+          <div v-for="post in openPosts" :key="post.id">
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.content || '내용이 없습니다' }}</p>
+          </div>
+        </div>
       </div>
     </main>
     <MainFooter></MainFooter>

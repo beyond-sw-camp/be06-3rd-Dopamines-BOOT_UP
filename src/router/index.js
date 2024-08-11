@@ -1,21 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useUserStore } from "@/pages/User/stores/useUserStore";
 
-// 접근 허가 관련
-// 로그인 했는지 안했는지
-// const requireLogin = async (from, to, next) => { // next함수를 이용해서 from에서 to로 이동
-//     const userStore = useUserStore();
-//     const auth = await userStore.getAuth();
-//     console.log("auth error?: ", auth)
-//     if (auth != null && auth !== "ROLE_TEMPORARY_USER") {
-//         console.log("auth check: ", auth);
-//         return next();
-//     } else {
-//         if (confirm("이용 권한이 필요합니다.")) {
-//             return next("/user/login");
-//         }
-//     }
-// }
 const requireLogin = async (to, from, next) => {
     const userStore = useUserStore();
     try {

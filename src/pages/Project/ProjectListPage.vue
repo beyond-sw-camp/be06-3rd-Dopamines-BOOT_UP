@@ -23,7 +23,7 @@
                 class="click"
             ></ProjectCardItem>
           </ul>
-          <div class="post-write" v-if="dataList && dataList.length > 0 && dataList.some(data => data.role === 'ROLE_ADMIN')">
+          <div class="post-write" v-if="auth && auth.value === 'ROLE_ADMIN'">
             <router-link :to="routes[0].path">글 작성</router-link>
           </div>
         </div>
@@ -42,14 +42,20 @@ import { useProjectStore } from "@/pages/Project/store/useProjectStore";
 import router from "@/router";
 import ProjectDetailPage from "@/pages/Project/ProjectDetailPage.vue";
 import PostList from "@/components/post/List/PostList.vue";
+import { useUserStore } from "@/pages/User/stores/useUserStore";
 
 const projectStore = useProjectStore();
+const userStore = useUserStore();
+const auth = ref("");
 const dataList = ref([]);
 const courseNum = ref(Array.from({ length: 10 }, (_, i) => i + 1));
 const selectedCourse = ref('all'); // 선택된 코스 번호를 저장
 
 const isLoading = ref(true);
 onMounted(async () => {
+  auth.value = await userStore.getAuth();
+  console.log("auth", auth.value);
+
   dataList.value = await projectStore.getProjectList();
   isLoading.value = false; // 데이터 로딩 완료
   console.log("dataList.value: ", dataList.value);

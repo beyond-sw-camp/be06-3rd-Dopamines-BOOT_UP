@@ -55,6 +55,7 @@ onMounted(() => {
                              :post-created-at="notice?.date"
                              :post-title="notice?.title"
                              :post-contents="notice?.content"
+                             :editlnk="`/notice/edit/${notice?.id}`"
         ></PostDetailComponent>
         <p v-else-if="!error">Loading...</p>
         <p v-else>{{ error }}</p>

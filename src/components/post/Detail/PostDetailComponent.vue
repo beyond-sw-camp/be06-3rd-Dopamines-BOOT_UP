@@ -104,9 +104,6 @@ const showCategoryTitle = computed(() => {
 
 <style scoped>
 .post-container {
-  max-width: 80rem;
-  margin-left: auto;
-  margin-right: auto;
   hr {
     border: .5px solid #e06139a3;
     width: calc(100% - 10px);

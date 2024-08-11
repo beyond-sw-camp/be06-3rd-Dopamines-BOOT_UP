@@ -1,10 +1,8 @@
 <script setup>
-import {computed, defineProps, ref} from 'vue';
-// import { useRoute } from 'vue-router';
+import { defineProps } from 'vue';
 import PostListItem from '@/pages/component/List/PostListItem.vue';
-import SearchBar from "@/components/post/Menu/SearchBar.vue";
 
-const props = defineProps({
+defineProps({
   title: {
     type: String,
     required: true
@@ -18,25 +16,16 @@ const props = defineProps({
     default: '/',
     required: true
   },
-  searchQuery: {
+  reservation: {
     type: String,
-    default: ''
+    default: '/reservation',
+    required: false,
   },
-  performSearch: {
-    type: Function,
-    required: true
-  },
-  showSearchInput: {
-    type: Boolean,
-    default: true
+  listlength: {
+    type: Number,
+    default: 5,
+    required: false,
   }
-});
-
-const searchQuery = ref(props.searchQuery);
-// const route = useRoute();
-
-const sortedDataList = computed(() => {
-  return [...props.dataList].sort((a, b) => a.idx - b.idx);
 });
 </script>
 
@@ -45,28 +34,25 @@ const sortedDataList = computed(() => {
     <router-link :to="board" class="title">
       <h3>{{ title }}</h3>
     </router-link>
-    <div v-if="showSearchInput">
-      <SearchBar v-model:searchInput="searchQuery" @performSearch="performSearch"></SearchBar>
-    </div>
-
-    <div class="content">
-      <ul class="board-list" v-if="sortedDataList && sortedDataList.length">
-        <li class="board-list-wrap" v-for="post in sortedDataList" :key="post.id">
-          <div>
-            <router-link class="board-post-title" :to="`${board}/detail/${post.idx!== undefined ? post.idx : 'undefined'}`">
-              <PostListItem
-                  :post-title="post.title"
-                  :content="post.content"
-                  :idx="post.idx"
-                  :author="post.author"
-                  :created-at="post.created_at"
-              />
-            </router-link>
-          </div>
-          <hr>
-        </li>
-      </ul>
-      <!--      <p v-else-if="!route.path.includes('market')">등록된 게시글이 없습니다.</p>-->
+    <div>
+      <div class="content">
+        <ul class="board-list" v-if="dataList && dataList.length">
+          <li class="board-list-wrap" v-for="post in dataList.slice(0, listlength)" :key="post.idx">
+            <div>
+              <router-link class="board-post-title" :to="`${board}/detail/${post.idx}`">
+                <PostListItem
+                    :post-title="post.title"
+                    :content="post.content"
+                    :idx="post.idx"
+                    :author="post.author" :created-at="post.created_at"
+                />
+              </router-link>
+            </div>
+            <hr>
+          </li>
+        </ul>
+        <p v-else>등록된 게시글이 없습니다.</p>
+      </div>
     </div>
   </div>
 </template>
@@ -94,7 +80,6 @@ const sortedDataList = computed(() => {
   box-sizing: border-box;
   align-items: center;
   box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
-  margin-bottom: 10px;
 }
 
 .board-list {

@@ -3,26 +3,28 @@ import axios from 'axios';
 
 export const useFreeCommentStore = defineStore('freeComment', {
     state: () => ({
-        comments: [],
-        isLoading: false,
-        error: null,
+        "idx": 0,
+        "content": ""
     }),
 
     actions: {
+        // 댓글 작성
         async createComment(user, req) {
             this.isLoading = true;
             this.error = null;
-
+            let userIdx = JSON.parse(localStorage.getItem('user')).idx;
+            const createCommentData = {
+                freePostIdx: req.freePostIdx,
+                content: req.content,
+                userIdx: userIdx,
+                createdAt: new Date().toISOString(),
+            };
             try {
-                const response = await axios.post('http://localhost:8080/free/comment/create', req, {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`,
-                    },
-                });
-
-                this.comments.push(response.data.data);
+                const response = await axios.post('http://localhost:8080/free/comment/create', createCommentData);
+                return response.data;
             } catch (error) {
                 this.error = error.response && error.response.data ? error.response.data.message : 'An error occurred';
+                throw error;
             } finally {
                 this.isLoading = false;
             }

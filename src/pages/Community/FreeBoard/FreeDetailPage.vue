@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import MainHeader from '@/components/layout/MainHeader.vue';
 import PostDetailComponent from '@/components/post/Detail/PostDetailComponent.vue';
 import CommentComponent from '@/components/post/Detail/Comment/CommentComponent.vue';
+import CommentInput from '@/components/post/Detail/Comment/CommentInput.vue';
 import MainFooter from "@/components/layout/MainFooter.vue";
 import { useFreePostStore } from "@/pages/Community/FreeBoard/stores/useFreePostStore";
 import { useRoute } from 'vue-router';
@@ -27,15 +28,11 @@ onMounted(async () => {
     errorMessage.value = `조회 실패: ${error.message}`;
     console.error('조회 실패:', error);
   }
-
-  try {
-    const postData = await freePostStore.readPost(postId);
-    comments.value = postData.freeCommentList;
-  } catch (error) {
-    commentErrorMessage.value = `댓글 조회 실패: ${error.message}`;
-    console.error('댓글 조회 실패:', error);
-  }
 });
+
+const handleNewComment = (newComment) => {
+  comments.value.push(newComment);
+};
 </script>
 
 <template>
@@ -64,8 +61,8 @@ onMounted(async () => {
           </div>
           <CommentComponent :comments="comments" :like-count="likeCount"
                             :comment-count="comments.length"></CommentComponent>
+          <CommentInput @new-comment="handleNewComment"></CommentInput>
         </div>
-<!--        <p v-else>포스트 로딩중...</p>-->
       </div>
     </main>
     <MainFooter></MainFooter>

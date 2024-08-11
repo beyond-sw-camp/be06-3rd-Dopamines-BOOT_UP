@@ -6,11 +6,11 @@ const props = defineProps({
     type: String,
     required: true
   },
-  comment: {
+  content: {
     type: String,
     required: true
   },
-  createAt: {
+  createdAt: {
     type: String,
     required: true
   },
@@ -54,18 +54,20 @@ function postLike() {
 
 <template>
   <div class="comment-view">
-    <div>
+    <div class="comment-wrap">
       <div>
-        <p><strong>{{ author }}</strong> - {{ createAt }}</p>
+        <p><strong>{{ author }}</strong> - {{ createdAt }}</p>
       </div>
       <div>
-        <p>{{ comment }}</p>
+        <p>{{ content }}</p>
       </div>
     </div>
-    <div>
-      <button @click="handleDelete">삭제</button>
-      <button @click="handleEdit">수정</button>
-      <button @click="handleReply">대댓글</button>
+    <div class="comment-method-container">
+      <div>
+        <button @click="handleDelete">삭제</button>
+        <button @click="handleEdit">수정</button>
+        <button @click="handleReply">대댓글</button>
+      </div>
       <div class="like-wrap">
         <button class="btn-like" @click="postLike">
           <img src="@/assets/icon/empty_marked.svg" alt="like icon">
@@ -80,5 +82,20 @@ function postLike() {
 .comment-view {
   padding: 1rem;
   border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+}
+.comment-method-container{
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+.like-wrap{
+  display: flex;
+  align-items: center;
+  p{
+    margin: 0;
+  }
 }
 </style>

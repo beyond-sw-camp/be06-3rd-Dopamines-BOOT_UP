@@ -1,24 +1,30 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue';
-import { ref } from 'vue';
+import {ref, defineEmits} from 'vue';
+import {useFreeCommentStore} from '@/pages/Community/FreeBoard/stores/useFreeCommentStore';
+import {useRoute} from 'vue-router';
 
-const props = defineProps({
-  commentContent: {
-    type: String,
-    required: false
-  },
-  // commentSubmit: {
-  //   type: Function,
-  //   required: true
-  // }
-});
+const freeCommentStore = useFreeCommentStore();
+const route = useRoute();
+const newComment = ref('');
+const emit = defineEmits(['new-comment']);
 
-const emit = defineEmits(['update:commentContent']);
-const textareaValue = ref(props.commentContent || '');
+const handleSubmit = async () => {
+  if (newComment.value.trim() === '') return;
+  const postId = route.params.id;
+  const commentData = {content: newComment.value};
+  try {
+    const createdComment = await freeCommentStore.createComment(postId, commentData);
+    newComment.value = '';
+    emit('new-comment', createdComment);
+  } catch (error) {
+    console.error('Failed to submit comment:', error);
+  }
+};
 
-const handleSubmit = () => {
-  emit('update:commentContent', textareaValue.value);
-  props.commentSubmit();
+const handleKeyPress = (event) => {
+  if (event.key === 'Enter') {
+    handleSubmit();
+  }
 };
 </script>
 
@@ -28,10 +34,7 @@ const handleSubmit = () => {
       <div class="comment-input-wrapper2">
         <div class="comment-input-box">
           <textarea id="answer" name="answer" placeholder="댓글을 입력해주세요"
-                    class="comment-input-textarea" v-model="textareaValue"></textarea>
-          <p style="display: flex; margin-left: 10px;" class="comment-authentication">
-            {{ commentContent }}
-          </p>
+                    class="comment-input-textarea" v-model="newComment" @keypress="handleKeyPress"></textarea>
           <div class="comment-btn-shape">
             <button type="submit" class="comment-btn-primary" @click="handleSubmit">작성</button>
           </div>
@@ -83,14 +86,6 @@ select, textarea {
   border: 1px solid #bfb8a6;
   width: 100%;
   box-sizing: border-box;
-}
-
-.comment-authentication {
-  display: flex;
-  margin-left: 10px;
-  position: absolute;
-  font-size: .875rem;
-  top: 0.625rem;
 }
 
 .comment-btn-shape {

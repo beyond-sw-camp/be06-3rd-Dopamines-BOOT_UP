@@ -22,6 +22,7 @@ const emit = defineEmits(['update:comments', 'update:likeCount']);
 const localComments = ref([...props.comments]);
 const localLikeCount = ref(props.likeCount);
 const replyIndex = ref(null);
+const showReplyInput = ref(false);
 
 watch(() => props.comments, (newComments) => {
   localComments.value = [...newComments];
@@ -53,7 +54,12 @@ function editComment(index, newComment) {
 }
 
 function replyToComment(index) {
-  replyIndex.value = index;
+  if (replyIndex.value === index) {
+    showReplyInput.value = !showReplyInput.value;
+  } else {
+    replyIndex.value = index;
+    showReplyInput.value = true;
+  }
 }
 </script>
 
@@ -73,8 +79,9 @@ function replyToComment(index) {
       <div class="comment-view-wrapper">
         <ul class="comment-view-detail-container">
           <li v-for="(comment, index) in localComments" :key="index" :id="'answer-' + index">
-            <CommentView v-bind="comment" @delete="deleteComment(index)" @edit="editComment(index, $event)" @reply="replyToComment(index)"></CommentView>
-            <CommentInput v-if="replyIndex === index" @commentSubmit="commentSubmit"></CommentInput>
+            <CommentView v-bind="comment" @delete="deleteComment(index)" @edit="editComment(index, $event)"
+                         @reply="replyToComment(index)"></CommentView>
+            <CommentInput v-if="replyIndex === index && showReplyInput" @commentSubmit="commentSubmit"></CommentInput>
           </li>
         </ul>
       </div>

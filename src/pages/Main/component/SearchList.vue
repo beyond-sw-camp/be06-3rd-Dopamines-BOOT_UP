@@ -85,6 +85,7 @@ watch(() => props.marketResults, (newVal) => {
           <div v-for="result in marketResults.slice(0, marketPostSize)" :key="result.idx" class="search-result-item">
             <router-link :to="`/market/detail/${result.idx}`">
               <h3>{{ result.title }}</h3>
+<!--              <p>{{ result.content || '내용이 없습니다' }}</p>-->
             </router-link>
           </div>
           <div class="search-more-btn">

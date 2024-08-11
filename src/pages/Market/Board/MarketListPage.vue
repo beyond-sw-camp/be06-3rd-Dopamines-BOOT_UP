@@ -3,24 +3,23 @@ import { ref, onMounted, computed } from "vue";
 import { useMarketStore } from "@/pages/Market/stores/UseMarketStore";
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
-// import PostList from "@/components/post/List/PostList.vue";
 import CardViewComponent from "@/pages/Market/Board/components/CardViewComponent.vue";
 
 const marketStore = useMarketStore();
 const isSearched = ref(false);
 const searchQuery = ref("");
+const showMarked = ref(false);
 
 const products = computed(() => marketStore.list);
 const filteredProducts = computed(() => {
+  if (showMarked.value) {
+    return products.value.filter(product => product.markedStatus === "fill");
+  }
   if (!searchQuery.value) {
     return products.value;
   }
   return products.value.filter(product => product.title.includes(searchQuery.value));
 });
-
-// const searchResults = ref([]);
-// const isEnd = computed(() => marketStore.isEnd);
-// const isSearchResultEnd = ref(false);
 
 const getData = () => {
   marketStore.getProducts();
@@ -30,19 +29,13 @@ const search = () => {
   isSearched.value = true;
 };
 
+const toggleMarkedItems = () => {
+  showMarked.value = !showMarked.value;
+};
+
 onMounted(() => {
   getData();
 });
-// const search = async () => {
-//   isSearched.value = true;
-//   const allProducts = await marketStore.getProducts(1, 100);
-//   searchResults.value = allProducts.filter(product => product.title.includes(searchQuery.value));
-//   isSearchResultEnd.value = searchResults.value.length === 0;
-// };
-
-// onMounted(() => {
-//   marketStore.getProducts();
-// });
 </script>
 
 <template>
@@ -52,6 +45,7 @@ onMounted(() => {
       <div class="market-container">
         <div class="market-wrapper">
           <div class="market-area">
+            <h3 class="title"> 중고 장터 </h3>
             <div class="search-container">
               <div class="search-area">
                 <div class="search-wrap">
@@ -69,7 +63,6 @@ onMounted(() => {
                     </button>
                   </div>
                 </div>
-<!--                <PostList title="중고마켓 게시판" :searchQuery="searchQuery" @performSearch="search" board="market"></PostList>-->
                 <div v-show="isSearched" class="search-title">
                   <h2>
                     <strong>'{{ searchQuery }}'</strong> 검색 결과
@@ -101,7 +94,9 @@ onMounted(() => {
             </div>
             <ul class="sort-list">
               <div>
-                <button class="px-2">찜한 목록</button>
+                <button class="px-2" @click="toggleMarkedItems">
+                  {{ showMarked ? '전체 목록' : '찜한 목록' }}
+                </button>
               </div>
               <div class="market-content-container">
                 <CardViewComponent
@@ -110,40 +105,22 @@ onMounted(() => {
                     :product="product"
                 />
               </div>
-<!--            </ul>-->
-<!--            <ul class="market-content-container">-->
-<!--              <li-->
-<!--                  v-show="!isSearched"-->
-<!--                  v-for="product in products"-->
-<!--                  :key="product.idx"-->
-<!--              >-->
-<!--                <CardViewComponent :product="product"></CardViewComponent>-->
-<!--              </li>-->
-
-<!--              <li-->
-<!--                  v-show="isSearched"-->
-<!--                  v-for="product in searchResults"-->
-<!--                  :key="product.idx"-->
-<!--              >-->
-<!--                <CardViewComponent :product="product"></CardViewComponent>-->
-<!--              </li>-->
-<!--            </ul>-->
-            <button
-                :disabled="isEnd"
-                v-show="!isEnd && !isSearched"
-                @click="getData"
-                class="apply-btn"
-            >
-              더보기
-            </button>
-            <button
-                :disabled="isSearchResultEnd"
-                v-show="!isSearchResultEnd && isSearched"
-                @click="search"
-                class="apply-btn"
-            >
-              더보기
-            </button>
+              <button
+                  :disabled="isEnd"
+                  v-show="!isEnd && !isSearched"
+                  @click="getData"
+                  class="apply-btn"
+              >
+                더보기
+              </button>
+              <button
+                  :disabled="isSearchResultEnd"
+                  v-show="!isSearchResultEnd && isSearched"
+                  @click="search"
+                  class="apply-btn"
+              >
+                더보기
+              </button>
             </ul>
           </div>
         </div>
@@ -471,5 +448,18 @@ button {
 .mx-\[6px\] {
   margin-left: 6px;
   margin-right: 6px;
+}
+.title {
+  display: flex;
+  background-color: rgb(224 97 57);
+  color: #fff;
+  border-radius: 0.75rem;
+  height: 4rem;
+  padding: 0 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
+  margin-bottom: 10px;
 }
 </style>

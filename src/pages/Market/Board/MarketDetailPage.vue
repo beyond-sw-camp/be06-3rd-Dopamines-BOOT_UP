@@ -12,7 +12,9 @@ const marketStore = useMarketStore();
 const route = useRoute();
 const router = useRouter();
 
+const userInfo = ref(JSON.parse(localStorage.getItem("user")));
 const markedStatus = ref("fill");
+const isChatAvailable = ref(true);
 
 const changeImg = () => {
   markedStatus.value = markedStatus.value === "empty" ? "fill" : "empty";
@@ -32,6 +34,10 @@ onMounted(async () => {
     markedStatus.value = "fill";
   } else {
     markedStatus.value = "empty";
+  }
+
+  if (marketStore.product.authorIdx == userInfo.value.userIdx) {
+    isChatAvailable.value = false;
   }
 });
 </script>

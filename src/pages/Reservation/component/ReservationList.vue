@@ -93,6 +93,7 @@ const cancelReservation = async (idx) => {
     if (result) {
       if (confirm("예약이 취소되었습니다.")) {
         await router.push("/reservation");
+        router.go(0);
       }
     } else {
       if (confirm("예약 취소에 실패하였습니다.")) {

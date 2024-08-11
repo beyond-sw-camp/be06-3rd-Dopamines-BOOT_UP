@@ -8,13 +8,16 @@ import { useRoute } from 'vue-router';
 const projectDetail = ref([]);
 const idx = ref(null);
 const projectStore = useProjectStore();
+const iframeSrc = ref('');
 
 onMounted(async () => {
   const route = useRoute();
   idx.value = route.params.id;
 
   projectDetail.value = await projectStore.getProjectDetail(idx.value);
-
+  if (projectDetail.value.sourceUrl != null) {
+    iframeSrc.value = projectDetail.value.sourceUrl;
+  }
   window.scrollTo(0, 0);
 });
 
@@ -41,6 +44,11 @@ onMounted(async () => {
           <hr>
           <div>
             <p v-html="projectDetail.contents"></p>
+            <p v-if="projectDetail.sourceUrl != null">
+              <br>
+              <iframe frameborder="0" :src="iframeSrc" width="640" height="360" class="note-video-clip"></iframe>
+              <br>
+            </p>
           </div>
           <hr>
           <div class="git-url">
@@ -77,9 +85,6 @@ main > div {
 }
 
 section {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin-top: 30px;
 }

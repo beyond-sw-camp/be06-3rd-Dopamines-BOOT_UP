@@ -13,7 +13,7 @@ export const useCommunityStore = defineStore('community', {
         async getPostDetail(idx, boardType) {
             const response = await axios.get(
                 `/api/${boardType}/post/read?idx=${idx}`,{
-                    isCredential: true,
+                    withCredential: true,
                 }
             );
 
@@ -31,7 +31,7 @@ export const useCommunityStore = defineStore('community', {
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        isCredential: true,
+                        withCredential: true,
                     }
                 )
 
@@ -52,7 +52,7 @@ export const useCommunityStore = defineStore('community', {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    isCredential: true,
+                    withCredential: true,
                 }
             )
 

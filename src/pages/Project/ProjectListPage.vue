@@ -10,7 +10,7 @@
             </div>
             <select class="coursenum-selection" v-model="selectedCourse">
               <option value="all">BEYOND 전체</option>
-              <option v-for="i in courseNum" v-bind:key="i">BEYOND {{ i }}기</option>
+              <option v-for="i in courseNum" v-bind:key="i" :value="i">BEYOND {{ i }}기</option>
             </select>
           </div>
           <div v-if="isLoading">로딩 중...</div>
@@ -65,8 +65,10 @@ onMounted(async () => {
 const filteredDataList = computed(() => {
   if (selectedCourse.value === 'all') {
     return dataList.value; // 전체 데이터 반환
+  } else {
+    console.log("what is you: ", selectedCourse);
   }
-  return dataList.value.filter(data => data.courseNum === selectedCourse.value); // 선택된 코스에 해당하는 데이터만 반환
+  return dataList.value.filter(data => data.courseNum === parseInt(selectedCourse.value)); // 선택된 코스에 해당하는 데이터만 반환
 });
 
 console.log(filteredDataList);
@@ -165,6 +167,7 @@ select {
   padding: 10px;
   margin: 20px 0 20px 0;
   text-align: center;
+  margin-left: auto;
   a {
     color: #fff;
   }

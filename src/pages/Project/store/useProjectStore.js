@@ -15,7 +15,7 @@ export const useProjectStore = defineStore("project", {
             try {
                 const response = await axios.get(
                     `/api/project/read-all`, {
-                        isCredentials: true
+                        withCredentials: true
                     }
                 )
 
@@ -29,17 +29,16 @@ export const useProjectStore = defineStore("project", {
         },
         async uploadFile(file) {
             const formData = new FormData();
-            const blob = new Blob([file], { type: "application/octet-stream" });
+            const type = file.type;
+            console.log("type: ", type);
+            const blob = new Blob([file], { type: type });
 
             formData.append('file', blob, file.name);
 
             const response = await axios.post(
                 "/api/project/upload-image",
                 formData, {
-                    isCredentials: true,
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    }
+                    withCredentials: true,
                 });
             console.log(response);
 
@@ -49,7 +48,7 @@ export const useProjectStore = defineStore("project", {
             try{
                 const response = await axios.post(
                     `/api/project/create`, postReq, {
-                        isCredential: true
+                        withCredential: true
                     }
                 )
                 console.log(response);

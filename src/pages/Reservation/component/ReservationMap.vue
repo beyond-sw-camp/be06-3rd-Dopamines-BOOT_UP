@@ -74,6 +74,7 @@
 <script>
 import { ref } from 'vue';
 import { useReservationStore } from '../stores/useReservationStore';
+import {useRouter} from "vue-router";
 
 export default {
   name: 'ReservationComponent',
@@ -83,6 +84,7 @@ export default {
     const isTimeTableVisible = ref(false);
     const selectedSeats = ref([]);
     const reservationTimeList = ref(null);
+    const router = useRouter();
     const reservationStore = useReservationStore();
 
     const getTime = async (floor, section) => {
@@ -108,7 +110,23 @@ export default {
           selectedSeats
         };
 
-        reservationStore.createReservation(reservationData);
+        const result = reservationStore.createReservation(reservationData);
+        console.log(result);
+        if (result) {
+          if (confirm("예약을 진행하시겠습니까?")){
+            if (confirm("예약을 성공했습니다.")) {
+              router.push("/reservation");
+              router.go(0);
+            } else {
+              alert("예약에 실패했습니다.")
+            }
+          }
+
+        } else {
+          if (confirm("예약에 실패했습니다. 다시 시도하여 주십시오.")) {
+            router.push("/reservation");
+          }
+        }
       } else {
         alert("시간대를 선택해주세요.");
       }

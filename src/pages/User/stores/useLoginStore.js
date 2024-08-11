@@ -21,7 +21,7 @@ export const useLoginStore = defineStore('user', {
         );
         if (response.status === 200) {
           this.isLoggedIn = true;
-          let atoken = await Cookies.get('Atoken');
+          let atoken = await Cookies.get('AToken');
           const decoded = jwtDecode(atoken);
 
           this.userIdx = decoded.idx

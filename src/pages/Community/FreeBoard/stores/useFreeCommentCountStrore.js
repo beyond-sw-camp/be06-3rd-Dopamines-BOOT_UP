@@ -1,4 +1,3 @@
-// src/pages/Community/FreeBoard/stores/useFreeCommentCountStore.js
 import { defineStore } from 'pinia';
 import { useFreeCommentStore } from './useFreeCommentStore';
 import { useFreeRecommentStore } from './useFreeRecommentStore';

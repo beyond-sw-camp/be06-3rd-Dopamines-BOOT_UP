@@ -3,13 +3,13 @@ import axios from 'axios';
 
 export const useFreeCommentStore = defineStore('freeComment', {
     state: () => ({
-        "idx": 0, //카테고리 아님
+        "idx": 0,
         "content": ""
     }),
 
     actions: {
         // 댓글 작성
-        async createComment(req) {
+        async createComment(user, req) {
             this.isLoading = true;
             this.error = null;
             let userIdx = JSON.parse(localStorage.getItem('user')).idx;

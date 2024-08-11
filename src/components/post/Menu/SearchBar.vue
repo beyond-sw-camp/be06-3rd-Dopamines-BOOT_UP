@@ -34,7 +34,7 @@ const handleSearch = () => {
         <img src="../../../assets/icon/searchIcon.svg" alt="" />
       </button>
     </div>
-    <div class="post-write" v-if="showWriteLink">
+    <div class="post-write" v-if="board === 'market'">
       <router-link :to="`${props.writelink}`">글 작성</router-link>
     </div>
   </div>

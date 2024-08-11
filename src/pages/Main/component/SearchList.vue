@@ -1,7 +1,7 @@
 <script setup>
-import { defineProps } from 'vue';
+import { watch, defineProps } from 'vue';
 
-defineProps({
+const props = defineProps({
   freeResults: {
     type: Array,
     default: () => []
@@ -19,6 +19,18 @@ defineProps({
     default: ''
   }
 });
+
+watch(() => props.freeResults, (newVal) => {
+  console.log('Free Results:', newVal);
+});
+
+watch(() => props.openResults, (newVal) => {
+  console.log('Open Results:', newVal);
+});
+
+watch(() => props.marketResults, (newVal) => {
+  console.log('Market Results:', newVal);
+});
 </script>
 
 <template>
@@ -29,9 +41,9 @@ defineProps({
         <div v-if="freeResults.length === 0">검색 결과가 없습니다</div>
         <div v-else class="search-result-list">
           <div v-for="result in freeResults" :key="result.id" class="search-result-item">
-            <div >
+            <div>
               <h3>{{ result.title }}</h3>
-              <p>{{ result.content }}</p>
+              <p>{{ result.content || '내용이 없습니다' }}</p>
             </div>
           </div>
           <div class="search-more-btn">
@@ -47,13 +59,13 @@ defineProps({
         <div v-if="openResults.length === 0">검색 결과가 없습니다</div>
         <div v-else class="search-result-list">
           <div v-for="result in openResults" :key="result.id" class="search-result-item">
-            <div >
+            <div>
               <h3>{{ result.title }}</h3>
-              <p>{{ result.content }}</p>
+              <p>{{ result.content || '내용이 없습니다' }}</p>
             </div>
           </div>
           <div class="search-more-btn">
-            <router-link  :to="{ name: 'OpenListPage', query: { q: searchQuery } }" class="btn">더보기</router-link>
+            <router-link :to="{ name: 'OpenListPage', query: { q: searchQuery } }" class="btn">더보기</router-link>
           </div>
         </div>
       </div>
@@ -64,12 +76,14 @@ defineProps({
       <div>
         <div v-if="marketResults.length === 0">검색 결과가 없습니다</div>
         <div v-else class="search-result-list">
-          <div v-for="result in marketResults" :key="result.id" class="search-result-item">
-            <h3>{{ result.title }}</h3>
-            <p>{{ result.content }}</p>
+          <div v-for="result in marketResults" :key="result.idx" class="search-result-item">
+            <div>
+              <h3>{{ result.title }}</h3>
+              <p>{{ result.content || '내용이 없습니다' }}</p>
+            </div>
           </div>
           <div class="search-more-btn">
-            <router-link  :to="{ name: 'MarketListPage', query: { q: searchQuery } }" class="btn">더보기</router-link>
+            <router-link :to="{ name: 'MarketListPage', query: { q: searchQuery } }" class="btn">더보기</router-link>
           </div>
         </div>
       </div>
@@ -79,35 +93,41 @@ defineProps({
 </template>
 
 <style scoped>
-h2{
+h2 {
   margin-top: 0;
   border-radius: 5px;
 }
-.search-result{
+
+.search-result {
   padding: 10px;
   background-color: rgba(191, 184, 166, 0.2);
   border-radius: 10px;
 }
-.search-result-list{
+
+.search-result-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-.search-result-item{
+
+.search-result-item {
   background-color: #ffffff8a;
   padding: 10px;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
   gap: 5px;
-  h3{
-    margin: 0;
-  }
-  p{
-    margin: 0;
-  }
 }
-.title{
+
+h3 {
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+.title {
   display: flex;
   background-color: rgb(224 97 57);
   color: #fff;

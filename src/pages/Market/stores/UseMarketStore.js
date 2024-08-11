@@ -91,11 +91,13 @@ export const useMarketStore = defineStore("market", {
             try {
                 const response = await axios.get(`/market/search?page=${page}&size=${size}&keyword=${query}`, { withCredentials: true });
                 console.log('market response', response);
+                console.log('market response.data.result', response.data.result);
+                console.log('market response.data.result.content', response.data.result.content);
                 if (response.data && Array.isArray(response.data.result)) {
                     let posts = response.data.result.map(post => ({
                         idx: post.idx,
                         title: post.title,
-                        content: post.content,
+                        // content: post.content,
                     }));
                     console.log('market posts', posts);
                     return posts;

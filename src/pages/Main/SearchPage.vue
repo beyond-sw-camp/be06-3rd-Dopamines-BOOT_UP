@@ -1,9 +1,9 @@
 <script setup>
-import {ref, onMounted} from 'vue';
-import {useRoute} from 'vue-router';
-import {useFreePostStore} from '@/pages/Community/FreeBoard/stores/useFreePostStore';
-import {useOpenPostStore} from '@/pages/Community/OpenBoard/stores/useOpenPostStore';
-import {useMarketStore} from '@/pages/Market/stores/UseMarketStore.js';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { useFreePostStore } from '@/pages/Community/FreeBoard/stores/useFreePostStore';
+import { useOpenPostStore } from '@/pages/Community/OpenBoard/stores/useOpenPostStore';
+import { useMarketStore } from '@/pages/Market/stores/UseMarketStore.js';
 import MainHeader from '@/components/layout/MainHeader.vue';
 import SearchBar from '@/components/post/Menu/SearchBar.vue';
 import MainFooter from '@/components/layout/MainFooter.vue';
@@ -23,9 +23,12 @@ const errorMessage = ref('');
 const performSearch = async () => {
   try {
     if (searchQuery.value) {
-      freePosts.value = await freePostStore.search(1, 3, searchQuery.value);
-      openPosts.value = await openPostStore.search(1, 3, searchQuery.value);
-      marketPosts.value = await marketPostStore.search(1, 3, searchQuery.value);
+      freePosts.value = await freePostStore.search(0, 3, searchQuery.value);
+      openPosts.value = await openPostStore.search(0, 3, searchQuery.value);
+      marketPosts.value = await marketPostStore.search(0, 3, searchQuery.value);
+      console.log('Free Posts:', freePosts.value);
+      console.log('Open Posts:', openPosts.value);
+      console.log('Market Posts:', marketPosts.value);
 
       if (freePosts.value.length === 0 && openPosts.value.length === 0 && marketPosts.value.length === 0) {
         errorMessage.value = '검색 결과가 없습니다';
@@ -34,7 +37,7 @@ const performSearch = async () => {
       }
     }
   } catch (error) {
-    errorMessage.value = 'An error occurred while performing the search.';
+    errorMessage.value = 'performsearch에서 에러 발생.';
     console.error(error);
   }
 };
@@ -52,7 +55,7 @@ onMounted(async () => {
       performSearch();
     }
   } catch (error) {
-    errorMessage.value = 'An error occurred while initializing the search.';
+    errorMessage.value = 'mount에서 에러 발생';
     console.error(error);
   }
 });

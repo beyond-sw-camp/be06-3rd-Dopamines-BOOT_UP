@@ -151,7 +151,14 @@ Frontend : 🐱 **이철수**
 <br>
 
 ## 🔍 배포 URL
-**<a href="http://13.124.239.157"> Boot Up 바로가기</a>**
+**<a href="http://13.124.239.157"> ✅ Boot Up 바로가기 ✅ </a>**
+
+<br>
+
+**테스트 계정**  
+ID : 곽동현@test.com  
+PW : qwer1234  
+
 <br><br>
 
 ## 📃 프로젝트 페이지

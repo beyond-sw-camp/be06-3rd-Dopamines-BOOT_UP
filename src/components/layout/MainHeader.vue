@@ -2,10 +2,12 @@
 import { ref, onMounted, watch, defineEmits } from 'vue';
 import { useRouter } from 'vue-router';
 import Cookies from 'js-cookie';
+import {useUserStore} from "@/pages/User/stores/useUserStore";
 
 const searchInput = ref('');
 const router = useRouter();
 const isLoggedIn = ref(false);
+const userStore = useUserStore();
 
 const checkLoginStatus = () => {
   const token = Cookies.get('token');
@@ -31,7 +33,7 @@ const handleSearch = () => {
 
 const toggleLogin = () => {
   if (isLoggedIn.value) {
-    Cookies.remove('token');
+    userStore.logout();
   } else {
     Cookies.set('token', 'your-token-value');
   }

@@ -19,6 +19,7 @@ const handleLogin = async () => {
     const success = await loginStore.login({ email: userEmail.value, password: password.value });
     if (success) {
       await router.push('/');
+      router.go(0);
     } else {
       error.value = '로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.';
     }

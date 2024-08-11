@@ -3,7 +3,7 @@ import { ref, onMounted, computed } from "vue";
 import { useMarketStore } from "@/pages/Market/stores/UseMarketStore";
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
-import PostList from "@/components/post/List/PostList.vue";
+// import PostList from "@/components/post/List/PostList.vue";
 import CardViewComponent from "@/pages/Market/Board/components/CardViewComponent.vue";
 
 const marketStore = useMarketStore();
@@ -11,24 +11,38 @@ const isSearched = ref(false);
 const searchQuery = ref("");
 
 const products = computed(() => marketStore.list);
-const searchResults = ref([]);
-const isEnd = computed(() => marketStore.isEnd);
-const isSearchResultEnd = ref(false);
+const filteredProducts = computed(() => {
+  if (!searchQuery.value) {
+    return products.value;
+  }
+  return products.value.filter(product => product.title.includes(searchQuery.value));
+});
+
+// const searchResults = ref([]);
+// const isEnd = computed(() => marketStore.isEnd);
+// const isSearchResultEnd = ref(false);
 
 const getData = () => {
   marketStore.getProducts();
 };
 
-const search = async () => {
+const search = () => {
   isSearched.value = true;
-  const allProducts = await marketStore.getProducts(1, 100); // Fetch all products
-  searchResults.value = allProducts.filter(product => product.title.includes(searchQuery.value));
-  isSearchResultEnd.value = searchResults.value.length === 0;
 };
 
 onMounted(() => {
-  marketStore.getProducts();
+  getData();
 });
+// const search = async () => {
+//   isSearched.value = true;
+//   const allProducts = await marketStore.getProducts(1, 100);
+//   searchResults.value = allProducts.filter(product => product.title.includes(searchQuery.value));
+//   isSearchResultEnd.value = searchResults.value.length === 0;
+// };
+
+// onMounted(() => {
+//   marketStore.getProducts();
+// });
 </script>
 
 <template>
@@ -40,7 +54,22 @@ onMounted(() => {
           <div class="market-area">
             <div class="search-container">
               <div class="search-area">
-                <PostList title="중고마켓 게시판" :searchQuery="searchQuery" @performSearch="search" board="market"></PostList>
+                <div class="search-wrap">
+                  <div class="search-box">
+                    <input
+                        v-model="searchQuery"
+                        @input="search"
+                        type="text"
+                        placeholder="Search by title"
+                        class="search-bar"
+                        style="margin: 0;"
+                    />
+                    <button aria-label="search" type="button" @click="handleSearch">
+                      <img src="../../../assets/icon/searchIcon.svg" alt="" />
+                    </button>
+                  </div>
+                </div>
+<!--                <PostList title="중고마켓 게시판" :searchQuery="searchQuery" @performSearch="search" board="market"></PostList>-->
                 <div v-show="isSearched" class="search-title">
                   <h2>
                     <strong>'{{ searchQuery }}'</strong> 검색 결과
@@ -71,27 +100,34 @@ onMounted(() => {
               </div>
             </div>
             <ul class="sort-list">
-              <li>
+              <div>
                 <button class="px-2">찜한 목록</button>
-              </li>
-            </ul>
-            <ul class="market-content-container">
-              <li
-                  v-show="!isSearched"
-                  v-for="product in products"
-                  :key="product.idx"
-              >
-                <CardViewComponent :product="product"></CardViewComponent>
-              </li>
+              </div>
+              <div class="market-content-container">
+                <CardViewComponent
+                    v-for="product in filteredProducts"
+                    :key="product.id"
+                    :product="product"
+                />
+              </div>
+<!--            </ul>-->
+<!--            <ul class="market-content-container">-->
+<!--              <li-->
+<!--                  v-show="!isSearched"-->
+<!--                  v-for="product in products"-->
+<!--                  :key="product.idx"-->
+<!--              >-->
+<!--                <CardViewComponent :product="product"></CardViewComponent>-->
+<!--              </li>-->
 
-              <li
-                  v-show="isSearched"
-                  v-for="product in searchResults"
-                  :key="product.idx"
-              >
-                <CardViewComponent :product="product"></CardViewComponent>
-              </li>
-            </ul>
+<!--              <li-->
+<!--                  v-show="isSearched"-->
+<!--                  v-for="product in searchResults"-->
+<!--                  :key="product.idx"-->
+<!--              >-->
+<!--                <CardViewComponent :product="product"></CardViewComponent>-->
+<!--              </li>-->
+<!--            </ul>-->
             <button
                 :disabled="isEnd"
                 v-show="!isEnd && !isSearched"
@@ -108,6 +144,7 @@ onMounted(() => {
             >
               더보기
             </button>
+            </ul>
           </div>
         </div>
       </div>
@@ -224,6 +261,8 @@ p {
   top: 220px;
   padding-top: 1.75rem;
   padding-bottom: 2.25rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .sort-list li {
@@ -391,8 +430,37 @@ button {
   color: #9ca3af;
 }
 
-.border {
-  border-width: 1px;
+.search-wrap {
+  display: flex;
+  gap: 10px;
+}
+.search-box {
+  width: 100%;
+  height: 40px;
+  padding: 0px 20px;
+  background-color: rgb(255, 255, 255);
+  position: relative;
+  border-radius: 100px;
+  border: 1px solid #e06139;
+  transition: 0.5s;
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0px 40px 0px 44px;
+    height: 40px;
+    border: none;
+    color: rgb(0, 0, 0);
+    position: absolute;
+    right: 0px;
+    background-color: transparent;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  button {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+  }
 }
 
 .px-2 {

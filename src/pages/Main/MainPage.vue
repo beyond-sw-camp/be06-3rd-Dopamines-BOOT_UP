@@ -43,11 +43,13 @@ onMounted(async () => {
                   :dataList="freePosts"
                   title="자유 게시판"
                   board="free"
+                  :showSearchInput="false"
               ></PostList>
               <PostList
                   :dataList="openPosts"
                   title="공개 게시판"
                   board="open"
+                  :showSearchInput="false"
               ></PostList>
             </div>
           </div>
@@ -57,6 +59,7 @@ onMounted(async () => {
                 title="공지사항"
                 board="notice"
                 listlength="10"
+                :showSearchInput="false"
             ></PostList>
           </div>
         </div>

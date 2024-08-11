@@ -25,6 +25,10 @@ const props = defineProps({
   performSearch: {
     type: Function,
     required: true
+  },
+  showSearchInput: {
+    type: Boolean,
+    default: true
   }
 });
 
@@ -37,7 +41,7 @@ const searchQuery = ref(props.searchQuery);
     <router-link :to="board" class="title">
       <h3>{{ title }}</h3>
     </router-link>
-    <div>
+    <div v-if="showSearchInput">
       <SearchBar v-model:searchInput="searchQuery" @performSearch="performSearch"></SearchBar>
     </div>
 

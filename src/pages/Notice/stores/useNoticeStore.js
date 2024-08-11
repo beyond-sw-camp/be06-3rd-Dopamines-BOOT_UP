@@ -33,99 +33,41 @@ export const useNoticeStore = defineStore('notice', {
             }
         },
 
-        async fetchNotice(id) {
-            const response = await axios.get(`http://localhost:8080/notices?idx=${id}`);
-            let notice = {
-                idx: response.data.data.idx,
-                title: response.data.data.title,
-                content: response.data.data.content,
-                date: response.data.data.date,
-                category: response.data.data.category,
-                isPrivate: response.data.data.isPrivate,
-                imageUrls: response.data.data.imageUrls
-            };
-
-            console.log('notice', notice);
-            return response;
-        },
-
-        async fetchAllPrivateNotices(page = 0, size = 10) {
-            this.isLoading = true;
-            try {
-                const response = await axios.get('http://localhost:8080/notices/private', {
-                    params: { page, size },
-                });
-                this.notices = response.data.data.content;
-                this.totalNotices = response.data.data.totalElements;
-            } catch (error) {
-                this.error = error.response && error.response.data ? error.response.data.message : error.message;
-            } finally {
-                this.isLoading = false;
-            }
-        },
-
         async fetchAllNotices() {
-            const response = await axios.get(`http://localhost:8080/notices/public`);
-            console.log('notice~~response', response);
-            if (response.data && Array.isArray(response.data.result.content)) {
-                let posts = response.data.result.content.map(post => ({
-                    idx: post.idx,
-                    title: post.title,
-                    content: post.content,
-                    date: post.date,
-                    category: post.category,
-                    isPrivate: post.isPrivate,
-                    imageUrls: post.imageUrls
+            try {
+                const response = await axios.get(`http://localhost:8080/notices/public`);
+                console.log('API response:', response.data);
+                const notices = response.data.result.content.map((post, index) => ({
+                    ...post,
+                    idx: index + 1
                 }));
-                console.log('notice~~~~', posts);
-                return posts;
+                console.log('Fetched notices:', notices);
+                return notices;
+            } catch (error) {
+                console.error('Failed to fetch notices:', error);
+                throw error;
             }
         },
 
-        async fetchNoticesByCategory(category, page = 0, size = 10) {
-            this.isLoading = true;
-            try {
-                const response = await axios.get('http://localhost:8080/notices/category', {
-                    params: { category, page, size },
-                });
-                this.notices = response.data.data.content;
-                this.totalNotices = response.data.data.totalElements;
-            } catch (error) {
-                this.error = error.response && error.response.data ? error.response.data.message : error.message;
-            } finally {
-                this.isLoading = false;
-            }
-        },
 
-        async fetchNoticesByDateRange(startDate, endDate, page = 0, size = 10) {
-            this.isLoading = true;
-            try {
-                const response = await axios.get('http://localhost:8080/notices/date', {
-                    params: { startDate, endDate, page, size },
-                });
-                this.notices = response.data.data.content;
-                this.totalNotices = response.data.data.totalElements;
-            } catch (error) {
-                this.error = error.response && error.response.data ? error.response.data.message : error.message;
-            } finally {
-                this.isLoading = false;
-            }
-        },
-
-        async findNoticesByCriteria(isPrivate, category) {
-            this.isLoading = true;
-            try {
-                const response = await axios.get('http://localhost:8080/notices/notices/criteria', {
-                    params: { isPrivate, category },
-                });
-                this.notices = response.data.content;
-                this.totalNotices = response.data.totalElements;
-            } catch (error) {
-                this.error = error.response && error.response.data ? error.response.data.message : error.message;
-            } finally {
-                this.isLoading = false;
-            }
-        },
+        // async fetchAllNotices() {
+        //     const response = await axios.get(`http://localhost:8080/notices/public`);
+        //     console.log('notice~~response', response);
+        //     // if (response.data && Array.isArray(response.data.result.content)) {
+        //     //     let posts = response.data.result.content.map(post => ({
+        //     //         idx: post.idx,
+        //     //         title: post.title,
+        //     //         content: post.content,
+        //     //         date: post.date,
+        //     //         category: post.category,
+        //     //         isPrivate: post.isPrivate,
+        //     //         imageUrls: post.imageUrls
+        //     //     }));
+        //     //     console.log('notice~~~~', posts);
+        //     //     return posts;
+        //     // }
+        //     return response.data.result.content;
+        // },
 
         async search(category, page = 0, size = 10) {
             try {

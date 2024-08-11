@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from 'vue';
+import { ref, onMounted } from 'vue';
 import MainHeader from "@/components/layout/MainHeader.vue";
 import PostList from "@/components/post/List/PostList.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
@@ -8,12 +8,21 @@ import { useNoticeStore } from '@/pages/Notice/stores/useNoticeStore';
 const noticeStore = useNoticeStore();
 const noticePosts = ref([]);
 
-onMounted(async () => {
+const fetchAllNotices = async () => {
   try {
     noticePosts.value = await noticeStore.fetchAllNotices();
+    console.log('noticePosts:', noticePosts.value);
+    if (!noticePosts.value) {
+      console.error('Notice posts are undefined');
+    }
   } catch (error) {
-    console.error('Failed to fetch posts:', error);
-  }});
+    console.error('Failed to fetch notices:', error);
+  }
+};
+
+onMounted(() => {
+  fetchAllNotices();
+});
 </script>
 
 <template>
@@ -21,7 +30,11 @@ onMounted(async () => {
     <MainHeader></MainHeader>
     <main>
       <div class="content-area">
-        <PostList title="공지사항 게시판" :data-list="noticePosts"></PostList>
+        <PostList
+            title="공지사항 게시판"
+            :data-list="noticePosts"
+            board="notice"
+        ></PostList>
       </div>
     </main>
     <MainFooter></MainFooter>
@@ -29,7 +42,7 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.content-area{
+.content-area {
   display: flex;
   gap: 10px;
   flex-direction: column;

@@ -42,7 +42,7 @@ defineProps({
       <ul class="board-list" v-if="dataList && dataList.length">
         <li class="board-list-wrap" v-for="post in dataList" :key="post.id">
           <div>
-            <router-link class="board-post-title" :to="`${board}/detail/${post.idx}`">
+            <router-link class="board-post-title" :to="`${board}/detail/${post.idx!== undefined ? post.idx : 'undefined'}`">
               <PostListItem
                   :post-title="post.title"
                   :content="post.content"

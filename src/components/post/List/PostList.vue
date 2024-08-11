@@ -1,8 +1,10 @@
 <script setup>
-import { defineProps } from 'vue';
+import {computed, defineProps, ref} from 'vue';
+// import { useRoute } from 'vue-router';
 import PostListItem from '@/pages/component/List/PostListItem.vue';
+import SearchBar from "@/components/post/Menu/SearchBar.vue";
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true
@@ -16,16 +18,25 @@ defineProps({
     default: '/',
     required: true
   },
-  reservation: {
+  searchQuery: {
     type: String,
-    default: '/reservation',
-    required: false,
+    default: ''
   },
-  listlength: {
-    type: Number,
-    default: 5,
-    required: false,
+  performSearch: {
+    type: Function,
+    required: true
+  },
+  showSearchInput: {
+    type: Boolean,
+    default: true
   }
+});
+
+const searchQuery = ref(props.searchQuery);
+// const route = useRoute();
+
+const sortedDataList = computed(() => {
+  return [...props.dataList].sort((a, b) => a.idx - b.idx);
 });
 </script>
 
@@ -34,27 +45,28 @@ defineProps({
     <router-link :to="board" class="title">
       <h3>{{ title }}</h3>
     </router-link>
-    <div>
-      <div class="content">
-        <ul class="board-list" v-if="dataList && dataList.length">
-          <li class="board-list-wrap" v-for="post in `${listlength}`" :key="post.id">
-            <div>
-              <router-link class="board-post-title" :to="`${board}/detail/${post.idx}`">
-                <PostListItem
-                    :post-title="post.title"
-                    :content="post.content"
-                    :idx="post.idx"/>
-                <!--                    :comment-count="post.commentCount"-->
-                <!--                    :like-count="post.likeCount"-->
-                <!--                    :created-at="post.createdAt"-->
-                <!--                    :author="post.author"-->
-              </router-link>
-            </div>
-            <hr>
-          </li>
-        </ul>
-        <p v-else>등록된 게시글이 없습니다.</p>
-      </div>
+    <div v-if="showSearchInput">
+      <SearchBar v-model:searchInput="searchQuery" @performSearch="performSearch"></SearchBar>
+    </div>
+
+    <div class="content">
+      <ul class="board-list" v-if="sortedDataList && sortedDataList.length">
+        <li class="board-list-wrap" v-for="post in sortedDataList" :key="post.id">
+          <div>
+            <router-link class="board-post-title" :to="`${board}/detail/${post.idx!== undefined ? post.idx : 'undefined'}`">
+              <PostListItem
+                  :post-title="post.title"
+                  :content="post.content"
+                  :idx="post.idx"
+                  :author="post.author"
+                  :created-at="post.created_at"
+              />
+            </router-link>
+          </div>
+          <hr>
+        </li>
+      </ul>
+<!--      <p v-else-if="!route.path.includes('market')">등록된 게시글이 없습니다.</p>-->
     </div>
   </div>
 </template>
@@ -82,6 +94,7 @@ defineProps({
   box-sizing: border-box;
   align-items: center;
   box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
+  margin-bottom: 10px;
 }
 
 .board-list {

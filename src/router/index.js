@@ -72,6 +72,7 @@ const router = createRouter({
         { path: '/market/chat', component: () => import('../pages/Market/Chat/MarketChatPage.vue'), beforeEnter: requireLogin  },
 
         // Reservation
+
         { path: '/reservation', component: () => import('../pages/Reservation/ReservationPage.vue'), beforeEnter: requireLogin },
     ]
 });

@@ -3,8 +3,7 @@ import axios from 'axios';
 
 export const useFreeLikeStore = defineStore('freeLike', {
     state: () => ({
-        isLoading: false,
-        error: null,
+        likeCount: 0,
     }),
 
     actions: {

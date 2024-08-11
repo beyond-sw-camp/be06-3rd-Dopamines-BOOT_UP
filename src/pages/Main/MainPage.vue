@@ -17,12 +17,9 @@ const noticePosts = ref([]);
 
 onMounted(async () => {
   try {
-    await freePostStore.readAllPosts(1, 5);
-    await openPostStore.readAllPosts(1, 5);
-    await noticePostStore.fetchAllPublicNotices(1, 5);
-    freePosts.value = freePostStore.posts;
-    openPosts.value = openPostStore.posts;
-    noticePosts.value = noticePostStore.posts;
+    freePosts.value = await freePostStore.readAllPosts(1, 3);
+    openPosts.value = await openPostStore.readAllPosts(1, 3);
+    noticePosts.value = await noticePostStore.fetchAllNotices();
   } catch (error) {
     console.error('Failed to fetch posts:', error);
   }
@@ -46,13 +43,13 @@ onMounted(async () => {
                   :dataList="freePosts"
                   title="자유 게시판"
                   board="free"
-                  listlength="5"
+                  :showSearchInput="false"
               ></PostList>
               <PostList
                   :dataList="openPosts"
                   title="공개 게시판"
                   board="open"
-                  listlength="5"
+                  :showSearchInput="false"
               ></PostList>
             </div>
           </div>
@@ -62,6 +59,7 @@ onMounted(async () => {
                 title="공지사항"
                 board="notice"
                 listlength="10"
+                :showSearchInput="false"
             ></PostList>
           </div>
         </div>
@@ -98,7 +96,6 @@ onMounted(async () => {
   margin-top: 2rem;
   margin-bottom: 2rem;
   border-radius: 10px;
-  background-color: rgba(191, 184, 166, 0.1);
 }
 
 .content-content {

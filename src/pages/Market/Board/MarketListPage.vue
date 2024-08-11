@@ -3,31 +3,38 @@ import { ref, onMounted, computed } from "vue";
 import { useMarketStore } from "@/pages/Market/stores/UseMarketStore";
 import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
-import SearchBar from "@/components/post/Menu/SearchBar.vue";
-import PostList from "@/components/post/List/PostList.vue";
 import CardViewComponent from "@/pages/Market/Board/components/CardViewComponent.vue";
 
 const marketStore = useMarketStore();
 const isSearched = ref(false);
 const searchQuery = ref("");
+const showMarked = ref(false);
 
 const products = computed(() => marketStore.list);
-const searchResults = computed(() => marketStore.searchResults);
-const isEnd = computed(() => marketStore.isEnd);
-const isSearchResultEnd = computed(() => marketStore.isSearchResultEnd);
+const filteredProducts = computed(() => {
+  if (showMarked.value) {
+    return products.value.filter(product => product.markedStatus === "fill");
+  }
+  if (!searchQuery.value) {
+    return products.value;
+  }
+  return products.value.filter(product => product.title.includes(searchQuery.value));
+});
 
 const getData = () => {
   marketStore.getProducts();
 };
 
-const search = (query) => {
+const search = () => {
   isSearched.value = true;
-  searchQuery.value = query;
-  marketStore.search(query);
+};
+
+const toggleMarkedItems = () => {
+  showMarked.value = !showMarked.value;
 };
 
 onMounted(() => {
-  marketStore.getProducts();
+  getData();
 });
 </script>
 
@@ -38,10 +45,24 @@ onMounted(() => {
       <div class="market-container">
         <div class="market-wrapper">
           <div class="market-area">
+            <h3 class="title"> 중고 장터 </h3>
             <div class="search-container">
               <div class="search-area">
-                <PostList title="중고마켓 게시판"></PostList>
-                <SearchBar writelink="/market/write"></SearchBar>
+                <div class="search-wrap">
+                  <div class="search-box">
+                    <input
+                        v-model="searchQuery"
+                        @input="search"
+                        type="text"
+                        placeholder="Search by title"
+                        class="search-bar"
+                        style="margin: 0;"
+                    />
+                    <button aria-label="search" type="button" @click="handleSearch">
+                      <img src="../../../assets/icon/searchIcon.svg" alt="" />
+                    </button>
+                  </div>
+                </div>
                 <div v-show="isSearched" class="search-title">
                   <h2>
                     <strong>'{{ searchQuery }}'</strong> 검색 결과
@@ -49,65 +70,58 @@ onMounted(() => {
                 </div>
                 <table class="filter-table">
                   <tbody>
-                    <tr>
-                      <td>가격</td>
-                      <td class="price-filter">
-                        <input
+                  <tr>
+                    <td>가격</td>
+                    <td class="price-filter">
+                      <input
                           type="text"
                           placeholder="최소 가격"
                           data-idx="0"
-                        />
-                        <span class="mx-[6px]">~</span>
-                        <input
+                      />
+                      <span class="mx-[6px]">~</span>
+                      <input
                           type="text"
                           placeholder="최대 가격"
                           data-idx="1"
-                        />
-                        <button class="apply-btn">적용</button>
-                      </td>
-                    </tr>
+                      />
+                      <button class="apply-btn">적용</button>
+                      <router-link to="/market/write" class="apply-btn">글 작성</router-link>
+                    </td>
+                  </tr>
                   </tbody>
                 </table>
               </div>
             </div>
             <ul class="sort-list">
-              <li>
-                <button class="px-2">찜한 목록</button>
-              </li>
-            </ul>
-            <ul class="market-content-container">
-              <li
-                v-show="!isSearched"
-                v-for="product in products"
-                :key="product.idx"
+              <div>
+                <button class="px-2" @click="toggleMarkedItems">
+                  {{ showMarked ? '전체 목록' : '찜한 목록' }}
+                </button>
+              </div>
+              <div class="market-content-container">
+                <CardViewComponent
+                    v-for="product in filteredProducts"
+                    :key="product.id"
+                    :product="product"
+                />
+              </div>
+              <button
+                  :disabled="isEnd"
+                  v-show="!isEnd && !isSearched"
+                  @click="getData"
+                  class="apply-btn"
               >
-                <CardViewComponent :product="product"></CardViewComponent>
-              </li>
-
-              <li
-                v-show="isSearched"
-                v-for="product in searchResults"
-                :key="product.idx"
+                더보기
+              </button>
+              <button
+                  :disabled="isSearchResultEnd"
+                  v-show="!isSearchResultEnd && isSearched"
+                  @click="search"
+                  class="apply-btn"
               >
-                <CardViewComponent :product="product"></CardViewComponent>
-              </li>
+                더보기
+              </button>
             </ul>
-            <button
-              :disabled="isEnd"
-              v-show="!isEnd && !isSearched"
-              @click="getData"
-              class="apply-btn"
-            >
-              더보기
-            </button>
-            <button
-              :disabled="isSearchResultEnd"
-              v-show="!isSearchResultEnd && isSearched"
-              @click="search(searchQuery)"
-              class="apply-btn"
-            >
-              더보기
-            </button>
           </div>
         </div>
       </div>
@@ -224,6 +238,8 @@ p {
   top: 220px;
   padding-top: 1.75rem;
   padding-bottom: 2.25rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .sort-list li {
@@ -391,8 +407,37 @@ button {
   color: #9ca3af;
 }
 
-.border {
-  border-width: 1px;
+.search-wrap {
+  display: flex;
+  gap: 10px;
+}
+.search-box {
+  width: 100%;
+  height: 40px;
+  padding: 0px 20px;
+  background-color: rgb(255, 255, 255);
+  position: relative;
+  border-radius: 100px;
+  border: 1px solid #e06139;
+  transition: 0.5s;
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0px 40px 0px 44px;
+    height: 40px;
+    border: none;
+    color: rgb(0, 0, 0);
+    position: absolute;
+    right: 0px;
+    background-color: transparent;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  button {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+  }
 }
 
 .px-2 {
@@ -403,5 +448,18 @@ button {
 .mx-\[6px\] {
   margin-left: 6px;
   margin-right: 6px;
+}
+.title {
+  display: flex;
+  background-color: rgb(224 97 57);
+  color: #fff;
+  border-radius: 0.75rem;
+  height: 4rem;
+  padding: 0 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
+  margin-bottom: 10px;
 }
 </style>

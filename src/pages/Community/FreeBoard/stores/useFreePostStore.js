@@ -9,9 +9,10 @@ export const useFreePostStore = defineStore('post', {
         content: '',
         author: '',
         imageUrlList: [],
-        created_at: new Date,
+        created_at: '',
         likeCount: 0,
         posts: [],
+        freeCommentList: []
     }),
     actions: {
         async createPost(postData) {
@@ -38,46 +39,39 @@ export const useFreePostStore = defineStore('post', {
                 throw error;
             }
         },
-        async readPost(idx) {
-            try {
-                const response = await axios.get(`/api/free/post/read?idx=${idx}`, {withCredentials: true});
-                this.post = {
-                    idx: response.data.idx,
-                    title: response.data.title,
-                    content: response.data.content,
-                    author: response.data.author,
-                    imageUrlList: response.data.imageUrlList,
-                    createdAt: response.data.created_at,
-                    likeCount: response.data.likeCount
-                };
-                return this.post;
-            } catch (error) {
-                console.error('Failed to read post:', error);
-                throw error;
-            }
+        async readPost(postId) {
+            const response = await axios.get(`/free/post/read?idx=${postId}`);
+            console.log('response', response);
+
+            let readResult = {
+                idx: response.data.result.idx,
+                title: response.data.result.title,
+                content: response.data.result.content,
+                author: response.data.result.author,
+                imageUrlList: response.data.result.imageUrlList,
+                created_at: response.data.result.created_at,
+                likeCount: response.data.result.likeCount,
+                commentCount: response.data.result.commentCount,
+                boardIdx: response.data.result.boardIdx,
+                posts: [],
+                freeCommentList: response.data.result.freeCommentList
+            };
+            return readResult;
         },
         async readAllPosts(page, size) {
-            try {
-                const response = await axios.get(`/api/free/post/read-all?page=${page}&size=${size}`, {withCredentials: true});
-                if (response.data && Array.isArray(response.data.result)) {
-                    this.posts = response.data.result.map(post => ({
-                        idx: post.idx,
-                        title: post.title,
-                        content: post.content,
-                        author: post.author,
-                        imageUrlList: post.imageUrlList,
-                        created_at: post.created_at,
-                        likeCount: post.likeCount,
-                        freeCommentList: post.freeCommentList
-                    }));
-                } else {
-                    console.error('Unexpected response format:', response.data);
-                    this.posts = [];
-                }
-                return this.posts;
-            } catch (error) {
-                console.error('Failed to read all posts:', error);
-                throw error;
+            const response = await axios.get(`/free/post/read-all?page=${page}&size=${size}`, {withCredentials: true});
+            console.log('response', response);
+            if (response.data && Array.isArray(response.data.result)) {
+                let posts = response.data.result.map(post => ({
+                    idx: post.idx,
+                    title: post.title,
+                    content: post.content,
+                    author: post.author,
+                    created_at: post.created_at,
+                }));
+                console.log('posts', posts);
+                return posts;
+
             }
         },
         async updatePost(postData) {
@@ -98,30 +92,29 @@ export const useFreePostStore = defineStore('post', {
                 throw error;
             }
         },
-        async search(query) {
-            if (this.lastSearchQuery !== query) {
-                this.lastSearchQuery = query;
-                this.searchResults = [];
-                this.searchPage = 0;
-                this.isSearchResultEnd = false;
+        async search(page, size, query) {
+            try {
+                const response = await axios.get(`/free/post/search?page=${page}&size=${size}&keyword=${query}&fields=title,content`, { withCredentials: true });
+                if (response.data && Array.isArray(response.data.result)) {
+                    let posts = response.data.result.map(post => ({
+                        idx: post.idx,
+                        title: post.title,
+                        content: post.content,
+                        author: post.author,
+                        created_at: post.created_at,
+                    }));
+                    console.log('posts', posts);
+                    return posts;
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    console.error('No search results found:', error);
+                    this.isSearchResultEnd = true;
+                } else {
+                    console.error('Failed to search:', error);
+                    throw error;
+                }
             }
-
-            let url = `/api/free/search?page=${this.searchPage}&size=10&keyword=${query}`;
-            const response = await axios.get(url);
-
-            let data = response.data.result;
-
-            if (data.length === 0) {
-                this.isSearchResultEnd = true;
-                return;
-            }
-
-            if (data.length > 10) {
-                data.pop();
-            }
-
-            this.searchResults.push(...data);
-            this.searchPage++;
         },
     },
 });

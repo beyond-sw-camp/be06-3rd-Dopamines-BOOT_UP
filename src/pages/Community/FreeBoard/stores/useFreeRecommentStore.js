@@ -3,9 +3,13 @@ import axios from 'axios';
 
 export const useFreeRecommentStore = defineStore('freeRecomment', {
     state: () => ({
-        recomments: [],
-        isLoading: false,
-        error: null,
+        idx: 0,
+        freePostIdx: 0,
+        commentIdx: 0,
+        content: '',
+        author: '',
+        createdAt: '',
+        likeCount: 0,
     }),
 
     actions: {
@@ -30,20 +34,14 @@ export const useFreeRecommentStore = defineStore('freeRecomment', {
         },
 
         // 대댓글 목록 조회
-        async fetchRecomments(idx, page = 0, size = 10) {
-            this.isLoading = true;
-            this.error = null;
-
+        async fetchRecomments(commentId) {
             try {
-                const response = await axios.get('http://localhost:8080/free/recomment', {
-                    params: { idx, page, size },
-                });
-
-                this.recomments = response.data.data;
+                const response = await axios.get(`http://localhost:8080/free/recomment?commentId=${commentId}&page=0&size=10`);
+                this.recomments[commentId] = response.data.result;
+                return response.data.result;
             } catch (error) {
-                this.error = error.response?.data?.message || 'An error occurred';
-            } finally {
-                this.isLoading = false;
+                console.error('Failed to fetch recomments:', error);
+                throw error;
             }
         },
 

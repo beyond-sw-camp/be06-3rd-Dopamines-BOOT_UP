@@ -1,27 +1,46 @@
 <script setup>
-import {ref, onMounted, watch} from 'vue';
-import {useRoute} from 'vue-router';
-import {useFreePostStore} from '@/pages/Community/FreeBoard/stores/useFreePostStore';
-import {useOpenPostStore} from '@/pages/Community/OpenBoard/stores/useOpenPostStore';
-import {useMarketStore} from '@/pages/Market/stores/UseMarketStore'; // Corrected case
-import {useNoticeStore} from '@/pages/Notice/stores/useNoticeStore';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { useFreePostStore } from '@/pages/Community/FreeBoard/stores/useFreePostStore';
+import { useOpenPostStore } from '@/pages/Community/OpenBoard/stores/useOpenPostStore';
+import { useMarketStore } from '@/pages/Market/stores/UseMarketStore.js';
 import MainHeader from '@/components/layout/MainHeader.vue';
 import SearchBar from '@/components/post/Menu/SearchBar.vue';
 import MainFooter from '@/components/layout/MainFooter.vue';
 import SearchList from '@/pages/Main/component/SearchList.vue';
 
-const searchQuery = ref('');
 const freePostStore = useFreePostStore();
 const openPostStore = useOpenPostStore();
 const marketPostStore = useMarketStore();
-const noticeStore = useNoticeStore();
 const route = useRoute();
 
-const performSearch = () => {
-  freePostStore.search(searchQuery.value);
-  openPostStore.search(searchQuery.value);
-  marketPostStore.search(searchQuery.value);
-  noticeStore.search(searchQuery.value);
+const searchQuery = ref('');
+const freePosts = ref([]);
+const openPosts = ref([]);
+const marketPosts = ref([]);
+const errorMessage = ref('');
+const marketPostSize = 3;
+
+const performSearch = async () => {
+  try {
+    if (searchQuery.value) {
+      freePosts.value = await freePostStore.search(0, 3, searchQuery.value);
+      openPosts.value = await openPostStore.search(0, 3, searchQuery.value);
+      marketPosts.value = await marketPostStore.search(0, marketPostSize + 1, searchQuery.value);
+      console.log('Free Posts:', freePosts.value);
+      console.log('Open Posts:', openPosts.value);
+      console.log('Market Posts:', marketPosts.value);
+
+      if (freePosts.value.length === 0 && openPosts.value.length === 0 && marketPosts.value.length === 0) {
+        errorMessage.value = '검색 결과가 없습니다';
+      } else {
+        errorMessage.value = '';
+      }
+    }
+  } catch (error) {
+    errorMessage.value = 'performSearch에서 에러 발생: ' + error.message;
+    console.error('performSearch에서 에러 발생:', error);
+  }
 };
 
 const handleSearch = (query) => {
@@ -29,16 +48,17 @@ const handleSearch = (query) => {
   performSearch();
 };
 
-onMounted(() => {
-  const query = route.query.q;
-  if (query) {
-    searchQuery.value = query;
-    performSearch();
+onMounted(async () => {
+  try {
+    const query = route.query.q;
+    if (query) {
+      searchQuery.value = query;
+      performSearch();
+    }
+  } catch (error) {
+    errorMessage.value = 'mount에서 에러 발생: ' + error.message;
+    console.error('mount에서 에러 발생:', error);
   }
-});
-
-watch(searchQuery, () => {
-  performSearch();
 });
 </script>
 
@@ -57,13 +77,16 @@ watch(searchQuery, () => {
             :searchInput="searchQuery"
             @update:searchInput="searchQuery = $event"
             @performSearch="performSearch"
+            @keyup.enter="performSearch"
         ></SearchBar>
         <SearchList
-            :freeResults="freePostStore.filteredPosts"
-            :openResults="openPostStore.filteredPosts"
-            :marketResults="marketPostStore.filteredPosts"
-            :noticeResults="noticeStore.filteredPosts"
-        ></SearchList>
+            :freeResults="freePosts"
+            :openResults="openPosts"
+            :marketResults="marketPosts"
+            :marketPostSize="marketPostSize"
+            :searchQuery="searchQuery"
+        />
+        <p v-if="errorMessage">{{ errorMessage }}</p>
       </div>
     </main>
     <MainFooter></MainFooter>
@@ -78,7 +101,8 @@ watch(searchQuery, () => {
   max-width: 1000px;
   width: 100%;
 }
-.title{
+
+.title {
   display: flex;
   background-color: rgb(224 97 57);
   color: #fff;
@@ -90,7 +114,8 @@ watch(searchQuery, () => {
   align-items: center;
   box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
 }
-p{
+
+p {
   margin: 0;
   padding: 10px;
   background-color: #f2f2f2;

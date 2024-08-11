@@ -9,11 +9,10 @@ export const useOpenPostStore = defineStore('post', {
         content: '',
         author: '',
         imageUrlList: [],
-        created_at: new Date,
+        created_at: '',
         likeCount: 0,
-        commentCount: 0,
-        boardIdx: 0,
         posts: [],
+        openCommentList: [],
     }),
     actions: {
         async createPost(postData) {
@@ -108,30 +107,30 @@ export const useOpenPostStore = defineStore('post', {
                 throw error;
             }
         },
-        async search(query) {
-            if (this.lastSearchQuery !== query) {
-                this.lastSearchQuery = query;
-                this.searchResults = [];
-                this.searchPage = 0;
-                this.isSearchResultEnd = false;
+        async search(page, size, query) {
+            try {
+                const response = await axios.get(`/open/post/search?page=${page}&size=${size}&keyword=${query}&fields=title,content`, { withCredentials: true });
+                console.log('open response', response);
+                if (response.data && Array.isArray(response.data.result)) {
+                    let posts = response.data.result.map(post => ({
+                        idx: post.idx,
+                        title: post.title,
+                        content: post.content,
+                        author: post.author,
+                        created_at: post.created_at,
+                    }));
+                    console.log('open posts', posts);
+                    return posts;
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    console.error('No search results found:', error);
+                    this.isSearchResultEnd = true;
+                } else {
+                    console.error('Failed to search:', error);
+                    throw error;
+                }
             }
-
-            let url = `/api/open/search?page=${this.searchPage}&size=10&keyword=${query}`;
-            const response = await axios.get(url);
-
-            let data = response.data.result;
-
-            if (data.length === 0) {
-                this.isSearchResultEnd = true;
-                return;
-            }
-
-            if (data.length > 10) {
-                data.pop();
-            }
-
-            this.searchResults.push(...data);
-            this.searchPage++;
-        },
+        }
     },
 });

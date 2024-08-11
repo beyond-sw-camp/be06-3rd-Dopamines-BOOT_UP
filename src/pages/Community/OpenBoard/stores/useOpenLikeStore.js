@@ -3,24 +3,38 @@ import axios from 'axios';
 
 export const useOpenLikeStore = defineStore('freeLike', {
     state: () => ({
-        isLoading: false,
-        error: null,
+        idx: 0,
+        postIdx: 0,
+        userIdx: 0,
     }),
 
     actions: {
-        async likePost(user, postId) {
+        async likePost() {
+            try {
+                const response = await axios.get('/open/like/post', {});
+                let postlike = {
+                    idx: response.data.response.idx,
+                    postIdx: response.data.response.postIdx,
+                    userIdx: JSON.parse(localStorage.getItem('user'))
+                };
+                console.log('hi', response.data.response);
+                return postlike;
+            } catch (error) {
+                console.error('An error occurred:', error);
+                throw error;
+            }
+        },
+
+        async likeComment() {
             this.isLoading = true;
             this.error = null;
 
             try {
-                const response = await axios.get('http://localhost:8080/free/like/post', {
-                    params: { idx: postId },
-                    headers: {
-                        Authorization: `Bearer ${user.token}`,
-                    },
+                const response = await axios.get('/open/like/comment', {
+                    params: { idx: this.idx },
                 });
 
-                return response.data.data; // 좋아요 결과 반환
+                return response.data.data;
             } catch (error) {
                 this.error = error.response?.data?.message || 'An error occurred';
             } finally {
@@ -28,41 +42,16 @@ export const useOpenLikeStore = defineStore('freeLike', {
             }
         },
 
-        // 댓글 좋아요
-        async likeComment(user, commentId) {
+        async likeRecomment() {
             this.isLoading = true;
             this.error = null;
 
             try {
-                const response = await axios.get('http://localhost:8080/free/like/comment', {
-                    params: { idx: commentId },
-                    headers: {
-                        Authorization: `Bearer ${user.token}`,
-                    },
+                const response = await axios.get('/open/like/recomment', {
+                    params: { idx: this.idx },
                 });
 
-                return response.data.data; // 좋아요 결과 반환
-            } catch (error) {
-                this.error = error.response?.data?.message || 'An error occurred';
-            } finally {
-                this.isLoading = false;
-            }
-        },
-
-        // 대댓글 좋아요
-        async likeRecomment(user, recommentId) {
-            this.isLoading = true;
-            this.error = null;
-
-            try {
-                const response = await axios.get('http://localhost:8080/free/like/recomment', {
-                    params: { idx: recommentId },
-                    headers: {
-                        Authorization: `Bearer ${user.token}`,
-                    },
-                });
-
-                return response.data.data; // 좋아요 결과 반환
+                return response.data.data;
             } catch (error) {
                 this.error = error.response?.data?.message || 'An error occurred';
             } finally {

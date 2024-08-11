@@ -1,7 +1,7 @@
 <script setup>
 import { defineProps, defineEmits } from "vue";
 
-const props = defineProps({
+defineProps({
   searchInput: {
     type: String,
     default: "",
@@ -37,6 +37,7 @@ const handleSearch = () => {
         <img src="../../../assets/icon/searchIcon.svg" alt="" />
       </button>
     </div>
+
     <div class="post-write">
       <router-link :to="`${props.writelink}`">글 작성</router-link>
     </div>

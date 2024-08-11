@@ -1,6 +1,7 @@
 import { defineStore } from "pinia"
 import axios from "axios";
 import Cookies from 'js-cookie';
+import router from "@/router";
 
 export const useUserStore = defineStore("user", {
     state: () => ({
@@ -103,6 +104,23 @@ export const useUserStore = defineStore("user", {
                     return true;
                 } else{
                     console.log("이메일 인증 실패");
+                    return false;
+                }
+            } catch(error){
+                console.log(" error ", error);
+            }
+        },
+
+        async logout() {
+            try {
+                let response = await axios.post("/api/logout");
+                if (response.status === 200) {
+                    this.isLoggedIn = false;
+                    localStorage.removeItem("user");
+
+                    await router.push('/');
+                    router.go(0);
+                } else{
                     return false;
                 }
             } catch(error){

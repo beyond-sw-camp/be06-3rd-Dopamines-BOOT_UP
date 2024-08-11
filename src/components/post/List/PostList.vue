@@ -66,7 +66,7 @@ const sortedDataList = computed(() => {
           <hr>
         </li>
       </ul>
-<!--      <p v-else-if="!route.path.includes('market')">등록된 게시글이 없습니다.</p>-->
+      <!--      <p v-else-if="!route.path.includes('market')">등록된 게시글이 없습니다.</p>-->
     </div>
   </div>
 </template>

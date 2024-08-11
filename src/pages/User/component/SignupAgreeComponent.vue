@@ -38,50 +38,50 @@ const handleSubmit = () => {
         <div class="agree-content-container list-ck-wrap">
           <div class="agree-content-wrapper ck-list">
             <div class="ck-wrap">
-              <p class="ck-title">이용약관1</p>
+              <p class="ck-title">1. 이용자 정보 제공 및 관리</p>
               <div class="checkbox">
                 <input type="checkbox" id="ck01" v-model="ck01" name="ck" required value="first" class="required-checkbox">
                 <label for="ck01">동의합니다.</label>
               </div>
             </div>
             <div class="agree-content-box">
-              <p>Agree 1</p>
+              <p>회원가입 시, 이용자는 정확하고 최신의 정보를 제공해야 합니다. 잘못된 정보 제공으로 인한 불이익에 대해서는 이용자가 책임을 집니다. 이용자는 회원정보의 변경 사항이 있을 경우 즉시 수정해야 하며, 관리 소홀로 발생한 문제에 대한 책임은 이용자 본인에게 있습니다.</p>
             </div>
           </div>
           <div class="ck-list">
             <div class="ck-wrap">
-              <p class="ck-title">이용약관2</p>
+              <p class="ck-title">2. 계정 보안 및 관리</p>
               <div class="checkbox">
                 <input type="checkbox" id="ck02" v-model="ck02" name="ck" required class="required-checkbox">
                 <label for="ck02">동의합니다.</label>
               </div>
             </div>
             <div class="agree-content-box">
-              <p>Agree 2</p>
+              <p>이용자는 본인의 계정과 비밀번호에 대한 보안을 유지할 책임이 있습니다. 계정의 부정 사용 또는 제3자에 의한 이용으로 인한 모든 결과는 이용자 본인에게 있으며, 커뮤니티 운영자는 이에 대한 책임을 지지 않습니다. 계정이 무단으로 사용되거나 보안이 위협받았다고 의심될 경우, 즉시 운영자에게 통보해야 합니다.</p>
             </div>
           </div>
           <div class="ck-list">
             <div class="ck-wrap">
-              <p class="ck-title">이용약관3</p>
+              <p class="ck-title">3. 서비스 이용 제한 및 중단</p>
               <div class="checkbox">
                 <input type="checkbox" id="ck03" v-model="ck03" name="ck" required class="required-checkbox">
                 <label for="ck03">동의합니다.</label>
               </div>
             </div>
-            <div class="term-box">
-              <p>Agree 3</p>
+            <div class="agree-content-box">
+              <p>커뮤니티 운영자는 이용자가 이용약관을 위반하거나 불법적인 활동을 한 경우, 사전 통지 없이 서비스 이용을 제한하거나 계정을 중단할 수 있습니다. 또한, 운영자는 필요에 따라 사전 통지 없이 서비스의 일부를 변경하거나 종료할 수 있습니다.</p>
             </div>
           </div>
           <div class="ck-list">
             <div class="ck-wrap">
-              <p class="ck-title">이용약관4</p>
+              <p class="ck-title">4. 개인정보 보호 및 활용</p>
               <div class="checkbox">
                 <input type="checkbox" id="ck04" v-model="ck04" name="ck" required class="required-checkbox">
                 <label for="ck04">동의합니다.</label>
               </div>
             </div>
-            <div class="term-box">
-              <p>Agree 4</p>
+            <div class="agree-content-box">
+              <p>회원가입 시 제공된 개인정보는 BOOT_UP 커뮤니티의 서비스 제공 및 개선을 위해 사용됩니다. 커뮤니티는 이용자의 동의 없이 개인정보를 제3자에게 제공하지 않으며, 이용자는 개인정보의 수집, 이용, 보관에 동의해야 합니다. 단, 법적 요구가 있을 경우 이에 따릅니다.</p>
             </div>
           </div>
           <div class="button-container">
@@ -126,6 +126,7 @@ const handleSubmit = () => {
 }
 
 .agree-content-box {
+  text-align: left;
   margin: 0;
   padding: 0;
   font-size: 100%;
@@ -136,7 +137,7 @@ const handleSubmit = () => {
   height: 160px;
   overflow-y: auto;
   padding: 12px;
-  font-size: 14px;
+  font-size: 17px;
   line-height: 20px;
   word-break: break-all;
 }

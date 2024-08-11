@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-// import axios from '@/config/axiosConfig';
 import axios from 'axios';
 
 export const useFreePostStore = defineStore('post', {
@@ -40,7 +39,7 @@ export const useFreePostStore = defineStore('post', {
             }
         },
         async readPost(postId) {
-            const response = await axios.get(`/free/post/read?idx=${postId}`);
+            const response = await axios.get(`/api/free/post/read?idx=${postId}`);
             console.log('response', response);
 
             let readResult = {
@@ -59,7 +58,7 @@ export const useFreePostStore = defineStore('post', {
             return readResult;
         },
         async readAllPosts(page, size) {
-            const response = await axios.get(`/free/post/read-all?page=${page}&size=${size}`, {withCredentials: true});
+            const response = await axios.get(`/api/free/post/read-all?page=${page}&size=${size}`, {withCredentials: true});
             console.log('response', response);
             if (response.data && Array.isArray(response.data.result)) {
                 let posts = response.data.result.map(post => ({
@@ -71,7 +70,6 @@ export const useFreePostStore = defineStore('post', {
                 }));
                 console.log('posts', posts);
                 return posts;
-
             }
         },
         async updatePost(postData) {
@@ -94,7 +92,7 @@ export const useFreePostStore = defineStore('post', {
         },
         async search(page, size, query) {
             try {
-                const response = await axios.get(`/free/post/search?page=${page}&size=${size}&keyword=${query}&fields=title,content`, { withCredentials: true });
+                const response = await axios.get(`/api/free/post/search?page=${page}&size=${size}&keyword=${query}&fields=title,content`, { withCredentials: true });
                 if (response.data && Array.isArray(response.data.result)) {
                     let posts = response.data.result.map(post => ({
                         idx: post.idx,

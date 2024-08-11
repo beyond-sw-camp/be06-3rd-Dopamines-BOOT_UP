@@ -84,6 +84,7 @@ onMounted(async () => {
                   id="chat-btn"
                   @click="createChatRoom"
                   :disabled="!isChatAvailable"
+                  :class="{ 'disable-btn': isChatAvailable === false }"
                 >
                   채팅하기
                 </button>
@@ -171,6 +172,13 @@ article {
   font-weight: 500;
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.disable-btn {
+  background-color: #a1a1a1;
+  color: #ffffff99;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .author-detail-wrapper {

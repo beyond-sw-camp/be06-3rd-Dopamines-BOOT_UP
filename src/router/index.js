@@ -37,7 +37,12 @@ const router = createRouter({
                 { path: 'signup/agree', component: () => import('../pages/User/SignupAgree.vue') },
                 { path: 'signup/info', component: () => import('../pages/User/SignupPage.vue') },
                 // { path: 'signup/complete', component: () => import('../pages/User/SignupComplete.vue') },
-                { path: 'signup/success', component: () => import('../pages/User/SignupSuccessPage.vue') }
+                {
+                    path: 'user/signup/success',
+                    name: 'SignupSuccess',
+                    component: () => import('@/pages/User/SignupSuccessPage.vue'),
+                    props: true
+                }
             ]
         },
 

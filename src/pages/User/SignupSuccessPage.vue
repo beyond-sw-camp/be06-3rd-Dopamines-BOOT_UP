@@ -1,9 +1,10 @@
 <script setup>
 import SubmitBtn from '../../components/button/SubmitBtn.vue';
 import {ref} from "vue";
+import {useRoute} from "vue-router";
 
-const signupUser = ref('');
-signupUser.value = '회원1';
+const route = useRoute();
+const signupUser = ref(route.params.fullName || '회원1');
 </script>
 
 <template>

@@ -72,7 +72,7 @@ function postLike() {
         <button class="btn-like" @click="postLike">
           <img src="@/assets/icon/empty_marked.svg" alt="like icon">
         </button>
-        <p class="post-count-text">{{ localLikeCount }}개의 좋아요</p>
+        <p class="post-count-text">{{ localLikeCount }} 좋아요</p>
       </div>
     </div>
   </div>
@@ -85,16 +85,19 @@ function postLike() {
   display: flex;
   justify-content: space-between;
 }
-.comment-method-container{
+
+.comment-method-container {
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
   flex-direction: column;
 }
-.like-wrap{
+
+.like-wrap {
   display: flex;
   align-items: center;
-  p{
+
+  p {
     margin: 0;
   }
 }

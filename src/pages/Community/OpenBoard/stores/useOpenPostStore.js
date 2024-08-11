@@ -109,7 +109,7 @@ export const useOpenPostStore = defineStore('post', {
         },
         async search(page, size, query) {
             try {
-                const response = await axios.get(`/open/post/search?page=${page}&size=${size}&keyword=${query}&fields=title,content`, { withCredentials: true });
+                const response = await axios.get(`/api/open/post/search?page=${page}&size=${size}&keyword=${query}&fields=title,content`, { withCredentials: true });
                 console.log('open response', response);
                 if (response.data && Array.isArray(response.data.result)) {
                     let posts = response.data.result.map(post => ({

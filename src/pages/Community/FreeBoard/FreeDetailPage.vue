@@ -1,16 +1,14 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import {onMounted, ref} from 'vue';
 import MainHeader from '@/components/layout/MainHeader.vue';
 import PostDetailComponent from '@/components/post/Detail/PostDetailComponent.vue';
 import CommentComponent from '@/components/post/Detail/Comment/CommentComponent.vue';
 import CommentInput from '@/components/post/Detail/Comment/CommentInput.vue';
 import MainFooter from "@/components/layout/MainFooter.vue";
-import { useFreePostStore } from "@/pages/Community/FreeBoard/stores/useFreePostStore";
-import { useRoute } from 'vue-router';
-import {useFreeRecommentStore} from "@/pages/Community/FreeBoard/stores/useFreeRecommentStore";
+import {useFreePostStore} from "@/pages/Community/FreeBoard/stores/useFreePostStore";
+import {useRoute} from 'vue-router';
 
 const freePostStore = useFreePostStore();
-const freeRecommentStore = useFreeRecommentStore();
 const route = useRoute();
 
 const post = ref({});
@@ -18,7 +16,6 @@ const comments = ref([]);
 const likeCount = ref(0);
 const errorMessage = ref('');
 const commentErrorMessage = ref('');
-const recomments = ref({});
 
 onMounted(async () => {
   const postId = route.params.id;
@@ -36,27 +33,6 @@ onMounted(async () => {
 const handleNewComment = (newComment) => {
   comments.value.push(newComment);
 };
-
-async function fetchComments(postId) {
-
-  return await freePostStore.readPost(postId).then(postData => postData.freeCommentList);
-}
-
-async function fetchCommentsAndRecomments() {
-  try {
-    const postId = route.params.id;
-    const fetchedComments = await fetchComments(postId);
-    comments.value = fetchedComments;
-
-    for (const comment of fetchedComments) {
-      const fetchedRecomments = await freeRecommentStore.fetchRecomments(comment.id);
-      recomments.value[comment.id] = fetchedRecomments;
-    }
-  } catch (error) {
-    console.error('댓글 대댓글 안됨:', error);
-  }
-}
-onMounted(fetchCommentsAndRecomments);
 </script>
 
 <template>

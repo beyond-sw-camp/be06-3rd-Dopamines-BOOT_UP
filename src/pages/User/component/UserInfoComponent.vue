@@ -46,7 +46,7 @@
                   </div>
               </div>
             </div>
-  
+
           <div class="input-wrapper">
             <label for="password" class="signup-wrapper-text">비밀번호</label>
             <div class="signup-wrapper-distance">
@@ -56,7 +56,7 @@
               <ErrorMessage name="password" class="warning-alert"/>
             </div>
           </div>
-  
+
           <div class="input-wrapper">
             <label for="passwordConfirm" class="signup-wrapper-text">비밀번호 확인</label>
             <div class="signup-wrapper-distance">
@@ -90,12 +90,12 @@
           <div class="input-wrapper">
             <label for="phoneNumber" class="signup-wrapper-text">휴대폰 번호</label>
             <div class="signup-wrapper-distance">
-              <Field id="phoneNumber" 
-                v-model="phoneNumber" 
-                type="text" 
-                required="" 
-                class="signup-input-box signup-input-text" 
-                placeholder="4~15자 이내로 입력해주세요" 
+              <Field id="phoneNumber"
+                v-model="phoneNumber"
+                type="text"
+                required=""
+                class="signup-input-box signup-input-text"
+                placeholder="4~15자 이내로 입력해주세요"
                 name="phoneNumber">
               </Field>
             </div>
@@ -107,12 +107,12 @@
           <div class="input-wrapper">
             <label for="address" class="signup-wrapper-text">주소</label>
             <div class="signup-wrapper-distance">
-              <Field id="address" 
-                v-model="address" 
-                type="text" 
-                required="" 
-                class="signup-input-box signup-input-text" 
-                placeholder="4~15자 이내로 입력해주세요" 
+              <Field id="address"
+                v-model="address"
+                type="text"
+                required=""
+                class="signup-input-box signup-input-text"
+                placeholder="4~15자 이내로 입력해주세요"
                 name="address">
               </Field>
             </div>
@@ -142,6 +142,7 @@ import SocialLoginBtn from "@/pages/User/component/SocialLoginBtn.vue";
 import { useUserStore } from '../stores/useUserStore';
 import { Field,Form,ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
+import router from "@/router";
 
 var phoneRegExp = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/
 
@@ -256,7 +257,7 @@ export default {
       if(!this.isDisabled){
         const userStore = useUserStore();
         userStore.signup(this.email, this.password, this.nickname, this.name, this.phoneNumber,this.address);
-        this.$router.push('/user/signup/success');
+        router.push({ name: 'SignupSuccess', params: { fullName: name.value } });
       }
     }
   }

@@ -11,6 +11,7 @@ export const useFreePostStore = defineStore('post', {
         created_at: '',
         likeCount: 0,
         posts: [],
+        freeCommentList: []
     }),
     actions: {
         async createPost(postData) {
@@ -38,9 +39,8 @@ export const useFreePostStore = defineStore('post', {
             }
         },
         async readPost(postId) {
-            const response = await axios.get(`/open/post/read?idx=${postId}`);
+            const response = await axios.get(`/free/post/read?idx=${postId}`);
             console.log('response', response);
-            // let values = JSON.parse(localStorage.getItem('user'));
 
             let readResult = {
                 idx: response.data.result.idx,
@@ -53,6 +53,7 @@ export const useFreePostStore = defineStore('post', {
                 commentCount: response.data.result.commentCount,
                 boardIdx: response.data.result.boardIdx,
                 posts: [],
+                freeCommentList: response.data.result.freeCommentList
             };
             return readResult;
         },
@@ -101,8 +102,6 @@ export const useFreePostStore = defineStore('post', {
                         created_at: post.created_at,
                     }));
                     console.log('posts', posts);
-                    // this.searchResults.push(...posts);
-                    // this.searchPage++;
                     return posts;
                 }
             } catch (error) {

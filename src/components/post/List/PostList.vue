@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref } from 'vue';
+import {computed, defineProps, ref} from 'vue';
 // import { useRoute } from 'vue-router';
 import PostListItem from '@/pages/component/List/PostListItem.vue';
 import SearchBar from "@/components/post/Menu/SearchBar.vue";
@@ -34,6 +34,10 @@ const props = defineProps({
 
 const searchQuery = ref(props.searchQuery);
 // const route = useRoute();
+
+const sortedDataList = computed(() => {
+  return [...props.dataList].sort((a, b) => a.idx - b.idx);
+});
 </script>
 
 <template>
@@ -46,8 +50,8 @@ const searchQuery = ref(props.searchQuery);
     </div>
 
     <div class="content">
-      <ul class="board-list" v-if="dataList && dataList.length">
-        <li class="board-list-wrap" v-for="post in dataList" :key="post.id">
+      <ul class="board-list" v-if="sortedDataList && sortedDataList.length">
+        <li class="board-list-wrap" v-for="post in sortedDataList" :key="post.id">
           <div>
             <router-link class="board-post-title" :to="`${board}/detail/${post.idx!== undefined ? post.idx : 'undefined'}`">
               <PostListItem

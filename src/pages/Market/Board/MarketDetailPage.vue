@@ -80,7 +80,13 @@ onMounted(async () => {
                   </label>
                   <input id=":r1:" type="checkbox" class="a11yHidden" />
                 </div>
-                <button id="chat-btn" @click="createChatRoom">채팅하기</button>
+                <button
+                  id="chat-btn"
+                  @click="createChatRoom"
+                  :disabled="!isChatAvailable"
+                >
+                  채팅하기
+                </button>
               </div>
             </div>
           </div>

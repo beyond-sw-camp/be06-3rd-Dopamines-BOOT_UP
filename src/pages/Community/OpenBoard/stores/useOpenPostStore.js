@@ -11,6 +11,7 @@ export const useOpenPostStore = defineStore('post', {
         created_at: '',
         likeCount: 0,
         posts: [],
+        openCommentList: [],
     }),
     actions: {
         async createPost(postData) {
@@ -52,6 +53,7 @@ export const useOpenPostStore = defineStore('post', {
                 likeCount: response.data.result.likeCount,
                 commentCount: response.data.result.commentCount,
                 boardIdx: response.data.result.boardIdx,
+                openCommentList: response.data.result.openCommentList,
                 posts: [],
             };
             console.log('readResult', readResult);

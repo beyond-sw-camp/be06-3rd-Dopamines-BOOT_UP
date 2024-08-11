@@ -1,19 +1,16 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import MainHeader from "@/components/layout/MainHeader.vue";
-import MainFooter from "@/components/layout/MainFooter.vue";
-import PostDetailComponent from "@/components/post/Detail/PostDetailComponent.vue";
-import CommentComponent from "@/components/post/Detail/Comment/CommentComponent.vue";
-import { useOpenPostStore } from "@/pages/Community/OpenBoard/stores/useOpenPostStore";
-import { useOpenCommentStore } from "@/pages/Community/OpenBoard/stores/useOpenCommentStore";
+import MainHeader from '@/components/layout/MainHeader.vue';
+import MainFooter from '@/components/layout/MainFooter.vue';
+import PostDetailComponent from '@/components/post/Detail/PostDetailComponent.vue';
+import CommentComponent from '@/components/post/Detail/Comment/CommentComponent.vue';
+import { useOpenPostStore } from '@/pages/Community/OpenBoard/stores/useOpenPostStore';
 import { useRoute } from 'vue-router';
 
 const openPostStore = useOpenPostStore();
-const openCommentStore = useOpenCommentStore();
 const route = useRoute();
 
 const post = ref(null);
-const comments = ref([]);
 const errorMessage = ref('');
 
 onMounted(async () => {
@@ -21,14 +18,19 @@ onMounted(async () => {
   try {
     const fetchedPost = await openPostStore.readPost(postId);
     post.value = fetchedPost;
-    await openCommentStore.fetchComments(postId);
-    comments.value = [...openCommentStore.comments];
-    console.log('comments:', comments.value);
   } catch (error) {
     errorMessage.value = 'Failed to load post or comments';
     console.error(error);
   }
 });
+
+const addNewComment = (newCommentContent) => {
+  const newComment = {
+    id: Date.now(), // Temporary ID, replace with actual ID from backend if needed
+    content: newCommentContent,
+  };
+  post.value.openCommentList.push(newComment);
+};
 </script>
 
 <template>
@@ -49,8 +51,12 @@ onMounted(async () => {
               :post-contents="post.content"
               :editlnk="`/open/edit/${route.params.id}`"
           ></PostDetailComponent>
-          <CommentComponent :comments="comments" :like-count="likeCount"
-                            :comment-count="comments.length"></CommentComponent>
+          <CommentComponent
+              :comments="post.openCommentList"
+              :like-count="post.likeCount"
+              :comment-count="post.openCommentList.length"
+              @newComment="addNewComment"
+          ></CommentComponent>
         </div>
         <p v-else>{{ errorMessage || '포스트 로딩중...' }}</p>
       </div>
@@ -58,16 +64,3 @@ onMounted(async () => {
     <MainFooter></MainFooter>
   </div>
 </template>
-
-<style scoped>
-.main-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-
-  .post-detail-container {
-    width: 100%;
-  }
-}
-</style>

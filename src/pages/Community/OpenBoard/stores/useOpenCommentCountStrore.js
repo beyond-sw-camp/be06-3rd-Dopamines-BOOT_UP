@@ -22,7 +22,6 @@ export const useFreeCommentsCountStore = defineStore('freeCommentCount', {
                 await commentStore.fetchComments(postIdx);
                 await recommentStore.fetchRecomments(postIdx);
 
-                // Sum the counts
                 const commentCount = commentStore.comments.length;
                 const recommentCount = recommentStore.recomments.length;
 

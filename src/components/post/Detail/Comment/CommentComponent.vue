@@ -27,22 +27,19 @@ watch(() => props.comments, (newComments) => {
   localComments.value = [...newComments];
 });
 
+async function postLike() {
+  try {
+    console.log('Liked post');
+    localLikeCount.value += 1;
+    emit('update:likeCount', localLikeCount.value);
+  } catch (error) {
+    console.error('Failed to like post:', error);
+  }
+}
+
 function commentSubmit(comment) {
   localComments.value.push(comment);
   emit('update:comments', localComments.value);
-}
-
-function postLike() {
-  const likeIcon = document.querySelector('.btn-like img');
-  let isLiked = likeIcon.src.includes('filled_marked.svg');
-  if (isLiked) {
-    likeIcon.src = '@/assets/icon/empty_marked.svg';
-    localLikeCount.value -= 1;
-  } else {
-    likeIcon.src = '@/assets/icon/filled_marked.svg';
-    localLikeCount.value += 1;
-  }
-  emit('update:likeCount', localLikeCount.value);
 }
 
 function deleteComment(index) {
@@ -62,31 +59,26 @@ function replyToComment(index) {
 
 <template>
   <div>
-    <div>
-      <div class="post-wrapper-bottom">
-        <h2 id="notes-title" class="post-count-text">{{ props.commentCount }}개의 답변</h2>
-        <div class="like-wrap">
-          <button class="btn-like" @click="postLike">
-            <img src="@/assets/icon/empty_marked.svg" alt="like icon">
-          </button>
-          <h2 class="post-count-text">{{ localLikeCount }}개의 좋아요</h2>
-        </div>
+    <div class="post-wrapper-bottom">
+      <h2 id="notes-title" class="post-count-text">답변 리스트</h2>
+      <div class="like-wrap">
+        <button class="btn-like" @click="postLike">
+          <img src="@/assets/icon/empty_marked.svg" alt="like icon">
+        </button>
       </div>
     </div>
-    <CommentInput @comment-submit="commentSubmit" comment-submit=""></CommentInput>
-    <div>
-      <div class="comment-view-container">
-        <div class="top-line"></div>
-        <div class="comment-view-wrapper">
-          <ul class="comment-view-detail-container">
-            <li v-for="(comment, index) in localComments" :key="index" :id="'answer-' + index">
-              <CommentView v-bind="comment" @delete="deleteComment(index)" @edit="editComment(index, $event)" @reply="replyToComment(index)"></CommentView>
-              <CommentInput v-if="replyIndex === index" @comment-submit="commentSubmit" comment-submit=""></CommentInput>
-            </li>
-          </ul>
-        </div>
-        <div class="bottom-line"></div>
+    <CommentInput @commentSubmit="commentSubmit"></CommentInput>
+    <div class="comment-view-container">
+      <div class="top-line"></div>
+      <div class="comment-view-wrapper">
+        <ul class="comment-view-detail-container">
+          <li v-for="(comment, index) in localComments" :key="index" :id="'answer-' + index">
+            <CommentView v-bind="comment" @delete="deleteComment(index)" @edit="editComment(index, $event)" @reply="replyToComment(index)"></CommentView>
+            <CommentInput v-if="replyIndex === index" @commentSubmit="commentSubmit"></CommentInput>
+          </li>
+        </ul>
       </div>
+      <div class="bottom-line"></div>
     </div>
   </div>
 </template>

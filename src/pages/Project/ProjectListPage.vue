@@ -23,7 +23,7 @@
                 class="click"
             ></ProjectCardItem>
           </ul>
-          <div class="post-write" :v-if="auth && auth.value === 'ROLE_ADMIN'">
+          <div class="post-write" v-if="isAdmin">
             <router-link :to="routes[0].path">글 작성</router-link>
           </div>
         </div>
@@ -52,6 +52,7 @@ const courseNum = ref(Array.from({ length: 10 }, (_, i) => i + 1));
 const selectedCourse = ref('all'); // 선택된 코스 번호를 저장
 
 const isLoading = ref(true);
+
 onMounted(async () => {
   auth.value = await userStore.getAuth();
   console.log("auth", auth.value);
@@ -65,6 +66,8 @@ onMounted(async () => {
     paragraph.textContent = '';
   });
 });
+
+const isAdmin = computed(() => auth.value === 'ROLE_ADMIN');
 
 
 // 필터링된 데이터 목록

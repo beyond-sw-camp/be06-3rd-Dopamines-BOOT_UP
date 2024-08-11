@@ -84,11 +84,11 @@ const toggleLogin = () => {
         </ul>
         <ul class="login menu">
           <li>
-            <button v-if="Cookies.get('Atoken')" @click="toggleLogin">로그아웃</button>
+            <button v-if="Cookies.get('AToken')" @click="toggleLogin">로그아웃</button>
             <router-link v-else to="/user/login">로그인</router-link>
 
           </li>
-          <li v-if="!Cookies.get('Atoken')">
+          <li v-if="!Cookies.get('AToken')">
             <router-link to="/user/signup/agree">회원가입</router-link>
           </li>
         </ul>

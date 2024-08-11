@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
-import axios from '@/config/axiosConfig';
+// import axios from '@/config/axiosConfig';
+import axios from 'axios';
 
 export const useOpenPostStore = defineStore('post', {
     state: () => ({
@@ -17,7 +18,7 @@ export const useOpenPostStore = defineStore('post', {
     actions: {
         async createPost(postData) {
             try {
-                const response = await axios.post('/open/post/create', postData);
+                const response = await axios.post('/api/open/post/create', postData);
                 return response.data;
             } catch (error) {
                 console.error('Failed to create post:', error);
@@ -28,7 +29,7 @@ export const useOpenPostStore = defineStore('post', {
             try {
                 const formData = new FormData();
                 files.forEach(file => formData.append('files', file));
-                const response = await axios.post('/open/post/upload-image', formData, {
+                const response = await axios.post('/api/open/post/upload-image', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -41,7 +42,7 @@ export const useOpenPostStore = defineStore('post', {
         },
         async readPost(postId) {
             try {
-                const response = await axios.get(`/open/post/read/${postId}`);
+                const response = await axios.get(`/api/open/post/read/${postId}`);
                 let values = JSON.parse(localStorage.getItem('user'));
                 this.idx = response.data.idx;
                 this.title = response.data.title;
@@ -65,7 +66,7 @@ export const useOpenPostStore = defineStore('post', {
         },
         async readAllPosts(page, size) {
             try {
-                const response = await axios.get(`/open/post/read-all?page=${page}&size=${size}`);
+                const response = await axios.get(`/api/open/post/read-all?page=${page}&size=${size}`);
                 let values = JSON.parse(localStorage.getItem('user'));
                 if (response.data && Array.isArray(response.data.result)) {
                     this.posts = response.data.result.map(post => ({
@@ -91,7 +92,7 @@ export const useOpenPostStore = defineStore('post', {
         },
         async updatePost(postData) {
             try {
-                const response = await axios.put('/open/post/update', postData);
+                const response = await axios.put('/api/open/post/update', postData);
                 return response.data;
             } catch (error) {
                 console.error('Failed to update post:', error);
@@ -100,7 +101,7 @@ export const useOpenPostStore = defineStore('post', {
         },
         async deletePost(idx) {
             try {
-                const response = await axios.delete(`/open/post/delete?idx=${idx}`);
+                const response = await axios.delete(`/api/open/post/delete?idx=${idx}`);
                 return response.data;
             } catch (error) {
                 console.error('Failed to delete post:', error);

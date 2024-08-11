@@ -37,6 +37,11 @@ const handleNewComment = (newComment) => {
   comments.value.push(newComment);
 };
 
+async function fetchComments(postId) {
+
+  return await freePostStore.readPost(postId).then(postData => postData.freeCommentList);
+}
+
 async function fetchCommentsAndRecomments() {
   try {
     const postId = route.params.id;
@@ -48,7 +53,7 @@ async function fetchCommentsAndRecomments() {
       recomments.value[comment.id] = fetchedRecomments;
     }
   } catch (error) {
-    console.error('Failed to fetch comments and recomments:', error);
+    console.error('댓글 대댓글 안됨:', error);
   }
 }
 onMounted(fetchCommentsAndRecomments);

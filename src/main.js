@@ -14,8 +14,6 @@ pinia.use(piniaPersistedstate);
 router.onError((error) => {
     console.error('Router error:', error);
 });
-
-const app = createApp(App);
 app.use(pinia)
 app.use(router)
 app.mount('#app')

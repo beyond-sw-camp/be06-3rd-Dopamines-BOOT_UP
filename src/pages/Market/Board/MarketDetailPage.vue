@@ -12,7 +12,9 @@ const marketStore = useMarketStore();
 const route = useRoute();
 const router = useRouter();
 
+const userInfo = ref(JSON.parse(localStorage.getItem("user")));
 const markedStatus = ref("fill");
+const isChatAvailable = ref(true);
 
 const changeImg = () => {
   markedStatus.value = markedStatus.value === "empty" ? "fill" : "empty";
@@ -32,6 +34,10 @@ onMounted(async () => {
     markedStatus.value = "fill";
   } else {
     markedStatus.value = "empty";
+  }
+
+  if (marketStore.product.authorIdx == userInfo.value.userIdx) {
+    isChatAvailable.value = false;
   }
 });
 </script>
@@ -74,7 +80,14 @@ onMounted(async () => {
                   </label>
                   <input id=":r1:" type="checkbox" class="a11yHidden" />
                 </div>
-                <button id="chat-btn" @click="createChatRoom">채팅하기</button>
+                <button
+                  id="chat-btn"
+                  @click="createChatRoom"
+                  :disabled="!isChatAvailable"
+                  :class="{ 'disable-btn': isChatAvailable === false }"
+                >
+                  채팅하기
+                </button>
               </div>
             </div>
           </div>
@@ -87,9 +100,7 @@ onMounted(async () => {
           </p>
           <p id="description-price">{{ marketStore.product.price }}원</p>
           <div id="description-detail">
-            <p>
-              {{ marketStore.product.content }}
-            </p>
+            <p v-html="marketStore.product.content"></p>
           </div>
         </section>
       </div>
@@ -161,6 +172,13 @@ article {
   font-weight: 500;
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.disable-btn {
+  background-color: #a1a1a1;
+  color: #ffffff99;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .author-detail-wrapper {

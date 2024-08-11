@@ -2,10 +2,15 @@
 import { defineProps, defineEmits, ref, watch } from 'vue';
 import CommentInput from './CommentInput.vue';
 import CommentView from './CommentView.vue';
+import ReCommentView from './ReCommentView.vue';
 
 const props = defineProps({
   comments: {
     type: Array,
+    required: true
+  },
+  recomments: {
+    type: Object,
     required: true
   },
   commentCount: {
@@ -81,7 +86,13 @@ function replyToComment(index) {
           <li v-for="(comment, index) in localComments" :key="index" :id="'answer-' + index">
             <CommentView v-bind="comment" @delete="deleteComment(index)" @edit="editComment(index, $event)"
                          @reply="replyToComment(index)"></CommentView>
-            <CommentInput v-if="replyIndex === index && showReplyInput" @commentSubmit="commentSubmit"></CommentInput>
+            <CommentInput v-if="replyIndex.value === index && showReplyInput.value"
+                          @commentSubmit="commentSubmit"></CommentInput>
+            <ul v-if="props.recomments[comment.id] && props.recomments[comment.id].length">
+              <li v-for="reply in props.recomments[comment.id]" :key="reply.id">
+                <ReCommentView v-bind="reply"></ReCommentView>
+              </li>
+            </ul>
           </li>
         </ul>
       </div>

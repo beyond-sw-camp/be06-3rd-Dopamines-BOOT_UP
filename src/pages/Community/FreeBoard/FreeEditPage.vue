@@ -4,19 +4,19 @@ import MainHeader from "@/components/layout/MainHeader.vue";
 import PostEditor from "@/components/post/Detail/PostEditor.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
 import {useCommunityStore} from "@/pages/Community/stores/useCommunityStore";
-// import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
-import router from "@/router";
 
-// const idx = ref(null);
+const router = useRouter();
+const idx = ref(null);
 const postDetail = ref(null); // ref로 선언
 
 const communityStore = useCommunityStore();
 onMounted(async () => {
-  // const router = useRouter();
-  // idx.value = router.params.postIdx;
-  // console.log("this is params.id: ", idx.value);
-  postDetail.value = await communityStore.getPostDetail(31);
+  const route = useRoute();
+  idx.value = route.params.id;
+  console.log("this is params.id: ", idx.value);
+  postDetail.value = await communityStore.getPostDetail(idx.value, "free");
   console.log("FreeEditPage postDetail result: ", postDetail.value);
 })
 
@@ -24,7 +24,7 @@ onMounted(async () => {
 const postUpdate = (formData) => {
   console.log("formData", formData);
   try{
-    const response = communityStore.updatePost(formData);
+    const response = communityStore.updatePost(formData, "free");
 
     if (response) {
       if (confirm("게시글 수정에 성공했습니다.")) {
@@ -51,7 +51,7 @@ const postUpdate = (formData) => {
       </div>
       <PostEditor v-if="postDetail"
                   :post-req="communityStore.postReq"
-                  :post-index="31"
+                  :post-index="idx.value"
                   :post-detail="postDetail"
                   @postReq="postUpdate"></PostEditor>
       <p v-else>게시글을 불러오는 중입니다...</p>

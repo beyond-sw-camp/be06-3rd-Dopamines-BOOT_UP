@@ -1,4 +1,25 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { useUserStore } from "@/pages/User/stores/useUserStore";
+
+const requireLogin = async (to, from, next) => {
+    const userStore = useUserStore();
+    try {
+        const auth = await userStore.getAuth();
+        console.log("auth:", auth);
+
+        if (auth != null && auth !== "ROLE_TEMPORARY_USER") {
+            console.log("auth check:", auth);
+            return next();
+        } else {
+            if (confirm("이용 권한이 필요합니다.")) {
+                return next("/user/login");
+            }
+        }
+    } catch (error) {
+        console.error("Authentication check failed:", error);
+        next("/user/login");  // 인증 실패 시 로그인 페이지로 리다이렉트
+    }
+}
 
 const router = createRouter({
     history: createWebHistory(),
@@ -22,44 +43,37 @@ const router = createRouter({
 
         // Community
         { path: '/community', component: () => import('../pages/Community/CommunityBoardListPage.vue') },
-        { path: '/free', component: () => import('../pages/Community/FreeBoard/FreeListPage.vue') },
-        { path: '/free/detail/:id', component: () => import('../pages/Community/FreeBoard/FreeDetailPage.vue') },
-        { path: '/free/write', component: () => import('../pages/Community/FreeBoard/FreeWritePage.vue') },
-        { path: '/free/edit/:id', component: () => import('../pages/Community/FreeBoard/FreeEditPage.vue') },
+        { path: '/free', component: () => import('../pages/Community/FreeBoard/FreeListPage.vue'), beforeEnter: requireLogin  },
+        { path: '/free/detail/:id', component: () => import('../pages/Community/FreeBoard/FreeDetailPage.vue'), beforeEnter: requireLogin  },
+        { path: '/free/write', component: () => import('../pages/Community/FreeBoard/FreeWritePage.vue'), beforeEnter: requireLogin  },
+        { path: '/free/edit/:id', component: () => import('../pages/Community/FreeBoard/FreeEditPage.vue'), beforeEnter: requireLogin  },
         { path: '/open', component: () => import('../pages/Community/OpenBoard/OpenListPage.vue') },
         { path: '/open/detail/:id', component: () => import('../pages/Community/OpenBoard/OpenDetailPage.vue') },
         { path: '/open/write', component: () => import('../pages/Community/OpenBoard/OpenWritePage.vue') },
         { path: '/open/edit/:id', component: () => import('../pages/Community/OpenBoard/OpenEditPage.vue') },
 
         // Notice Board
-        { path: '/notice', component: () => import('../pages/Notice/NoticeListPage.vue') },
-        { path: '/notice/detail/:id', component: () => import('../pages/Notice/NoticeDetailPage.vue') },
-        { path: '/notice/write', component: () => import('../pages/Notice/NoticeWritePage.vue') },
-        { path: '/notice/edit/:id', component: () => import('../pages/Notice/NoticeEditPage.vue') },
+        { path: '/notice', component: () => import('../pages/Notice/NoticeListPage.vue'), beforeEnter: requireLogin  },
+        { path: '/notice/detail/:id', component: () => import('../pages/Notice/NoticeDetailPage.vue'), beforeEnter: requireLogin  },
+        { path: '/notice/write', component: () => import('../pages/Notice/NoticeWritePage.vue'), beforeEnter: requireLogin  },
+        { path: '/notice/edit/:id', component: () => import('../pages/Notice/NoticeEditPage.vue'), beforeEnter: requireLogin  },
 
         // Project Board
         { path: '/project', component: () => import('../pages/Project/ProjectListPage.vue') },
         { path: '/project/detail/:id', component: () => import('../pages/Project/ProjectDetailPage.vue') },
-        { path: '/project/write', component: () => import('../pages/Project/ProjectWritePage.vue') },
-        { path: '/project/edit/:id', component: () => import('../pages/Project/ProjectEditPage.vue') },
+        { path: '/project/write', component: () => import('../pages/Project/ProjectWritePage.vue'), beforeEnter: requireLogin  },
+        { path: '/project/edit/:id', component: () => import('../pages/Project/ProjectEditPage.vue'), beforeEnter: requireLogin  },
 
         // Market Board
-        { path: '/market', component: () => import('../pages/Market/Board/MarketListPage.vue') },
-        { path: '/market/detail/:idx', component: () => import('../pages/Market/Board/MarketDetailPage.vue') },
-        { path: '/market/write', component: () => import('../pages/Market/Board/MarketWritePage.vue') },
+        { path: '/market', component: () => import('../pages/Market/Board/MarketListPage.vue'), beforeEnter: requireLogin },
+        { path: '/market/detail/:idx', component: () => import('../pages/Market/Board/MarketDetailPage.vue'), beforeEnter: requireLogin },
+        { path: '/market/write', component: () => import('../pages/Market/Board/MarketWritePage.vue'), beforeEnter: requireLogin  },
         // Market Chat
-        { path: '/market/chat', component: () => import('../pages/Market/Chat/MarketChatPage.vue') },
+        { path: '/market/chat', component: () => import('../pages/Market/Chat/MarketChatPage.vue'), beforeEnter: requireLogin  },
 
         // Reservation
-        { path: '/reservation', component: () => import('../pages/Reservation/ReservationPage.vue') },
 
-        // Free List Page
-        {
-            path: '/free-list',
-            name: 'FreeListPage',
-            component: () => import('../pages/Community/FreeBoard/FreeListPage.vue'),
-            props: (route) => ({ query: route.query.q })
-        },
+        { path: '/reservation', component: () => import('../pages/Reservation/ReservationPage.vue'), beforeEnter: requireLogin },
     ]
 });
 

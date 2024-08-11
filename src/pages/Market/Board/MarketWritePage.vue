@@ -1,27 +1,50 @@
 <script setup>
+import { ref } from "vue";
+import router from "@/router";
+import { useMarketStore } from "@/pages/Market/stores/UseMarketStore";
 import MainHeader from "@/components/layout/MainHeader.vue";
 import PostEditor from "@/components/post/Detail/PostEditor.vue";
 import MarketWriteItem from "@/pages/Market/Board/components/MarketWriteItem.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
-import { useMarketStore } from "@/pages/Market/stores/UseMarketStore";
 
 const marketStore = useMarketStore();
 
-const postCreate = (postReq) => {
+const updateValues = ref({});
+
+const postCreate = async (postReq) => {
   console.log("postCreate in postReq", postReq);
+  if (
+    updateValues.value.images == null ||
+    updateValues.value.images.length == 0
+  ) {
+    alert("이미지를 업로드해주세요!");
+    return;
+  }
 
-  // const response = marketStore.createPost(postReq);
+  postReq.images = updateValues.value.images;
+  postReq.price = updateValues.value.price;
 
-  // if (response) {
-  //   alert("게시글이 등록되었습니다.");
-  // } else {
-  //   alert("게시글 작성에 실패했습니다. 다시 요청해주세요.");
-  // }
+  try {
+    const response = marketStore.createPost(postReq);
+
+    if (response) {
+      if (confirm("게시글 등록에 성공하였습니다.")) {
+        router.push("/market");
+      }
+    } else {
+      if (confirm("게시글 등록에 실패하였습니다. 다시 시도하여 주십시오.")) {
+        router.push("/market/write");
+      }
+    }
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 const updateContent = (content) => {
-  console.log("업로드된 이미지들:", content.uploadedImages);
+  console.log("업로드된 이미지들:", content.images);
   console.log("가격:", content.price);
+  updateValues.value = content;
 };
 </script>
 

@@ -86,7 +86,7 @@ const toggleLogin = () => {
             <router-link v-else to="/user/login">로그인</router-link>
 
           </li>
-          <li>
+          <li v-if="!Cookies.get('Atoken')">
             <router-link to="/user/signup/agree">회원가입</router-link>
           </li>
         </ul>

@@ -1,37 +1,63 @@
 <script setup>
-import { onMounted } from 'vue';
+import {onMounted, ref} from 'vue';
 import MainHeader from "@/components/layout/MainHeader.vue";
-import PostDetailComponent from "@/components/post/Detail/PostDetailComponent.vue";
-import useProjectStore from '@/pages/Project/store/useProjectStore';
+import MainFooter from "@/components/layout/MainFooter.vue";
+import {useProjectStore} from '@/pages/Project/store/useProjectStore';
+import { useRoute } from 'vue-router';
 
+const projectDetail = ref([]);
+const idx = ref(null);
 const projectStore = useProjectStore();
-const { dataList, readPost } = projectStore;
+const iframeSrc = ref('');
 
-onMounted(() => {
-  readPost();
+onMounted(async () => {
+  const route = useRoute();
+  idx.value = route.params.id;
+
+  projectDetail.value = await projectStore.getProjectDetail(idx.value);
+  if (projectDetail.value.sourceUrl != null) {
+    iframeSrc.value = projectDetail.value.sourceUrl;
+  }
+  window.scrollTo(0, 0);
 });
+
 </script>
 
 <template>
   <div class="body-container">
     <MainHeader></MainHeader>
     <main>
-      <div class="main-container">
-        <div :id="'post-' + project.boardIdx" v-for="project in dataList" :key="project.idx">
-          <PostDetailComponent
-              :post-idx="project.idx"
-              :board="project.boardTitle"
-              :board-title="project.boardTitle"
-              :category="project"
-              :category-title="프로젝트게시판"
-              :post-author="project.author"
-              :post-created-at="project.created_at"
-              :post-title="project.title"
-              :post-contents="project.content"
-          ></PostDetailComponent>
-        </div>
+      <div>
+        <section>
+          <h1>{{ projectDetail.title }}</h1>
+          <div class="student-team-container">
+            <label for="team">팀</label>
+            <p class="student-item">{{ projectDetail.teamName }}</p>
+
+            <label for="team">팀원</label>
+            <div class="student-list">
+              <div class="student-item" v-for="(student, index) in projectDetail.students" :key="index">
+                {{ student }}
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div>
+            <p v-html="projectDetail.contents"></p>
+            <p v-if="projectDetail.sourceUrl != null">
+              <br>
+              <iframe frameborder="0" :src="iframeSrc" width="640" height="360" class="note-video-clip"></iframe>
+              <br>
+            </p>
+          </div>
+          <hr>
+          <div class="git-url">
+            Github URL : <a :href="projectDetail.gitUrl" target="_blank" class="git-link">{{ projectDetail.gitUrl }}</a>
+          </div>
+        </section>
       </div>
     </main>
+    <MainFooter></MainFooter>
   </div>
 
 </template>
@@ -59,9 +85,6 @@ main > div {
 }
 
 section {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin-top: 30px;
 }

@@ -7,8 +7,10 @@ import CommentInput from '@/components/post/Detail/Comment/CommentInput.vue';
 import MainFooter from "@/components/layout/MainFooter.vue";
 import { useFreePostStore } from "@/pages/Community/FreeBoard/stores/useFreePostStore";
 import { useRoute } from 'vue-router';
+import {useFreeRecommentStore} from "@/pages/Community/FreeBoard/stores/useFreeRecommentStore";
 
 const freePostStore = useFreePostStore();
+const freeRecommentStore = useFreeRecommentStore();
 const route = useRoute();
 
 const post = ref({});
@@ -16,6 +18,7 @@ const comments = ref([]);
 const likeCount = ref(0);
 const errorMessage = ref('');
 const commentErrorMessage = ref('');
+const recomments = ref({});
 
 onMounted(async () => {
   const postId = route.params.id;
@@ -33,6 +36,22 @@ onMounted(async () => {
 const handleNewComment = (newComment) => {
   comments.value.push(newComment);
 };
+
+async function fetchCommentsAndRecomments() {
+  try {
+    const postId = route.params.id;
+    const fetchedComments = await fetchComments(postId);
+    comments.value = fetchedComments;
+
+    for (const comment of fetchedComments) {
+      const fetchedRecomments = await freeRecommentStore.fetchRecomments(comment.id);
+      recomments.value[comment.id] = fetchedRecomments;
+    }
+  } catch (error) {
+    console.error('Failed to fetch comments and recomments:', error);
+  }
+}
+onMounted(fetchCommentsAndRecomments);
 </script>
 
 <template>

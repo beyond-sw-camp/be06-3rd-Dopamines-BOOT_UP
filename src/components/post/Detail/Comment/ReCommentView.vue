@@ -42,10 +42,10 @@ function postLike() {
   const likeIcon = document.querySelector('.btn-like img');
   let isLiked = likeIcon.src.includes('filled_marked.svg');
   if (isLiked) {
-    likeIcon.src = '@/assets/icon/empty_marked.svg';
+    likeIcon.src = require('@/assets/icon/empty_marked.svg');
     localLikeCount.value -= 1;
   } else {
-    likeIcon.src = '@/assets/icon/filled_marked.svg';
+    likeIcon.src = require('@/assets/icon/fill_marked.svg');
     localLikeCount.value += 1;
   }
   emit('update:likeCount', localLikeCount.value);

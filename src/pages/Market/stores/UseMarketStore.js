@@ -14,7 +14,7 @@ export const useMarketStore = defineStore("market", {
         isEnd: false,
         isSearchResultEnd: false,
         lastSearchQuery: "",
-        postReq: { idx: 0, title: "", content: "", images: [] },
+        postReq: { idx: 0, title: "", content: "", images: [], price: 0 },
     }),
     actions: {
         async getProducts() {
@@ -135,6 +135,39 @@ export const useMarketStore = defineStore("market", {
             await axios.put(url, {
                 withCredentials: true,
             });
+        },
+
+        async createPost(postReq) {
+            console.log(postReq)
+
+            const formData = new FormData();
+            postReq.images.forEach((image) => {
+                formData.append('images', image.file);
+            });
+
+            // JSON 데이터를 문자열로 변환하여 추가
+            const req = {
+                title: postReq.title,
+                content: postReq.content,
+                price: postReq.price
+            };
+            formData.append('req', new Blob([JSON.stringify(req)], { type: "application/json" }));
+
+            try {
+                const response = await axios.post('/api/market', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+
+                console.log('Response:', response.data);
+                return true
+
+            } catch (error) {
+                console.error('Error:', error);
+                return false
+            }
+
         }
 
     }

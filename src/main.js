@@ -6,8 +6,10 @@ import App from './App.vue'
 import router from './router'
 import piniaPersistedstate from 'pinia-plugin-persistedstate';
 
+const app = createApp(App);
 const pinia = createPinia();
 pinia.use(piniaPersistedstate);
+
 
 router.onError((error) => {
     console.error('Router error:', error);

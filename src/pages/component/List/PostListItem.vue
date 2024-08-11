@@ -38,9 +38,9 @@ const props = defineProps({
       </div>
     </div>
   </div>
-  <div>
-    <a class="board-post-title" :href="`${props.idx}`">{{ props.content }}</a>
-  </div>
+<!--  <div>-->
+<!--    <a class="board-post-title" :href="`${props.idx}`">{{ props.content }}</a>-->
+<!--  </div>-->
 </template>
 
 <style scoped>

@@ -10,7 +10,7 @@
             </div>
             <select class="coursenum-selection" v-model="selectedCourse">
               <option value="all">BEYOND 전체</option>
-              <option v-for="i in courseNum" v-bind:key="i">BEYOND {{ i }}기</option>
+              <option v-for="i in courseNum" v-bind:key="i" :value="i">BEYOND {{ i }}기</option>
             </select>
           </div>
           <div v-if="isLoading">로딩 중...</div>
@@ -23,7 +23,7 @@
                 class="click"
             ></ProjectCardItem>
           </ul>
-          <div class="post-write" v-if="dataList && dataList.length > 0 && dataList.some(data => data.role === 'ROLE_ADMIN')">
+          <div class="post-write" :v-if="auth && auth.value === 'ROLE_ADMIN'">
             <router-link :to="routes[0].path">글 작성</router-link>
           </div>
         </div>
@@ -42,14 +42,20 @@ import { useProjectStore } from "@/pages/Project/store/useProjectStore";
 import router from "@/router";
 import ProjectDetailPage from "@/pages/Project/ProjectDetailPage.vue";
 import PostList from "@/components/post/List/PostList.vue";
+import { useUserStore } from "@/pages/User/stores/useUserStore";
 
 const projectStore = useProjectStore();
+const userStore = useUserStore();
+const auth = ref("");
 const dataList = ref([]);
 const courseNum = ref(Array.from({ length: 10 }, (_, i) => i + 1));
 const selectedCourse = ref('all'); // 선택된 코스 번호를 저장
 
 const isLoading = ref(true);
 onMounted(async () => {
+  auth.value = await userStore.getAuth();
+  console.log("auth", auth.value);
+
   dataList.value = await projectStore.getProjectList();
   isLoading.value = false; // 데이터 로딩 완료
   console.log("dataList.value: ", dataList.value);
@@ -60,12 +66,15 @@ onMounted(async () => {
   });
 });
 
+
 // 필터링된 데이터 목록
 const filteredDataList = computed(() => {
   if (selectedCourse.value === 'all') {
     return dataList.value; // 전체 데이터 반환
+  } else {
+    console.log("what is you: ", selectedCourse);
   }
-  return dataList.value.filter(data => data.courseNum === selectedCourse.value); // 선택된 코스에 해당하는 데이터만 반환
+  return dataList.value.filter(data => data.courseNum === parseInt(selectedCourse.value)); // 선택된 코스에 해당하는 데이터만 반환
 });
 
 console.log(filteredDataList);
@@ -164,6 +173,7 @@ select {
   padding: 10px;
   margin: 20px 0 20px 0;
   text-align: center;
+  margin-left: auto;
   a {
     color: #fff;
   }

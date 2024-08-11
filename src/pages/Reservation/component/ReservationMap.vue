@@ -1,4 +1,3 @@
-
 <template>
   <div class="container-wrap">
     <div class="container">
@@ -11,27 +10,21 @@
         <div class="seat-table-wrap f4">
           <p class="seat-table-label">4층</p>
           <button class="seat-table" :class="{ 'selected': selectedSection === 'A' && selectedFloor === 4 }"
-                  @click="getTime(4, 'A')">A
-          </button>
+                  @click="getTime(4, 'A')">A</button>
         </div>
         <div class="seat-table-wrap f5">
           <p class="seat-table-label">5층</p>
           <div class="seat-table-fifth">
             <button class="seat-table table-1" :class="{ 'selected': selectedSection === 'A' && selectedFloor === 5 }"
-                    @click="getTime(5, 'A')">A
-            </button>
+                    @click="getTime(5, 'A')">A</button>
             <button class="seat-table" :class="{ 'selected': selectedSection === 'B' && selectedFloor === 5 }"
-                    @click="getTime(5, 'B')">B
-            </button>
+                    @click="getTime(5, 'B')">B</button>
             <button class="seat-table t3" :class="{ 'selected': selectedSection === 'C' && selectedFloor === 5 }"
-                    @click="getTime(5, 'C')">C
-            </button>
+                    @click="getTime(5, 'C')">C</button>
             <button class="seat-table t4" :class="{ 'selected': selectedSection === 'D' && selectedFloor === 5 }"
-                    @click="getTime(5, 'D')">D
-            </button>
+                    @click="getTime(5, 'D')">D</button>
             <button class="seat-table t5" :class="{ 'selected': selectedSection === 'E' && selectedFloor === 5 }"
-                    @click="getTime(5, 'E')">E
-            </button>
+                    @click="getTime(5, 'E')">E</button>
           </div>
         </div>
         <div class="seating-status-wrap">
@@ -56,8 +49,8 @@
               <p>{{ selectedFloor }}층 {{ selectedSection }}테이블 예약 가능 시간</p>
 
               <div class="time-selector"
-                   v-if="reservationStore.reservationTimeList && reservationStore.reservationTimeList.seatIdx && reservationStore.reservationTimeList.seatIdx.length > 0">
-                <div v-for="(seat, index) in reservationStore.reservationTimeList.seatIdx" :key="index">
+                   v-if="reservationTimeList && reservationTimeList.seatIdx && reservationTimeList.seatIdx.length > 0">
+                <div v-for="(seat, index) in reservationTimeList.seatIdx" :key="index">
                   <input
                       type="checkbox"
                       name="time"
@@ -79,57 +72,83 @@
 </template>
 
 <script>
-import {mapStores} from 'pinia';
-import {useReservationStore} from '../stores/useReservationStore';
+import { ref } from 'vue';
+import { useReservationStore } from '../stores/useReservationStore';
+import {useRouter} from "vue-router";
 
 export default {
   name: 'ReservationComponent',
-  data() {
-    return {
-      selectedFloor: null,
-      selectedSection: null,
-      isTimeTableVisible: false,
-      selectedSeats: [],
-      reservationSuccess: false,
-      reservationMessage: ''
-    }
-  },
-  computed: {
-    ...mapStores(useReservationStore)
-  },
-  methods: {
-    getTime(floor, section) {
-      this.selectedFloor = floor;
-      this.selectedSection = section;
-      this.isTimeTableVisible = true;
-      this.selectedSeats = [];
+  setup() {
+    const selectedFloor = ref(null);
+    const selectedSection = ref(null);
+    const isTimeTableVisible = ref(false);
+    const selectedSeats = ref([]);
+    const reservationTimeList = ref(null);
+    const router = useRouter();
+    const reservationStore = useReservationStore();
 
-      this.reservationStore.getTimeList(floor, section);
-    },
-    isSeatReserved(seat) {
-      return this.reservationStore.reservationTimeList.reserveSeatIdx.includes(seat);
-    },
-    reserve(selectedSeats) {
-      if (this.selectedSeats.length !== 0) {
+    const getTime = async (floor, section) => {
+      selectedFloor.value = floor;
+      selectedSection.value = section;
+      isTimeTableVisible.value = true;
+      selectedSeats.value = [];
+
+      reservationTimeList.value = await reservationStore.getTimeList(floor, section);
+
+      console.log("what is your value: ", reservationTimeList.value);
+    };
+
+    const isSeatReserved = (seat) => {
+      return reservationTimeList.value?.reserveSeatIdx?.includes(seat) || false;
+    };
+
+    const reserve = (selectedSeats) => {
+      if (selectedSeats.length !== 0) {
         selectedSeats.sort();
 
         const reservationData = {
-          selectedSeats: this.selectedSeats
+          selectedSeats
         };
 
-        this.reservationStore.createReservation(reservationData);
+        const result = reservationStore.createReservation(reservationData);
+        console.log(result);
+        if (result) {
+          if (confirm("예약을 진행하시겠습니까?")){
+            if (confirm("예약을 성공했습니다.")) {
+              router.push("/reservation");
+              router.go(0);
+            } else {
+              alert("예약에 실패했습니다.")
+            }
+          }
 
+        } else {
+          if (confirm("예약에 실패했습니다. 다시 시도하여 주십시오.")) {
+            router.push("/reservation");
+          }
+        }
       } else {
         alert("시간대를 선택해주세요.");
       }
-    }
+    };
+
+    return {
+      selectedFloor,
+      selectedSection,
+      isTimeTableVisible,
+      selectedSeats,
+      reservationTimeList,
+      getTime,
+      isSeatReserved,
+      reserve
+    };
   }
 }
 </script>
 
+
 <style>
 .container-wrap {
-  //margin-top: 250px;
 }
 
 .container {

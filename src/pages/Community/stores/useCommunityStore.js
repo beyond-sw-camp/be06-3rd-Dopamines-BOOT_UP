@@ -10,10 +10,10 @@ export const useCommunityStore = defineStore('community', {
         }
     ),
     actions: {
-        async getPostDetail(idx) {
+        async getPostDetail(idx, boardType) {
             const response = await axios.get(
-                `/api/free/post/read?idx=${idx}`,{
-                    isCredential: true,
+                `/api/${boardType}/post/read?idx=${idx}`,{
+                    withCredential: true,
                 }
             );
 
@@ -24,14 +24,14 @@ export const useCommunityStore = defineStore('community', {
             return this.postDetail;
         },
 
-        async createPost(formData) {
+        async createPost(formData, boardType) {
             try{
                 const response = await axios.post(
-                    `/api/free/post/create`, formData, {
+                    `/api/${boardType}/post/create`, formData, {
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        isCredential: true,
+                        withCredential: true,
                     }
                 )
 
@@ -46,13 +46,13 @@ export const useCommunityStore = defineStore('community', {
             }
         },
 
-        async updatePost(formData) {
+        async updatePost(formData, boardType) {
             const response = await axios.put(
-                `/api/free/post/update`, formData, {
+                `/api/${boardType}/post/update`, formData, {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    isCredential: true,
+                    withCredential: true,
                 }
             )
 

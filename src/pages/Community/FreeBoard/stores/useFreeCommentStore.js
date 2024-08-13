@@ -20,7 +20,7 @@ export const useFreeCommentStore = defineStore('freeComment', {
                 createdAt: new Date().toISOString(),
             };
             try {
-                const response = await axios.post('http://localhost:8080/free/comment/create', createCommentData);
+                const response = await axios.post('/api/free/comment/create', createCommentData);
                 return response.data;
             } catch (error) {
                 this.error = error.response && error.response.data ? error.response.data.message : 'An error occurred';
@@ -36,7 +36,7 @@ export const useFreeCommentStore = defineStore('freeComment', {
             this.error = null;
 
             try {
-                const response = await axios.get('http://localhost:8080/free/comment', {
+                const response = await axios.get('/api/free/comment', {
                     params: { idx, page, size },
                 });
 
@@ -54,7 +54,7 @@ export const useFreeCommentStore = defineStore('freeComment', {
             this.error = null;
 
             try {
-                const response = await axios.put('http://localhost:8080/free/comment/update', req, {
+                const response = await axios.put('/api/free/comment/update', req, {
                     headers: {
                         Authorization: `Bearer ${user.token}`,
                     },
@@ -74,7 +74,7 @@ export const useFreeCommentStore = defineStore('freeComment', {
             this.error = null;
 
             try {
-                await axios.delete(`http://localhost:8080/free/comment/delete?idx=${idx}`, {
+                await axios.delete(`/api/free/comment/delete?idx=${idx}`, {
                     headers: {
                         Authorization: `Bearer ${user.token}`,
                     },

@@ -36,7 +36,8 @@ const searchQuery = ref(props.searchQuery);
 // const route = useRoute();
 
 const sortedDataList = computed(() => {
-  return [...props.dataList].sort((a, b) => a.idx - b.idx);
+  // return [...props.dataList].sort((a, b) => a.idx - b.idx);
+
 });
 </script>
 

@@ -17,7 +17,8 @@ export const useChatStore = defineStore("chat", {
     actions: {
         async connect() {
             console.log("[UseChatStore] connect() ==========>")
-            const serverURL = "http://localhost:8080/ws"
+            // const serverURL = "http://localhost:8080/ws"
+            const serverURL = "http://43.201.50.222:8080/ws"
             // 쿠키 설정을 위한 초기 HTTP 요청
             // await axios.get(serverURL, { withCredentials: true });
 

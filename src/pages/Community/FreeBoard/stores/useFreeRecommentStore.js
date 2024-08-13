@@ -15,7 +15,7 @@ export const useFreeRecommentStore = defineStore('freeRecomment', {
             this.error = null;
 
             try {
-                const response = await axios.post('http://localhost:8080/free/recomment/create', req, {
+                const response = await axios.post('/api/free/recomment/create', req, {
                     headers: {
                         Authorization: `Bearer ${user.token}`,
                     },
@@ -35,7 +35,7 @@ export const useFreeRecommentStore = defineStore('freeRecomment', {
             this.error = null;
 
             try {
-                const response = await axios.get('http://localhost:8080/free/recomment', {
+                const response = await axios.get('/api/free/recomment', {
                     params: { idx, page, size },
                 });
 
@@ -53,7 +53,7 @@ export const useFreeRecommentStore = defineStore('freeRecomment', {
             this.error = null;
 
             try {
-                const response = await axios.put('http://localhost/free/recomment/update', req, {
+                const response = await axios.put('/api/free/recomment/update', req, {
                     headers: {
                         Authorization: `Bearer ${user.token}`,
                     },
@@ -75,7 +75,7 @@ export const useFreeRecommentStore = defineStore('freeRecomment', {
             this.error = null;
 
             try {
-                await axios.delete(`http://localhost:8080/free/recomment/delete?idx=${idx}`, {
+                await axios.delete(`/api/free/recomment/delete?idx=${idx}`, {
                     headers: {
                         Authorization: `Bearer ${user.token}`,
                     },

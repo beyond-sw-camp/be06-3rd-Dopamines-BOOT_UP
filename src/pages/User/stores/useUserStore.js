@@ -2,12 +2,15 @@ import { defineStore } from "pinia"
 import axios from "axios";
 import Cookies from 'js-cookie';
 import router from "@/router";
+import {jwtDecode} from "jwt-decode";
 
 export const useUserStore = defineStore("user", {
     state: () => ({
         email: "",
         uuid: "",
         nickname:"",
+        userIdx: '',
+        userNickName: '',
         isLoggedIn: false,
     }),
     actions: {
@@ -38,7 +41,7 @@ export const useUserStore = defineStore("user", {
                 email : email,
                 uuid: uuid,
             };
-            
+
             try{
                 let response = await axios.post("/api/user/email-verify",EmailRequestDto);
                 console.log(response);
@@ -87,27 +90,28 @@ export const useUserStore = defineStore("user", {
             console.log(signupResponse.idx);
             console.log(signupResponse.email);
             console.log(signupResponse.name);
-            
+
         },
         async login(user) {
             try {
-                let response = await axios.post("/api/login", user);
+                let response = await axios.post("/api/login", user, { withCredentials: true });
                 if (response.status === 200) {
-                    this.isLoggedIn = true;
-                    const token = response.headers['authorization'];
-                    if (token) {
-                        Cookies.set('jwt', token, { secure: true, sameSite: 'Strict' });
-                    } else {
-                        console.error("Token not found in response headers");
-                        return false;
-                    }
+
+                    let atoken = await Cookies.get('AToken');
+                    console.log("atoken: ", atoken);
+                    const decoded = jwtDecode(atoken);
+                    console.log("decoded: ", decoded);
+
+                    this.userIdx = decoded.idx
+                    this.userNickName = decoded.nickname
+
                     return true;
                 } else{
-                    console.log("이메일 인증 실패");
                     return false;
                 }
             } catch(error){
-                console.log(" error ", error);
+                console.log("로그인 실패", error);
+                return false;
             }
         },
 
@@ -129,17 +133,19 @@ export const useUserStore = defineStore("user", {
         },
 
         async getAuth() {
-          try{
-              const response = await axios.get("/api/user/auth", {
-                  withCredentials: true
-              });
+            try{
+                const response = await axios.get("/api/user/auth", {
+                    withCredentials: true
+                });
 
-              console.log(response);
+                console.log(response);
 
-              return response.data.result;
-          } catch (error) {
-              console.log(" error ", error);
-          }
+                return response.data.result;
+            } catch (error) {
+                console.log(" error ", error);
+            }
         },
-    }
+    },
+    persist: true
+
 })

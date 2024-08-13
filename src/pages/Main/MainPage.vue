@@ -17,8 +17,8 @@ const noticePosts = ref([]);
 
 onMounted(async () => {
   try {
-    freePosts.value = await freePostStore.readAllPosts(1, 3);
-    openPosts.value = await openPostStore.readAllPosts(1, 3);
+    freePosts.value = await freePostStore.readAllPosts(0, 3);
+    openPosts.value = await openPostStore.readAllPosts(0, 3);
     noticePosts.value = await noticePostStore.fetchAllNotices();
   } catch (error) {
     console.error('Failed to fetch posts:', error);

@@ -48,18 +48,19 @@ export const useFreeCommentStore = defineStore('freeComment', {
         },
 
         // 댓글 수정
-        async updateComment(user, req) {
+        async updateComment(commentUpdateReq) {
             this.isLoading = true;
             this.error = null;
+            console.log(">>??>?>>?>: ", commentUpdateReq);
 
             try {
-                const response = await axios.put('/api/free/comment/update', req, {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`,
-                    },
+                const response = await axios.put('/api/free/comment/update', commentUpdateReq, {
+                    withCredentials: true
                 });
-                const updatedCommentIndex = this.comments.findIndex((comment) => comment.id === response.data.data.id);
-                this.comments[updatedCommentIndex] = response.data.data;
+                // const updatedCommentIndex = this.comments.findIndex((comment) => comment.id === response.data.data.id);
+                // this.comments[updatedCommentIndex] = response.data.data;
+
+                console.log(response);
             } catch (error) {
                 this.error = error.response && error.response.data ? error.response.data.message : 'An error occurred';
             } finally {

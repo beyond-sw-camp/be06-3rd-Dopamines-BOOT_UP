@@ -38,11 +38,22 @@ const handleNewComment = (newComment) => {
 };
 
 function deleteComment(idx) {
-  if(confirm(`${idx}번 댓글을 삭제하시겠습니까?`)) {
+  if(confirm(`댓글을 삭제하시겠습니까?`)) {
     const response = freeCommentStore.deleteComment(idx);
 
     if (response) {
-      console.log("댓글삭제완료");
+      console.log("댓글 삭제 완료");
+      window.location.reload();
+    }
+  }
+}
+
+function updateComment(commentUpdateReq) {
+  if (confirm(`${commentUpdateReq.idx}번의 댓글을 수정하시겠습니까?`)) {
+    const response = freeCommentStore.updateComment(commentUpdateReq);
+
+    if (response) {
+      console.log("댓글 수정 완료");
       window.location.reload();
     }
   }
@@ -80,8 +91,12 @@ function deleteComment(idx) {
               :comment-author="post.nickName"
           ></CommentInput>
 
-          <CommentComponent :comments="comments" :like-count="likeCount"
-                            :comment-count="comments.length" @delete:comments="deleteComment"></CommentComponent>
+          <CommentComponent
+              :comments="comments" :like-count="likeCount"
+              :comment-count="comments.length"
+              @delete:comments="deleteComment"
+              @update:comments="updateComment"
+          ></CommentComponent>
         </div>
       </div>
     </main>

@@ -53,9 +53,9 @@ function deleteComment(idx) {
   emit('delete:comments', idx);
 }
 
-function editComment(index, newComment) {
-  localComments.value[index].comment = newComment;
-  emit('update:comments', localComments.value);
+function updateComment(commentUpdateReq) {
+  console.log("updateComment: ", commentUpdateReq);
+  emit('update:comments', commentUpdateReq);
 }
 
 function replyToComment(index) {
@@ -79,13 +79,12 @@ function replyToComment(index) {
 <!--        </button>-->
       </div>
     </div>
-<!--    <CommentInput @commentSubmit="commentSubmit"></CommentInput>-->
     <div class="comment-view-container">
       <div class="top-line"></div>
       <div class="comment-view-wrapper">
         <ul class="comment-view-detail-container">
           <li v-for="(comment, index) in localComments" :key="index" :id="'answer-' + index">
-            <CommentView v-bind="comment" @delete="deleteComment" @edit="editComment(index, $event)"
+            <CommentView v-bind="comment" @delete="deleteComment" @update="updateComment"
                          @reply="replyToComment(index)"></CommentView>
 <!--            <CommentInput v-if="replyIndex.value === index && showReplyInput.value"-->
 <!--                          @commentSubmit="commentSubmit"></CommentInput>-->

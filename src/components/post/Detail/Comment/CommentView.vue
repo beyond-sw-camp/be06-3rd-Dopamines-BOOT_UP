@@ -1,5 +1,5 @@
 <script setup>
-import {defineProps, defineEmits, ref, computed} from 'vue';
+import {defineProps, defineEmits, ref, computed, nextTick} from 'vue';
 
 const props = defineProps({
   author: {
@@ -21,11 +21,18 @@ const props = defineProps({
   idx: {
     type: Number,
     required: true
+  },
+  recommentList: {
+    type: Array,
+    required: false
   }
 });
 
 const emit = defineEmits(['delete', 'edit', 'reply', 'update:likeCount']);
 const localLikeCount = ref(props.likeCount);
+const isEditing = ref(false);
+const editableContent = ref(props.content);
+const inputRef = ref(null);
 
 const userNickName = computed(() => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -42,10 +49,23 @@ const canEditComment = computed(() => {
 });
 
 function handleEdit() {
-  const newComment = prompt('Edit your comment:', props.comment);
-  if (newComment !== null) {
-    emit('edit', newComment);
-  }
+  isEditing.value = !isEditing.value;
+
+  nextTick(() => {
+    if (isEditing.value && inputRef.value) {
+      inputRef.value.focus();
+    }
+  })
+}
+
+function commentUpdate() {
+  console.log("this is commentUpdate section")
+  console.log(props.idx)
+  console.log(editableContent.value)
+  emit('update', {
+    idx: props.idx,
+    content: editableContent.value
+  });
 }
 
 function handleReply() {
@@ -82,7 +102,11 @@ function formatDate(dateString) {
       <div>
         <p><strong>{{ author }}</strong> - {{ formatDate(createdAt) }}</p>
       </div>
-      <div>
+      <div v-if="isEditing" class="comment-edit-container">
+        <input  ref="inputRef" v-model="editableContent" />
+        <button class="comment-create-btn" @click="commentUpdate">수정</button>
+      </div>
+      <div v-else>
         <p>{{ content }}</p>
       </div>
     </div>
@@ -124,5 +148,27 @@ function formatDate(dateString) {
   p {
     margin: 0;
   }
+}
+.comment-wrap {
+  width: 85%;
+}
+.comment-edit-container {
+  display: flex;
+}
+.comment-create-btn {
+  font-size: 1rem;
+  padding: 6px 10px;
+  background-color: rgba(191, 184, 166, 0.7);
+  color: #212529;
+  border-radius: 5px;
+}
+.comment-wrap input {
+  width: 90%;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+}
+.comment-wrap input:focus{
+  border-bottom: 2px solid #e06139a3;
 }
 </style>

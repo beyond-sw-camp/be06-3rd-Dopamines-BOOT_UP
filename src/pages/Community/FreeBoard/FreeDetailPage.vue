@@ -7,8 +7,10 @@ import CommentInput from '@/components/post/Detail/Comment/CommentInput.vue';
 import MainFooter from "@/components/layout/MainFooter.vue";
 import {useFreePostStore} from "@/pages/Community/FreeBoard/stores/useFreePostStore";
 import {useRoute} from 'vue-router';
+import {useFreeCommentStore} from "@/pages/Community/FreeBoard/stores/useFreeCommentStore";
 
 const freePostStore = useFreePostStore();
+const freeCommentStore = useFreeCommentStore();
 const route = useRoute();
 
 const post = ref({});
@@ -21,6 +23,7 @@ onMounted(async () => {
   const postId = route.params.id;
   try {
     const postData = await freePostStore.readPost(postId);
+    console.log("come on~~~", postData);
     post.value = postData;
     comments.value = postData.freeCommentList;
     likeCount.value = postData.likeCount;
@@ -33,6 +36,17 @@ onMounted(async () => {
 const handleNewComment = (newComment) => {
   comments.value.push(newComment);
 };
+
+function deleteComment(idx) {
+  if(confirm(`${idx}번 댓글을 삭제하시겠습니까?`)) {
+    const response = freeCommentStore.deleteComment(idx);
+
+    if (response) {
+      console.log("댓글삭제완료");
+      window.location.reload();
+    }
+  }
+}
 </script>
 
 <template>
@@ -50,8 +64,8 @@ const handleNewComment = (newComment) => {
               :board-title="`자유게시판`"
               :category="community"
               :category-title="`커뮤니티게시판`"
-              :post-author="post.author"
-              :post-created-at="post.created_at"
+              :post-author="post.nickName"
+              :post-created-at="post.createdAt"
               :post-title="post.title"
               :post-contents="post.content"
               :editlnk="`/free/edit/${route.params.id}`"
@@ -59,9 +73,15 @@ const handleNewComment = (newComment) => {
           <div v-if="commentErrorMessage" class="error-message">
             <p>{{ commentErrorMessage }}</p>
           </div>
+          <CommentInput
+              @new-comment="handleNewComment"
+              :post-idx="post.idx"
+              :board-type="`free`"
+              :comment-author="post.nickName"
+          ></CommentInput>
+
           <CommentComponent :comments="comments" :like-count="likeCount"
-                            :comment-count="comments.length"></CommentComponent>
-          <CommentInput @new-comment="handleNewComment"></CommentInput>
+                            :comment-count="comments.length" @delete:comments="deleteComment"></CommentComponent>
         </div>
       </div>
     </main>
@@ -84,6 +104,7 @@ const handleNewComment = (newComment) => {
 
 .post-container {
   width: 100%;
+  margin-bottom: 50px;
 }
 
 .error-message {

@@ -52,6 +52,8 @@ const handleSearch = () => {
   border-radius: 100px;
   border: 1px solid #e06139;
   transition: 0.5s;
+  margin-bottom: 10px;
+
 
   input {
     width: 100%;

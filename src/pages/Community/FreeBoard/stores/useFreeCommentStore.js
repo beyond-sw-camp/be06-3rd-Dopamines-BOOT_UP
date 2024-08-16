@@ -9,18 +9,17 @@ export const useFreeCommentStore = defineStore('freeComment', {
 
     actions: {
         // 댓글 작성
-        async createComment(user, req) {
+        async createComment(commentReq) {
             this.isLoading = true;
             this.error = null;
-            let userIdx = JSON.parse(localStorage.getItem('user')).idx;
+            let userIdx = JSON.parse(localStorage.getItem('user')).userIdx;
             const createCommentData = {
-                freePostIdx: req.freePostIdx,
-                content: req.content,
+                freePostIdx: commentReq.postIdx,
+                content: commentReq.content,
                 userIdx: userIdx,
-                createdAt: new Date().toISOString(),
             };
             try {
-                const response = await axios.post('http://localhost:8080/free/comment/create', createCommentData);
+                const response = await axios.post('/api/free/comment/create', createCommentData);
                 return response.data;
             } catch (error) {
                 this.error = error.response && error.response.data ? error.response.data.message : 'An error occurred';
@@ -36,7 +35,7 @@ export const useFreeCommentStore = defineStore('freeComment', {
             this.error = null;
 
             try {
-                const response = await axios.get('http://localhost:8080/free/comment', {
+                const response = await axios.get('/api/free/comment', {
                     params: { idx, page, size },
                 });
 
@@ -54,7 +53,7 @@ export const useFreeCommentStore = defineStore('freeComment', {
             this.error = null;
 
             try {
-                const response = await axios.put('http://localhost:8080/free/comment/update', req, {
+                const response = await axios.put('/api/free/comment/update', req, {
                     headers: {
                         Authorization: `Bearer ${user.token}`,
                     },
@@ -69,18 +68,16 @@ export const useFreeCommentStore = defineStore('freeComment', {
         },
 
         // 댓글 삭제
-        async deleteComment(user, idx) {
+        async deleteComment(idx) {
             this.isLoading = true;
             this.error = null;
 
             try {
-                await axios.delete(`http://localhost:8080/free/comment/delete?idx=${idx}`, {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`,
-                    },
-                });
+                console.log(idx);
+                const response = await axios.delete(`/api/free/comment/delete?idx=${idx}`);
+                // this.comments = this.comments.filter((comment) => comment.id !== idx);
+                console.log(response);
 
-                this.comments = this.comments.filter((comment) => comment.id !== idx);
             } catch (error) {
                 this.error = error.response && error.response.data ? error.response.data.message : 'An error occurred';
             } finally {

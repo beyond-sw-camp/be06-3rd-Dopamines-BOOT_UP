@@ -1,18 +1,27 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
 export const useFreePostStore = defineStore('post', {
     state: () => ({
         idx: 0,
         title: '',
         content: '',
-        author: '',
+        nickName: '',
         imageUrlList: [],
-        created_at: '',
+        createdAt: '',
         likeCount: 0,
         posts: [],
         freeCommentList: []
     }),
+
     actions: {
         async createPost(postData) {
             try {
@@ -38,6 +47,8 @@ export const useFreePostStore = defineStore('post', {
                 throw error;
             }
         },
+
+        // 상세
         async readPost(postId) {
             const response = await axios.get(`/api/free/post/read?idx=${postId}`);
             console.log('response', response);
@@ -46,17 +57,20 @@ export const useFreePostStore = defineStore('post', {
                 idx: response.data.result.idx,
                 title: response.data.result.title,
                 content: response.data.result.content,
-                author: response.data.result.author,
+                nickName: response.data.result.author,
                 imageUrlList: response.data.result.imageUrlList,
-                created_at: response.data.result.created_at,
+                createdAt: formatDate(response.data.result.created_at),
                 likeCount: response.data.result.likeCount,
                 commentCount: response.data.result.commentCount,
                 boardIdx: response.data.result.boardIdx,
                 posts: [],
                 freeCommentList: response.data.result.freeCommentList
             };
+
             return readResult;
         },
+
+        // 페이징 처리한 자유게시글 가져오기
         async readAllPosts(page, size) {
             const response = await axios.get(`/api/free/post/read-all?page=${page}&size=${size}`, {withCredentials: true});
             console.log('response', response);
@@ -65,12 +79,20 @@ export const useFreePostStore = defineStore('post', {
                     idx: post.idx,
                     title: post.title,
                     content: post.content,
-                    author: post.author,
-                    created_at: post.created_at,
+                    nickName: post.nickName,
+                    createdAt: formatDate(post.createdAt),
                 }));
                 console.log('posts', posts);
                 return posts;
             }
+        },
+
+        async getCount() {
+            const response = await axios.get(`/api/free/post/get-count`);
+            console.log('response', response);
+            console.log(response.data);
+
+            return response.data.result;
         },
         async updatePost(postData) {
             try {
@@ -98,8 +120,8 @@ export const useFreePostStore = defineStore('post', {
                         idx: post.idx,
                         title: post.title,
                         content: post.content,
-                        author: post.author,
-                        created_at: post.created_at,
+                        nickName: post.nickName,
+                        createdAt: post.createdAt,
                     }));
                     console.log('posts', posts);
                     return posts;

@@ -24,7 +24,7 @@ export const useNoticeStore = defineStore('notice', {
         async createNotice(req) {
             this.isLoading = true;
             try {
-                const response = await axios.post('http://localhost:8080/notices', req);
+                const response = await axios.post('/api/notices', req);
                 this.notices.push(response.data.data);
             } catch (error) {
                 this.error = error.response && error.response.data ? error.response.data.message : error.message;
@@ -35,7 +35,7 @@ export const useNoticeStore = defineStore('notice', {
 
         async fetchAllNotices() {
             try {
-                const response = await axios.get(`http://localhost:8080/notices/public`);
+                const response = await axios.get(`/api/notices/public`);
                 console.log('API response:', response.data);
                 const notices = response.data.result.content.map((post, index) => ({
                     ...post,
@@ -71,7 +71,7 @@ export const useNoticeStore = defineStore('notice', {
 
         async search(category, page = 0, size = 10) {
             try {
-                const response = await axios.get(`/notices/criteria?isPrivate=false&category=${category}&page=${page}&size=${size}`, { withCredentials: true });
+                const response = await axios.get(`/api/notices/criteria?isPrivate=false&category=${category}&page=${page}&size=${size}`, { withCredentials: true });
                 console.log('notice response', response);
                 if (response.data && Array.isArray(response.data.result)) {
                     let posts = response.data.result.map(post => ({
@@ -100,7 +100,7 @@ export const useNoticeStore = defineStore('notice', {
         async updateNotice(id, req) {
             this.isLoading = true;
             try {
-                const response = await axios.put(`http://localhost:8080/notices/${id}`, req);
+                const response = await axios.put(`/api/notices/${id}`, req);
                 const updatedIndex = this.notices.findIndex((n) => n.id === id);
                 if (updatedIndex !== -1) {
                     this.notices[updatedIndex] = response.data.data;
@@ -115,7 +115,7 @@ export const useNoticeStore = defineStore('notice', {
         async deleteNotice(id) {
             this.isLoading = true;
             try {
-                await axios.delete(`http://localhost:8080/notices/${id}`);
+                await axios.delete(`/api/notices/${id}`);
                 this.notices = this.notices.filter((n) => n.id !== id);
             } catch (error) {
                 this.error = error.response && error.response.data ? error.response.data.message : error.message;

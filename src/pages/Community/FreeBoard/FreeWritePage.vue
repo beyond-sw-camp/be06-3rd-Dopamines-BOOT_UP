@@ -5,19 +5,19 @@ import PostEditor from "@/components/post/Detail/PostEditor.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
 import { useCommunityStore } from "@/pages/Community/stores/useCommunityStore";
 import router from "@/router";
+import {ref} from "vue";
 // import { useRouter } from "vue-router";
 
 const communityStore = useCommunityStore();
+const postIdx = ref(0);
 // const router = useRouter();
 
-const postCreate = (postReq) => {
-  console.log("postCreate in postReq", postReq);
+const postCreate = async (postReq) => {
+  postIdx.value = await communityStore.createPost(postReq, "free");
 
-  const response = communityStore.createPost(postReq, "free");
-
-  if (response) {
+  if (postIdx.value) {
     if(confirm("게시글이 등록되었습니다.")) {
-      router.push('/free')
+      router.push(`/free/detail/${postIdx.value}`);
     }
   } else {
     alert("게시글 작성에 실패했습니다. 다시 요청해주세요.");

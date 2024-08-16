@@ -3,7 +3,6 @@ import MainHeader from "@/components/layout/MainHeader.vue";
 import MainFooter from "@/components/layout/MainFooter.vue";
 import ReservationComponent from "@/pages/Reservation/component/ReservationMap.vue";
 import ReservationList from "@/pages/Reservation/component/ReservationList.vue";
-import PostList from "@/components/post/List/PostList.vue";
 import {onMounted} from "vue";
 
 onMounted(() => {
@@ -21,6 +20,13 @@ onMounted(() => {
   });
 });
 
+const routes = [
+  {
+    path: '/reservation',
+    name: 'reservation',
+  },
+];
+
 </script>
 
 <template>
@@ -28,7 +34,9 @@ onMounted(() => {
     <MainHeader></MainHeader>
     <main>
       <div class="content-area">
-        <PostList title="스터디 자리 예약" :reservation="reservation" :data-list="dataList" :show-status="isStatusShow"></PostList>
+        <router-link :to="routes[0].path" class="title">
+          <h3>스터디 자리 예약</h3>
+        </router-link>
         <ReservationComponent></ReservationComponent>
         <ReservationList></ReservationList>
       </div>
@@ -44,5 +52,18 @@ onMounted(() => {
   flex-direction: column;
   max-width: 1000px;
   width: 100%;
+}
+.title {
+  display: flex;
+  background-color: rgb(224 97 57);
+  color: #fff;
+  border-radius: 0.75rem;
+  height: 4rem;
+  padding: 0 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
+  margin-bottom: 10px;
 }
 </style>

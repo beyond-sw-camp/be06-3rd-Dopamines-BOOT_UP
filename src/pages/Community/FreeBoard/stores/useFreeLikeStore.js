@@ -12,7 +12,7 @@ export const useFreeLikeStore = defineStore('freeLike', {
             this.error = null;
 
             try {
-                const response = await axios.get('http://localhost:8080/free/like/post', {
+                const response = await axios.get('/api/free/like/post', {
                     params: { idx: postId },
                     headers: {
                         Authorization: `Bearer ${user.token}`,
@@ -33,7 +33,7 @@ export const useFreeLikeStore = defineStore('freeLike', {
             this.error = null;
 
             try {
-                const response = await axios.get('http://localhost:8080/free/like/comment', {
+                const response = await axios.get('/api/free/like/comment', {
                     params: { idx: commentId },
                     headers: {
                         Authorization: `Bearer ${user.token}`,
@@ -54,7 +54,7 @@ export const useFreeLikeStore = defineStore('freeLike', {
             this.error = null;
 
             try {
-                const response = await axios.get('http://localhost:8080/free/like/recomment', {
+                const response = await axios.get('/api/free/like/recomment', {
                     params: { idx: recommentId },
                     headers: {
                         Authorization: `Bearer ${user.token}`,

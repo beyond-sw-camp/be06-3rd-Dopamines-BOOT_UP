@@ -1,7 +1,9 @@
 // import axios from 'axios';
 // import Cookies from 'js-cookie';
 //
-// const backend = "http://localhost:8080";
+// const backend = "http://13.124.239.157:80";
+// // const backend = "http://127.0.0.1:3000";
+//
 //
 // axios.defaults.baseURL = backend;
 //

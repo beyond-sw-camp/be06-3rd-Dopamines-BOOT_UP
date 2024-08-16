@@ -7,7 +7,6 @@ import {useUserStore} from "@/pages/User/stores/useUserStore";
 const searchInput = ref('');
 const router = useRouter();
 const isLoggedIn = ref(false);
-const userStore = useUserStore();
 
 const checkLoginStatus = () => {
   const token = Cookies.get('token');
@@ -31,14 +30,13 @@ const handleSearch = () => {
   router.push({ path: '/search', query: { q: searchInput.value } });
 };
 
-const toggleLogin = () => {
-  if (isLoggedIn.value) {
-    userStore.logout();
-  } else {
-    Cookies.set('token', 'your-token-value');
-  }
-  checkLoginStatus();
+const logout = async () => {
+  const userStore = useUserStore(); // 괄호 추가
+  await userStore.logout(); // 로그아웃이 완료될 때까지 대기
+  router.push({path: '/'});
+  window.location.reload();
 };
+
 </script>
 
 <template>
@@ -83,10 +81,11 @@ const toggleLogin = () => {
           </li>
         </ul>
         <ul class="login menu">
-          <li>
-            <button v-if="Cookies.get('AToken')" @click="toggleLogin">로그아웃</button>
-            <router-link v-else to="/user/login">로그인</router-link>
-
+          <li v-if="Cookies.get('AToken')">
+            <button @click="logout">로그아웃</button>
+          </li>
+          <li v-else>
+            <router-link to="/user/login">로그인</router-link>
           </li>
           <li v-if="!Cookies.get('AToken')">
             <router-link to="/user/signup/agree">회원가입</router-link>

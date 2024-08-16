@@ -46,6 +46,16 @@ const props = defineProps({
 });
 const route = useRoute();
 
+const userNickName = computed(() => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  return user?.userNickName || '';
+});
+
+// props.postAuthor와 로컬 스토리지의 userNickName을 비교
+const canEditPost = computed(() => {
+  return userNickName.value === props.postAuthor;
+});
+
 const showCategoryTitle = computed(() => {
   return route.path.startsWith('/free') || route.path.startsWith('/open');
 });
@@ -88,9 +98,9 @@ const showCategoryTitle = computed(() => {
                    aria-placeholder="내용을 입력해주세요." translate="no"
                    class="ProseMirror remirror-editor remirror-a11y-dark">
                 <!-- 글자 넘침 시 해결 필요 -->
-                <div class="post-content">{{ props.postContents }}</div>
+                <div class="post-content" v-html="props.postContents"></div>
               </div>
-              <div class="post-edit-wrap">
+              <div class="post-edit-wrap" v-if="canEditPost">
                 <!-- TODO v-show="userIdx" 확인 로직 추가 -->
                 <router-link :to="`${props.editlnk}`" class="post-edit">수정하기</router-link>
               </div>
@@ -174,6 +184,12 @@ const showCategoryTitle = computed(() => {
   padding: 10px;
   background-color: #fff;
   border-radius: 5px;
+}
+.post-content img {
+  width: 50% !important;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 .post-edit-wrap {
   display: flex;

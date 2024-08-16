@@ -19,6 +19,7 @@ onMounted(async () => {
   try {
     freePosts.value = await freePostStore.readAllPosts(0, 3);
     openPosts.value = await openPostStore.readAllPosts(0, 3);
+    noticePosts.value = await noticePostStore.readAllPosts(0, 7);
     noticePosts.value = await noticePostStore.fetchAllNotices();
   } catch (error) {
     console.error('Failed to fetch posts:', error);
@@ -58,7 +59,7 @@ onMounted(async () => {
                 :dataList="noticePosts"
                 title="공지사항"
                 board="notice"
-                listlength="10"
+                listlength="7"
                 :showSearchInput="false"
             ></PostList>
           </div>

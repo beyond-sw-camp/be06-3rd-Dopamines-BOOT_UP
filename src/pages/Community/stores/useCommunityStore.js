@@ -39,7 +39,7 @@ export const useCommunityStore = defineStore('community', {
                 console.log(response);
                 console.log("==============");
 
-                return true;
+                return response.data.result.idx;
             } catch (error) {
                 console.log(error);
                 return false;

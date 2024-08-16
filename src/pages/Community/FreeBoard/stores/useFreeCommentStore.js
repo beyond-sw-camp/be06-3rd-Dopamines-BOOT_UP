@@ -9,15 +9,14 @@ export const useFreeCommentStore = defineStore('freeComment', {
 
     actions: {
         // 댓글 작성
-        async createComment(user, req) {
+        async createComment(commentReq) {
             this.isLoading = true;
             this.error = null;
-            let userIdx = JSON.parse(localStorage.getItem('user')).idx;
+            let userIdx = JSON.parse(localStorage.getItem('user')).userIdx;
             const createCommentData = {
-                freePostIdx: req.freePostIdx,
-                content: req.content,
+                freePostIdx: commentReq.postIdx,
+                content: commentReq.content,
                 userIdx: userIdx,
-                createdAt: new Date().toISOString(),
             };
             try {
                 const response = await axios.post('/api/free/comment/create', createCommentData);
@@ -69,18 +68,16 @@ export const useFreeCommentStore = defineStore('freeComment', {
         },
 
         // 댓글 삭제
-        async deleteComment(user, idx) {
+        async deleteComment(idx) {
             this.isLoading = true;
             this.error = null;
 
             try {
-                await axios.delete(`/api/free/comment/delete?idx=${idx}`, {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`,
-                    },
-                });
+                console.log(idx);
+                const response = await axios.delete(`/api/free/comment/delete?idx=${idx}`);
+                // this.comments = this.comments.filter((comment) => comment.id !== idx);
+                console.log(response);
 
-                this.comments = this.comments.filter((comment) => comment.id !== idx);
             } catch (error) {
                 this.error = error.response && error.response.data ? error.response.data.message : 'An error occurred';
             } finally {

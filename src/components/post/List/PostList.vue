@@ -7,16 +7,16 @@ import SearchBar from "@/components/post/Menu/SearchBar.vue";
 const props = defineProps({
   title: {
     type: String,
-    required: true
+    required: false
   },
   dataList: {
     type: Array,
-    required: true
+    required: false
   },
   board: {
     type: String,
     default: '/',
-    required: true
+    required: false
   },
   searchQuery: {
     type: String,
@@ -24,11 +24,11 @@ const props = defineProps({
   },
   performSearch: {
     type: Function,
-    required: true
+    required: false
   },
   showSearchInput: {
     type: Boolean,
-    default: true
+    default: false
   }
 });
 
@@ -36,7 +36,7 @@ const searchQuery = ref(props.searchQuery);
 // const route = useRoute();
 
 const sortedDataList = computed(() => {
-  // return [...props.dataList].sort((a, b) => a.idx - b.idx);
+  return [...props.dataList].sort((a, b) => b.idx - a.idx);
 
 });
 </script>
@@ -59,8 +59,8 @@ const sortedDataList = computed(() => {
                   :post-title="post.title"
                   :content="post.content"
                   :idx="post.idx"
-                  :author="post.author"
-                  :created-at="post.created_at"
+                  :nick-name="post.nickName"
+                  :created-at="post.createdAt"
               />
             </router-link>
           </div>
@@ -100,8 +100,7 @@ const sortedDataList = computed(() => {
 
 .board-list {
   li {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding: 1rem;
 
     .board-post-title {
       font-weight: 600;

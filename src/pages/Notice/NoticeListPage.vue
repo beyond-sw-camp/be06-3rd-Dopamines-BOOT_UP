@@ -22,6 +22,8 @@ const fetchAllNotices = async () => {
 
 onMounted(() => {
   fetchAllNotices();
+
+
 });
 </script>
 

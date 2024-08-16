@@ -3,7 +3,9 @@
     <MainHeader></MainHeader>
     <main>
       <div class="content-area">
-        <PostList title="주요 프로젝트 소개" :project="project" :data-list="data" :show-status="isStatusShow"></PostList>
+        <router-link :to="routes[2].path" class="title">
+          <h3>주요 프로젝트 소개</h3>
+        </router-link>
         <div class="project-container">
           <div class="project-title-wrap">
             <div class="content-title">
@@ -41,7 +43,6 @@ import {ref, onMounted, computed} from 'vue';
 import { useProjectStore } from "@/pages/Project/store/useProjectStore";
 import router from "@/router";
 import ProjectDetailPage from "@/pages/Project/ProjectDetailPage.vue";
-import PostList from "@/components/post/List/PostList.vue";
 import { useUserStore } from "@/pages/User/stores/useUserStore";
 
 const projectStore = useProjectStore();
@@ -92,6 +93,10 @@ const routes = [
     component: ProjectDetailPage,
     name: 'ProjectDetail',
   },
+  {
+    path: '/project',
+    name: 'project'
+  }
 ];
 
 const navigateToDetail = (idx) => {
@@ -106,6 +111,21 @@ export default {
 </script>
 
 <style scoped>
+.title {
+  display: flex;
+  background-color: rgb(224 97 57);
+  color: #fff;
+  border-radius: 0.75rem;
+  height: 4rem;
+  padding: 0 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
+  margin-bottom: 10px;
+}
+
+
 .project-container {
   max-width: 1000px;
 }
@@ -150,22 +170,6 @@ select {
   flex-wrap: wrap;
   line-height: 1.15;
   word-break: keep-all;
-}
-
-.title-page {
-  font-size: 2.250rem;
-  font-weight: 700;
-  color: #222;
-  line-height: 1.15;
-  display: block;
-  margin-bottom: 20px;
-}
-
-.title-text {
-  font-size: 1.125rem;
-  color: #666;
-  margin-bottom: 40px;
-  line-height: 1.15;
 }
 
 .post-write {

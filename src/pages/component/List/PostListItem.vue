@@ -4,23 +4,23 @@ import { defineProps } from 'vue';
 const props = defineProps({
   idx: {
     type: Number,
-    required: true
+    required: false
   },
   postTitle: {
     type: String,
-    required: true
+    required: false
   },
   content: {
     type: String,
-    required: true
+    required: false
   },
-  author: {
+  nickName: {
     type: String,
-    required: true
+    required: false
   },
   createdAt: {
     type: String,
-    required: true
+    required: false
   },
 });
 </script>
@@ -29,7 +29,7 @@ const props = defineProps({
   <div class="board-post-status-header">
     <div class="board-post-status-left">
       <div class="board-post-author">
-        <span>{{ props.author }}</span>
+        <span>{{ props.nickName }}</span>
         |
         <span class="board-post-time">{{ props.createdAt }}</span>
       </div>
@@ -63,6 +63,14 @@ const props = defineProps({
       font-size: 0.875rem;
       color: #19191a92;
       margin-left: 0.5rem;
+    }
+
+    .board-post-title {
+      transition: color 0.3s;
+    }
+
+    .board-post-title:hover{
+      color: red;
     }
   }
 

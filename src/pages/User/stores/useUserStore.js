@@ -1,7 +1,6 @@
 import { defineStore } from "pinia"
 import axios from "axios";
 import Cookies from 'js-cookie';
-import router from "@/router";
 import {jwtDecode} from "jwt-decode";
 
 export const useUserStore = defineStore("user", {
@@ -117,15 +116,13 @@ export const useUserStore = defineStore("user", {
 
         async logout() {
             try {
-                let response = await axios.post("/api/logout");
+                let response = await axios.post("/api/logout", {withCredentials: true });
+                console.log(response)
+                console.log(response.data)
+                console.log(response.status)
                 if (response.status === 200) {
                     this.isLoggedIn = false;
                     localStorage.removeItem("user");
-
-                    await router.push('/');
-                    router.go(0);
-                } else{
-                    return false;
                 }
             } catch(error){
                 console.log(" error ", error);

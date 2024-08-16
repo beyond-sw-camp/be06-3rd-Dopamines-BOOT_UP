@@ -43,9 +43,9 @@ onMounted(() => {
     <MainHeader></MainHeader>
     <main>
       <div class="market-container">
+        <h3 class="title"> 중고 장터 </h3>
         <div class="market-wrapper">
           <div class="market-area">
-            <h3 class="title"> 중고 장터 </h3>
             <div class="search-container">
               <div class="search-area">
                 <div class="search-wrap">
@@ -461,5 +461,6 @@ button {
   align-items: center;
   box-shadow: 2px 2px 10px rgb(0 0 0 / 10%);
   margin-bottom: 10px;
+  margin-top: 0;
 }
 </style>

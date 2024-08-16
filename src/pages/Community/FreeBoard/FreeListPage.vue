@@ -13,6 +13,8 @@ const route = useRoute();
 const searchQuery = ref('');
 const freePosts = ref([]);
 const errorMessage = ref('');
+const postCnt = ref(0);
+const currentPage = ref(1);
 
 const performSearch = async () => {
   try {
@@ -35,9 +37,18 @@ const performSearch = async () => {
   }
 };
 
+const routes = [
+  {
+    path: '/free/write',
+    name: 'FreeWritePage',
+  },
+];
+
 onMounted(async () => {
   try {
-    freePosts.value = await freePostStore.readAllPosts(1, 10);
+    freePosts.value = await freePostStore.readAllPosts(0, 10);
+    postCnt.value = await freePostStore.getCount();
+    console.log(postCnt.value)
     searchQuery.value = route.query.q || '';
     if (searchQuery.value) {
       performSearch();
@@ -50,8 +61,10 @@ onMounted(async () => {
 
 const onPageChanged = async (page) => {
   const validPage = Math.max(1, page);
-  freePosts.value = await freePostStore.readAllPosts(validPage, 10);
+  freePosts.value = await freePostStore.readAllPosts(validPage-1, 10);
+  currentPage.value = validPage;
 };
+
 </script>
 
 <template>
@@ -75,11 +88,14 @@ const onPageChanged = async (page) => {
               :performSearch="performSearch"
           ></PostList>
           <PaginationComponent
-              :totalItems="freePosts.length"
+              :totalItems="postCnt"
               :itemsPerPage="10"
-              :currentPage="1"
+              :currentPage="currentPage"
               @page-changed="onPageChanged"
           />
+          <div class="post-write">
+            <router-link :to="routes[0].path">글 작성</router-link>
+          </div>
         </div>
       </div>
     </main>
@@ -103,5 +119,21 @@ const onPageChanged = async (page) => {
 .error-message {
   color: red;
   margin-top: 1rem;
+}
+.post-write {
+  background-color: #e06139;
+  border-radius: 5px;
+  width: 130px;
+  //height: 100%;
+  padding: 10px;
+  margin: 20px 0 20px 0;
+  text-align: center;
+  margin-left: auto;
+  a {
+    color: #fff;
+  }
+  &:hover {
+    background-color: #e0613976;
+  }
 }
 </style>

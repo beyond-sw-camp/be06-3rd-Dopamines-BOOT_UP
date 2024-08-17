@@ -10,18 +10,16 @@ export const useFreeRecommentStore = defineStore('freeRecomment', {
 
     actions: {
         // 대댓글 생성
-        async createRecomment(user, req) {
+        async createRecomment(req) {
             this.isLoading = true;
             this.error = null;
 
             try {
+                console.log("createRecomment: ", req);
                 const response = await axios.post('/api/free/recomment/create', req, {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`,
-                    },
+                    withCredentials: true
                 });
-
-                this.recomments.push(response.data.data);
+                console.log(response);
             } catch (error) {
                 this.error = error.response?.data?.message || 'An error occurred';
             } finally {
@@ -48,20 +46,17 @@ export const useFreeRecommentStore = defineStore('freeRecomment', {
         },
 
         // 대댓글 수정
-        async updateRecomment(user, req) {
+        async updateRecomment(req) {
             this.isLoading = true;
             this.error = null;
 
             try {
+                console.log("updateRecomment: ", req);
                 const response = await axios.put('/api/free/recomment/update', req, {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`,
-                    },
+                    withCredentials: true
                 });
 
-                // 업데이트된 대댓글 목록 업데이트
-                const updatedRecommentIndex = this.recomments.findIndex((recomment) => recomment.id === response.data.data.id);
-                this.recomments[updatedRecommentIndex] = response.data.data;
+                console.log(response);
             } catch (error) {
                 this.error = error.response?.data?.message || 'An error occurred';
             } finally {
@@ -70,19 +65,16 @@ export const useFreeRecommentStore = defineStore('freeRecomment', {
         },
 
         // 대댓글 삭제
-        async deleteRecomment(user, idx) {
+        async deleteRecomment(idx) {
             this.isLoading = true;
             this.error = null;
 
             try {
+                console.log("deleteRecomment: ", idx);
                 await axios.delete(`/api/free/recomment/delete?idx=${idx}`, {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`,
-                    },
+                    withCredentials: true
                 });
 
-                // 삭제된 대댓글 목록에서 제거
-                this.recomments = this.recomments.filter((recomment) => recomment.id !== idx);
             } catch (error) {
                 this.error = error.response?.data?.message || 'An error occurred';
             } finally {

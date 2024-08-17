@@ -26,27 +26,10 @@ const props = defineProps({
 const emit = defineEmits(['update:comments', 'update:likeCount']);
 const localComments = ref([...props.comments]);
 // const localLikeCount = ref(props.likeCount);
-const replyIndex = ref(null);
-const showReplyInput = ref(false);
 
 watch(() => props.comments, (newComments) => {
   localComments.value = [...newComments];
 });
-
-// async function postLike() {
-//   try {
-//     console.log('Liked post');
-//     localLikeCount.value += 1;
-//     emit('update:likeCount', localLikeCount.value);
-//   } catch (error) {
-//     console.error('Failed to like post:', error);
-//   }
-// }
-
-// function commentSubmit(comment) {
-//   localComments.value.push(comment);
-//   emit('update:comments', localComments.value);
-// }
 
 function deleteComment(idx) {
   console.log("CommentComponent-deleteComment: ", idx);
@@ -58,13 +41,19 @@ function updateComment(commentUpdateReq) {
   emit('update:comments', commentUpdateReq);
 }
 
-function replyToComment(index) {
-  if (replyIndex.value === index) {
-    showReplyInput.value = !showReplyInput.value;
-  } else {
-    replyIndex.value = index;
-    showReplyInput.value = true;
-  }
+function createReComment(reCommentCreateReq) {
+  console.log("createReComment: ", reCommentCreateReq);
+  emit('create:reComments', reCommentCreateReq);
+}
+
+function deleteReComment(idx) {
+  console.log("deleteReComment: ", idx);
+  emit('delete:reComment', idx);
+}
+
+function updateReComment(reCommentUpdateReq) {
+  console.log("updateReComment: ", reCommentUpdateReq);
+  emit('update:reComment', reCommentUpdateReq);
 }
 
 </script>
@@ -72,11 +61,8 @@ function replyToComment(index) {
 <template>
   <div>
     <div class="post-wrapper-bottom">
-      <h2 id="notes-title" class="post-count-text">답변 리스트</h2>
+      <h2 id="notes-title" class="post-count-text">댓글 리스트</h2>
       <div class="like-wrap">
-<!--        <button class="btn-like" @click="postLike">-->
-<!--          <img src="@/assets/icon/empty_marked.svg" alt="like icon">-->
-<!--        </button>-->
       </div>
     </div>
     <div class="comment-view-container">
@@ -84,15 +70,14 @@ function replyToComment(index) {
       <div class="comment-view-wrapper">
         <ul class="comment-view-detail-container">
           <li v-for="(comment, index) in localComments" :key="index" :id="'answer-' + index">
-            <CommentView v-bind="comment" @delete="deleteComment" @update="updateComment"
-                         @reply="replyToComment(index)"></CommentView>
-<!--            <CommentInput v-if="replyIndex.value === index && showReplyInput.value"-->
-<!--                          @commentSubmit="commentSubmit"></CommentInput>-->
-<!--            <ul v-if="props.recomments[comment.idx] && props.recomments[comment.idx].length">-->
-<!--              <li v-for="reply in props.recomments[comment.idx]" :key="reply.idx">-->
-<!--                <ReCommentView v-bind="reply"></ReCommentView>-->
-<!--              </li>-->
-<!--            </ul>-->
+            <CommentView
+                v-bind="comment"
+                @delete="deleteComment"
+                @update="updateComment"
+                @recomment="createReComment"
+                @deleteReComment="deleteReComment"
+                @updateReComment="updateReComment">
+            </CommentView>
           </li>
         </ul>
       </div>

@@ -72,7 +72,7 @@ const commentCreate = async () => {
   <div class="comment-view">
     <div class="comment-wrap">
       <div>
-        <input type="text" v-model="commentReq.content">
+        <input type="text" v-model="commentReq.content" placeholder="댓글 추가...">
       </div>
     </div>
     <div class="comment-method-container">
@@ -95,7 +95,7 @@ const commentCreate = async () => {
 }
 .comment-wrap input {
   width: 100%;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   padding: 10px;
   border: none;
   outline: none;

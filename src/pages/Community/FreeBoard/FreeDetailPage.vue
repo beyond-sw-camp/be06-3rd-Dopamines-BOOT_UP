@@ -8,9 +8,11 @@ import MainFooter from "@/components/layout/MainFooter.vue";
 import {useFreePostStore} from "@/pages/Community/FreeBoard/stores/useFreePostStore";
 import {useRoute} from 'vue-router';
 import {useFreeCommentStore} from "@/pages/Community/FreeBoard/stores/useFreeCommentStore";
+import {useFreeRecommentStore} from "@/pages/Community/FreeBoard/stores/useFreeRecommentStore";
 
 const freePostStore = useFreePostStore();
 const freeCommentStore = useFreeCommentStore();
+const freeReCommentStore = useFreeRecommentStore();
 const route = useRoute();
 
 const post = ref({});
@@ -58,6 +60,42 @@ function updateComment(commentUpdateReq) {
     }
   }
 }
+
+function createReComment(reCommentCreateReq) {
+  console.log("recomment store 넘어가기전 데이터 확인: ", reCommentCreateReq);
+  if (confirm(`${reCommentCreateReq.commentIdx}번의 댓글에 답글을 등록하시겠습니까?`)) {
+    const response = freeReCommentStore.createRecomment(reCommentCreateReq);
+
+    if (response) {
+      console.log("대댓글 등록 완료");
+      window.location.reload();
+    }
+  }
+}
+
+function deleteReComment(idx) {
+  console.log("deleteReComment: ", idx);
+  if (confirm(`${idx}번의 대댓글을 삭제 하시겠습니까?`)) {
+    const response = freeReCommentStore.deleteRecomment(idx);
+
+    if (response) {
+      console.log("대댓글 삭제 완료");
+      window.location.reload();
+    }
+  }
+}
+
+function updateReComment(reCommentUpdateReq) {
+  console.log("updateReComment: ", reCommentUpdateReq);
+  if (confirm(`${reCommentUpdateReq.idx}번의 대댓글을 수정 하시겠습니까?`)) {
+    const response = freeReCommentStore.updateRecomment(reCommentUpdateReq);
+
+    if (response) {
+      console.log("대댓글 수정 완료");
+      window.location.reload();
+    }
+  }
+}
 </script>
 
 <template>
@@ -92,10 +130,14 @@ function updateComment(commentUpdateReq) {
           ></CommentInput>
 
           <CommentComponent
-              :comments="comments" :like-count="likeCount"
+              :comments="comments"
+              :like-count="likeCount"
               :comment-count="comments.length"
               @delete:comments="deleteComment"
               @update:comments="updateComment"
+              @create:reComments="createReComment"
+              @delete:reComment="deleteReComment"
+              @update:reComment="updateReComment"
           ></CommentComponent>
         </div>
       </div>

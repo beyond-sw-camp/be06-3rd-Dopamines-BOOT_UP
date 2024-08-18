@@ -9,26 +9,35 @@ import {useFreePostStore} from "@/pages/Community/FreeBoard/stores/useFreePostSt
 import {useRoute} from 'vue-router';
 import {useFreeCommentStore} from "@/pages/Community/FreeBoard/stores/useFreeCommentStore";
 import {useFreeRecommentStore} from "@/pages/Community/FreeBoard/stores/useFreeRecommentStore";
+import {useFreeLikeStore} from "@/pages/Community/FreeBoard/stores/useFreeLikeStore";
 
 const freePostStore = useFreePostStore();
 const freeCommentStore = useFreeCommentStore();
 const freeReCommentStore = useFreeRecommentStore();
+const freeLikeStore = useFreeLikeStore();
 const route = useRoute();
 
 const post = ref({});
 const comments = ref([]);
 const likeCount = ref(0);
+const postLikeStatus = ref(false);
 const errorMessage = ref('');
 const commentErrorMessage = ref('');
 
 onMounted(async () => {
   const postId = route.params.id;
   try {
+    // 게시글 데이트
     const postData = await freePostStore.readPost(postId);
-    console.log("come on~~~", postData);
+    // 좋아요 유무 상태
+    const status = await freeLikeStore.checkStatus(postId, "free", "post");
+
     post.value = postData;
     comments.value = postData.freeCommentList;
     likeCount.value = postData.likeCount;
+
+    postLikeStatus.value = status; // 반환된 값을 postLikeStatus에 설정
+
   } catch (error) {
     errorMessage.value = `조회 실패: ${error.message}`;
     console.error('조회 실패:', error);
@@ -96,6 +105,21 @@ function updateReComment(reCommentUpdateReq) {
     }
   }
 }
+
+function likeAction(idx) {
+  console.log(`${idx}번 게시글 좋아요 하트 눌림!!! 뿌이뿌이뿌이뿌이`);
+  freeLikeStore.likePost(idx);
+}
+
+function likeReCommment(idx) {
+  console.log(`${idx}번 대댓글 좋아요 하트 눌림!!! 뿌이뿌이뿌이뿌이`)
+  freeLikeStore.likeRecomment(idx);
+}
+
+function likeCommment(idx) {
+  console.log(`${idx}번 댓글 좋아요 하트 눌림!!! 뿌이뿌이뿌이뿌이`)
+  freeLikeStore.likeComment(idx);
+}
 </script>
 
 <template>
@@ -117,7 +141,10 @@ function updateReComment(reCommentUpdateReq) {
               :post-created-at="post.createdAt"
               :post-title="post.title"
               :post-contents="post.content"
+              :post-like-count="likeCount"
+              :post-like-status="postLikeStatus"
               :editlnk="`/free/edit/${route.params.id}`"
+              @update:likeCount="likeAction"
           ></PostDetailComponent>
           <div v-if="commentErrorMessage" class="error-message">
             <p>{{ commentErrorMessage }}</p>
@@ -135,9 +162,11 @@ function updateReComment(reCommentUpdateReq) {
               :comment-count="comments.length"
               @delete:comments="deleteComment"
               @update:comments="updateComment"
+              @likeComment="likeCommment"
               @create:reComments="createReComment"
               @delete:reComment="deleteReComment"
               @update:reComment="updateReComment"
+              @likeReComment="likeReCommment"
           ></CommentComponent>
         </div>
       </div>

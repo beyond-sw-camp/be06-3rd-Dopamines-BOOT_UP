@@ -1,5 +1,5 @@
 <script setup>
-import {computed, defineProps} from 'vue';
+import {computed, defineEmits, defineProps, onMounted, ref, watch} from 'vue';
 import { useRoute } from 'vue-router';
 
 const props = defineProps({
@@ -42,14 +42,27 @@ const props = defineProps({
   editlnk: {
     type: String,
     required: true,
+  },
+  postLikeCount: {
+    type: Number,
+    required: true
+  },
+  postLikeStatus: {
+    type: Boolean,
+    required: false
   }
 });
+const emit = defineEmits(['update:likeCount']);
 const route = useRoute();
 
 const userNickName = computed(() => {
   const user = JSON.parse(localStorage.getItem('user'));
   return user?.userNickName || '';
 });
+
+// 로컬 상태로 postLikeCount 관리
+const localLikeCount = ref(props.postLikeCount);
+const isLiked = computed(() => props.postLikeStatus);
 
 // props.postAuthor와 로컬 스토리지의 userNickName을 비교
 const canEditPost = computed(() => {
@@ -59,6 +72,44 @@ const canEditPost = computed(() => {
 const showCategoryTitle = computed(() => {
   return route.path.startsWith('/free') || route.path.startsWith('/open');
 });
+
+// 게시글 조회시, 해당 유저가 좋아요를 눌렀던 적이 있는지 확인 후 표시
+onMounted(() => {
+  const likeIcon = document.querySelector('.btn-like img');
+  if (isLiked.value) {
+    likeIcon.src = require('@/assets/icon/fill_marked.svg');
+  } else {
+    likeIcon.src = require('@/assets/icon/empty_marked.svg');
+  }
+});
+
+// props 변경을 감지하고 로컬 상태 업데이트
+watch(() => props.postLikeCount, (newCount) => {
+  localLikeCount.value = newCount;
+});
+
+watch(() => props.postLikeStatus, (newStatus) => {
+  const likeIcon = document.querySelector('.btn-like img');
+  if (newStatus) {
+    likeIcon.src = require('@/assets/icon/fill_marked.svg');
+  } else {
+    likeIcon.src = require('@/assets/icon/empty_marked.svg');
+  }
+});
+
+function postLike() {
+  const likeIcon = document.querySelector('.btn-like img');
+
+  if (isLiked.value) {
+    likeIcon.src = require('@/assets/icon/empty_marked.svg');
+    localLikeCount.value--;
+  } else {
+    likeIcon.src = require('@/assets/icon/fill_marked.svg');
+    localLikeCount.value++;
+  }
+
+  emit('update:likeCount', props.postIdx);
+}
 </script>
 
 <template>
@@ -83,9 +134,13 @@ const showCategoryTitle = computed(() => {
         <div class="">
           <div class="post-writer-container">
             <div class="post-writer-wrapper">
-              <p class="post-writer-name">{{ props.postAuthor }}</p>
+              <p class="post-writer-name">{{ props.postAuthor }} / {{ props.postCreatedAt }}</p>
               <div class="post-time-ago">
-                <span>{{ props.postCreatedAt }}</span>
+                <button class="btn-like" @click="postLike">
+                  <img :src="isLiked ? require('@/assets/icon/fill_marked.svg') : require('@/assets/icon/empty_marked.svg')"
+                       alt="like icon">
+                </button>
+                <p class="post-count-text">{{ localLikeCount }}</p>
               </div>
             </div>
           </div>
@@ -166,6 +221,7 @@ const showCategoryTitle = computed(() => {
   margin: 0;
 }
 .post-time-ago {
+  display: flex;
   font-size: .875rem;
 }
 .post-title {

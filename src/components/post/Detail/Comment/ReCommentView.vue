@@ -1,5 +1,5 @@
 <script setup>
-import {defineProps, defineEmits, ref, computed, nextTick} from 'vue';
+import {defineProps, defineEmits, ref, computed, nextTick, onMounted, watch} from 'vue';
 
 const props = defineProps({
   author: {
@@ -18,6 +18,10 @@ const props = defineProps({
     type: Number,
     required: true
   },
+  likeStatus: {
+    type: Boolean,
+    required: false
+  },
   idx: {
     type: Number,
     required: true
@@ -25,7 +29,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['delete', 'edit', 'reply', 'update:likeCount']);
-const localLikeCount = ref(props.likeCount);
 const isEditing = ref(false);
 const editableContent = ref(props.content);
 const inputRef = ref(null);
@@ -34,6 +37,10 @@ const userNickName = computed(() => {
   const user = JSON.parse(localStorage.getItem('user'));
   return user?.userNickName || '';
 });
+
+// 로컬 상태로 postLikeCount 관리
+const localLikeCount = ref(props.likeCount);
+const isLiked = ref(false);
 
 // 대댓글 삭제
 function handleDelete() {
@@ -73,20 +80,6 @@ function handleReply() {
   emit('reply');
 }
 
-// 좋아요 눌렀을때
-function postLike() {
-  const likeIcon = document.querySelector('.btn-like img');
-  let isLiked = likeIcon.src.includes('filled_marked.svg');
-  if (isLiked) {
-    likeIcon.src = require('@/assets/icon/empty_marked.svg');
-    localLikeCount.value -= 1;
-  } else {
-    likeIcon.src = require('@/assets/icon/fill_marked.svg');
-    localLikeCount.value += 1;
-  }
-  emit('update:likeCount', localLikeCount.value);
-}
-
 // 날짜 년-월-일로 표현하는 함수
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -96,6 +89,47 @@ function formatDate(dateString) {
   return `${year}-${month}-${day}`;
 }
 
+// 게시글 조회시, 해당 유저가 좋아요를 눌렀던 적이 있는지 확인 후 표시
+onMounted(async() => {
+  const likeIcon = document.querySelector('.btn-like img');
+  isLiked.value = await props.likeStatus;
+  if (isLiked.value) {
+    likeIcon.src = require('@/assets/icon/fill_marked.svg');
+  } else {
+    likeIcon.src = require('@/assets/icon/empty_marked.svg');
+  }
+});
+
+// props 변경을 감지하고 로컬 상태 업데이트
+watch(() => props.likeCount, (newCount) => {
+  localLikeCount.value = newCount;
+});
+
+watch(() => props.likeStatus, (newStatus) => {
+  isLiked.value = newStatus;
+  const likeIcon = document.querySelector('.btn-like img');
+
+  if (newStatus) {
+    likeIcon.src = require('@/assets/icon/fill_marked.svg');
+  } else {
+    likeIcon.src = require('@/assets/icon/empty_marked.svg');
+  }
+});
+
+function postLike() {
+  const likeIcon = document.querySelector('.btn-like img');
+
+  if (isLiked.value) {
+    likeIcon.src = require('@/assets/icon/empty_marked.svg');
+    localLikeCount.value--;
+  } else {
+    likeIcon.src = require('@/assets/icon/fill_marked.svg');
+    localLikeCount.value++;
+  }
+
+  isLiked.value = !isLiked.value;
+  emit('update:likeCount', props.idx);
+}
 </script>
 
 <template>
@@ -120,9 +154,10 @@ function formatDate(dateString) {
       </div>
       <div class="like-wrap">
         <button class="btn-like" @click="postLike">
-          <img src="@/assets/icon/empty_marked.svg" alt="like icon">
+          <img :src="isLiked ? require('@/assets/icon/fill_marked.svg') : require('@/assets/icon/empty_marked.svg')"
+               alt="like icon">
         </button>
-        <p class="post-count-text">{{ localLikeCount }} 좋아요</p>
+        <p class="post-count-text">{{ localLikeCount }}</p>
       </div>
     </div>
   </div>

@@ -1,7 +1,8 @@
 <script setup>
-import { defineProps, defineEmits, ref, watch } from 'vue';
+import {defineProps, defineEmits, ref, watch, computed} from 'vue';
 // import CommentInput from './CommentInput.vue';
 import CommentView from './CommentView.vue';
+import {useFreeLikeStore} from "@/pages/Community/FreeBoard/stores/useFreeLikeStore";
 // import ReCommentView from './ReCommentView.vue';
 
 const props = defineProps({
@@ -26,6 +27,9 @@ const props = defineProps({
 const emit = defineEmits(['update:comments', 'update:likeCount']);
 const localComments = ref([...props.comments]);
 // const localLikeCount = ref(props.likeCount);
+const freeLikeStore = useFreeLikeStore();
+const likeStatusResult = ref(false);
+
 
 watch(() => props.comments, (newComments) => {
   localComments.value = [...newComments];
@@ -56,6 +60,23 @@ function updateReComment(reCommentUpdateReq) {
   emit('update:reComment', reCommentUpdateReq);
 }
 
+function likeReComment(reCommentIdx) {
+  console.log("likeReComment-check reCommentIdx: ", reCommentIdx);
+  emit('likeReComment', reCommentIdx);
+}
+
+
+function likeCount(commentIdx) {
+  emit('likeComment', commentIdx);
+}
+
+const likeStatus = computed(() => {
+  return localComments.value.map(async(comment, ) => {
+    likeStatusResult.value = await freeLikeStore.checkStatus(comment.idx, "free", "comment")
+
+    return likeStatusResult.value;
+  })
+})
 </script>
 
 <template>
@@ -72,11 +93,15 @@ function updateReComment(reCommentUpdateReq) {
           <li v-for="(comment, index) in localComments" :key="index" :id="'answer-' + index">
             <CommentView
                 v-bind="comment"
+                :like-status="likeStatus[index]"
                 @delete="deleteComment"
                 @update="updateComment"
+                @update:likeCount="likeCount"
                 @recomment="createReComment"
                 @deleteReComment="deleteReComment"
-                @updateReComment="updateReComment">
+                @updateReComment="updateReComment"
+                @likeReComment="likeReComment"
+            >
             </CommentView>
           </li>
         </ul>

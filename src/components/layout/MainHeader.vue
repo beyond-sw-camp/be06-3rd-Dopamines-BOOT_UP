@@ -33,8 +33,8 @@ const handleSearch = () => {
 const logout = async () => {
   const userStore = useUserStore(); // 괄호 추가
   await userStore.logout(); // 로그아웃이 완료될 때까지 대기
-  router.push({path: '/'});
-  window.location.reload();
+
+  window.location.href = "https://www.dopamines-bootup.kro.kr/";  // 로그아웃 요청을 받으면 메인페이지 리다이렉트
 };
 
 </script>
